@@ -35,8 +35,14 @@ getWthXY <- function(lon, lat, start="1993-1-1", end="2009-12-31") {
 	
 		download.file(url=theurl, destfile=filename, method="auto", quiet = FALSE, mode = "wb", cacheOK = TRUE)
 	}
-	thefile <- file(filename, open="rt")
-	close(thefile)
+	lns <- readLines(filename)
+	hdr <- strsplit ( gsub("[[:space:]]+", " ", gsub("[[:space:]]+$", "", lns[14]))  , " ")[[1]]
+	if (hdr[1] != "YEAR") { stop("Something funny is going on") }
+	lns <- lns[15:length(lns)]
+	lns <- strsplit ( gsub("[[:space:]]+", " ", gsub("[[:space:]]+$", "", lns))  , " ")
+	lns <- matrix(as.numeric(unlist(lns)), ncol=length(lns[[1]]), byrow=T)
+	colnames(lns) <- hdr
+	return(lns)
 }
 
 

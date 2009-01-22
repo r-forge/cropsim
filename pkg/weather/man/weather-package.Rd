@@ -1,18 +1,18 @@
-\name{Climate-package}
-\alias{Climate-package}
-\alias{Climate}
+\name{weather-package}
+\alias{weather-package}
+\alias{weather}
 \docType{package}
 \title{
 What the package does (short line)
-	Climate data manipulation
+	Weather data manipulation
 }
 \description{
 More about what it does (maybe more than one line)
-	Climate data manipulation. Particularly in the context of ecological modeling, such as crop growth simulation modeling.
+	Weather data manipulation. Particularly in the context of ecological modeling, such as crop growth simulation modeling.
 }
 \details{
 \tabular{ll}{
-Package: \tab Climate\cr
+Package: \tab weather\cr
 Type: \tab Package\cr
 Version: \tab 0.1\cr
 Date: \tab 2008-10-17\cr
@@ -22,14 +22,10 @@ LazyLoad: \tab yes\cr
 ~~ An overview of how to use the package, including the most important functions ~~
 }
 \author{
-Who wrote it
-
+Robert J. Hijmans
 Maintainer: <r.hijmans@gmail.com>
-~~ The author and/or maintainer of the package ~~
 }
-\references{
-~~ Literature or other references for background information ~~
-}
+
 \keyword{ package }
 \keyword{ spatial }
 \seealso{
