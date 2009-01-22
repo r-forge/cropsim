@@ -18,20 +18,20 @@ setClass('location',
 
 setClass('weather', 
 	representation (
-		wth ="data.frame"
 		temp ='vector',
 		prec = 'vector',
 		rad = 'vector',
 		wind = 'vector',
 		vapr = 'vector',
 		relh  = 'vector',
-		time = 'vector',
+		time = 'vector'
 	),
 	prototype (	
 		
 	),	
 	validity = function(object)
-	{ # all vectors should have same length }
+	{ # all vectors should have same length 
+	}
 )
 
 	
