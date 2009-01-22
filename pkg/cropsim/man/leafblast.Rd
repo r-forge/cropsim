@@ -8,11 +8,12 @@
   ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-leafblast(wth, duration=120, startday=1, rhlim=90) 
-leafblast_v1(wth, duration=120, startday=1) 
+leafblast(tmp, rh, duration=120, startday=1, rhlim=90) 
+leafblast_v1(tmp, rh, duration=120, startday=1) 
 }
 \arguments{
-  \item{wth}{ Describe \code{xy} here }
+  \item{tmp}{ Describe \code{xy} here }
+  \item{rh}{ Describe \code{xy} here }  
   \item{duration}{ Describe \code{x} here }  
   \item{startday}{ Describe \code{x} here }    
   \item{rhlim}{ threshold to decide whethere leaves are wet or not }      
@@ -41,10 +42,7 @@ for (d in 1:dur) {
 	rh[d] <- AFGen(rhtable, d)
 	tmp[d] <- AFGen(tmptable, d)
 }	
-tmax <- tmp + 5
-tmin <- tmp - 5
-wth <- as.data.frame(cbind(tmin, tmax, rh))
-res <- leafblast(wth)
+res <- leafblast(tmp, rh)
 splot(res)
 
 
@@ -63,10 +61,7 @@ for (r in rhrange) {
 		tc <- tc + 1
 		rh <- rep(r, 120)
 		tmp <- rep(t, 120)
-		tmin <- tmp - 5
-		tmax <- tmp + 5
-		wth <- as.data.frame(cbind(tmin, tmax, rh))
-		res <- leafblast(wth)
+		res <- leafblast(tmp, rh)
 		raudpc <- sum(res[,6]) / 120
 		m[rhc, tc] <- raudpc
 	}
