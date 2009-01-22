@@ -45,18 +45,20 @@ sheathblight <- function(tmp, rh, duration=120, startday=30) {
 	AgeCoefRc <- cbind(0:12 * 5, c(0.84, 0.84, 0.84, 0.84, 0.84, 0.84, 0.83, 0.88, 0.88, 1.0, 1.0, 1.0, 1.0))
 	RHCoefRc <- cbind(0:20 * 5, c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.24, 0.87, 0.96, 1.0))
 	TempCoefRc <- cbind(3:9 * 4, c(0, 0.42, 0.94, 0.94, 1.0, 0.85, 0.64))
-	RSenesced <- initSenesced
+	RSenesced
 	RGrowth <- initSites
 	Rinfection <- 0
 	
 	
 	for (day in 1:duration) {
 
-# initialization of the disease
-		Sites[day] <- RGrowth
-		Senesced <- RSenesced
+		if (day==1) {
+		# start crop growth 
+			Sites[day] <- RGrowth
+		}
 		
 		if (day==startday) {
+		# start disease 
 			{Rinfection <- initInfection}
 		}
 		
@@ -79,11 +81,13 @@ sheathblight <- function(tmp, rh, duration=120, startday=30) {
 		infday <- max(1, infday)
 		now_infectious[day] <- sum(infectious[infday:day])
 
-		if (day > 1) { Sites[day] <- Sites[day-1] - Rinfection	}
+		if (day > 1) { 
+			Sites[day] <- Sites[day-1] + RGrowth - RSenesced
+			Senesced[day] <- Senesced[day-1] + RSenesced
+		}
 	
 		Diseased[day] <- sum(infectious) + now_latent[day]
 		Removed[day] <- sum(infectious) - now_infectious[day]
-		Senesced[day] <- Sites[day] - Senesced[day]
 				
 	
 		TotalSites <- Diseased[day] + Sites[day] + Senesced[day]
@@ -95,10 +99,10 @@ sheathblight <- function(tmp, rh, duration=120, startday=30) {
 		RSenesced <- Removed[day]* SenesceType + RRPhysiolSenesc * Sites[day]
 
 	}
-	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased,Rinfection)
-	#res <- res / AllSites
+	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased,Rinfection, Senesced)
+	#res <- res / AllSitesspl
 	res <- cbind(1:duration, res)
-	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased","Rinfection")
+	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased","Rinfection", "Senesced")
 	return(res)
 }
 
