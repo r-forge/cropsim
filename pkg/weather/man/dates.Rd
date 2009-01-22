@@ -2,6 +2,8 @@
 
 \alias{dateFromDoy}
 \alias{doyFromDate}
+\alias{dayFromDate}
+\alias{monthFromDate}
 \alias{yearFromDate}
 \alias{isLeapYear}
 \alias{daysInYear}
@@ -11,12 +13,14 @@
 
 \title{ date routines }
 \description{
-  Conversion between day of year number to date and back
+  Conversion between day of year number to date and back, and extraction of parts of a date.
 }
 
 \usage{
 dateFromDoy(doy, year)
 doyFromDate(date)
+dayFromDate(date)
+monthFromDate(date)
 yearFromDate(date)
 isLeapYear(year)
 daysInYear(year)

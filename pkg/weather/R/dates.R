@@ -3,6 +3,19 @@ yearFromDate <- function(date) {
 	as.numeric(format(as.Date(date), "%Y"))
 }
 
+monthFromDate <- function(date) {
+	as.numeric(format(as.Date(date), "%m"))
+}
+
+dayFromDate <- function(date) {
+	as.numeric(format(as.Date(date), "%d"))
+}
+
+doyFromDate <- function(date) {
+# date is a string like "2007-7-10"
+	as.numeric(format(as.Date(date), "%j"))
+}
+
 isLeapYear <- function(year) {
 	year <- round(year)
     if(((year %% 100 !=0) & (year %%4 ==0)) | (year %% 400==0) )
@@ -24,10 +37,6 @@ daysOfYear <- function(year) {
 }	
 
 
-doyFromDate <- function(date) {
-# adate is string like "2007-7-10"
-	as.numeric(format(as.Date(date), "%j"))
-}
 
 
 dateFromDoy <- function(doy, year) {
@@ -42,8 +51,10 @@ dateFromDoy <- function(doy, year) {
 		doy <- doy - diy
 		year <- year+1
 	}
+	diy <- daysInYear(year)
 	if (doy < 1) { stop('cannot understand value for doy') }
 	if (doy > diy) { stop('cannot understand value for doy') }
 	
-	as.Date(doy, origin=paste(year, "-01-01", sep=''))
+	return(daysOfYear(year)[doy])
+#	as.Date(doy, origin=paste(year, "-01-01", sep='')) - 1 day
 }

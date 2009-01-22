@@ -7,7 +7,7 @@
 # Version 0.1
 # Licence GPL v3
 
-sheathblight <- function(temp, rh, duration=120, startday=30) {
+sheathblight <- function(tmp, rh, duration=120, startday=30) {
 	RRG <- 0.2
 	RRPhysiolSenesc <- 0.001
 	SenesceType <- 1
