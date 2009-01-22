@@ -1,4 +1,9 @@
 
+# Author: Robert J. Hijmans, r.hijmans@gmail.com
+# License GPL3
+# Version 0.1  January 2009
+
+
 getplantdates <- function(yields, fact=2, yp=10000, yt=0.5) {
 	yields[is.na(yields)] <- 0
 	if (sum(yields) == 0) {
