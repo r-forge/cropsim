@@ -73,3 +73,11 @@ AccessGetWthCell <- function(database, table, cell) {
 	colnames(data) <- c("cell", "day", "prec", "relh", "srad", "tmax", "tmin")
 	return(data[,2:7])     
 }	
+
+AccessGetCellNumbers <- function(database, table) {
+	query <- paste("SELECT cell FROM", table, "GROUP BY cell") 
+	db <- odbcConnectAccess(database)
+	data <- sqlQuery(db, query)
+	odbcClose(db)
+	return(as.vector(data[,1]))
+}

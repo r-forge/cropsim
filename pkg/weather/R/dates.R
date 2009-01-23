@@ -1,18 +1,23 @@
 
 yearFromDate <- function(date) {
+# to avoid date shifts because of your local time zone if date is a POSIX. ..
+# date is a string like "2007-7-10"    YYYY-M-D
+	date <- as.character(date)
 	as.numeric(format(as.Date(date), "%Y"))
 }
 
 monthFromDate <- function(date) {
+	date <- as.character(date)
 	as.numeric(format(as.Date(date), "%m"))
 }
 
 dayFromDate <- function(date) {
+	date <- as.character(date)
 	as.numeric(format(as.Date(date), "%d"))
 }
 
 doyFromDate <- function(date) {
-# date is a string like "2007-7-10"
+	date <- as.character(date)
 	as.numeric(format(as.Date(date), "%j"))
 }
 
