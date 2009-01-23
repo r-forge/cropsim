@@ -50,28 +50,39 @@ leafblast <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 	Rinfection <- 0
 	COFR <- 1
 	Senesced <- 0
+	MatPer <- 20
 	
 	for (day in 1:duration) {
-		
+			
 	# State calculations
 		if (day==1) {
 		# start crop growth 
 			Sites[day] <- initSites
+			Sites[day] <- 652.80
 		}
 		infectious[day] <- Rtransfer
 		
  		latency[day] <- Rinfection
-		latday <- day - latency_transit_time
+		latday <- day - latency_transit_time + 1
 		latday <- max(1, latday)
 		now_latent[day] <- sum(latency[latday:day])
 		
-		infday <- day - infectious_transit_time
+		infday <- day - infectious_transit_time + 1
 		infday <- max(1, infday)
 		now_infectious[day] <- sum(infectious[infday:day])
 
 		if (day > 1) {
-			Sites[day] <- Sites[day-1] + RGrowth - RSenesced
+#			Sites[day] <- Sites[day-1] + RGrowth - Rinfection 
+# Or should it be:			
+			Sites[day] <- Sites[day-1] + RGrowth - Rinfection - RSenesced
+
+# consider natural senescence...
+#			Sites[day] <- min(Sites[day], MatScen)
 			Senesced[day] <- Senesced[day-1] + RSenesced
+			if (Sites[day] < 0 ) { 
+				Sites[day] <- 0
+				break 
+			}
 		}
 		Diseased[day] <- sum(infectious) + now_latent[day]
 		Removed[day] <- sum(infectious) - now_infectious[day]
@@ -81,8 +92,12 @@ leafblast <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 		RcAgeTemp <- BaseRc * AFGen(AgeCoefRc, day) * AFGen(TempCoefRc, tmp[day]) * RHCoefRc[day]
 		Rinfection <- now_infectious[day] * RcAgeTemp * (COFR^AGGR)
 		RGrowth <- RRG * Sites[day] * (1-TotalSites/Sitemax)
+
+# consider natural senescence...		
+#		MatScen <- -1*(day*Sitemax/MatPer) + (Sitemax * duration/MatPer)
+		
 		RSenesced <- Removed[day]* SenescType + RRPhysiolSenesc * Sites[day]
-		COFR <- 1-(Diseased[day]/Sitemax)
+		COFR <- 1-(Diseased[day]/(Sites[day]+Diseased[day]))
 
 	# Boxcar transger to other staet 
 		if (day >= latency_transit_time ) {	
@@ -96,8 +111,14 @@ leafblast <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 	}
 	
 	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased)
+	res <- res[1:day,]
 	#res <- Diseased / AllSites 
 	res <- cbind(1:duration, res)
 	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased")
 	return(res)
 }
+
+res <- as.data.frame(leafblast(tmp, rh, duration=120, startday=15, rhlim=195))
+splot2(res)
+res[1:25,]
+
