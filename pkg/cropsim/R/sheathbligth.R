@@ -7,7 +7,7 @@
 # Version 0.1
 # Licence GPL v3
 
-sheathblight <- function(tmp, rh, duration=120, startday=30) {
+sheathBlight <- function(tmp, rh, duration=120, startday=30) {
 	RRG <- 0.2
 	RRPhysiolSenesc <- 0.001
 	SenesceType <- 1
@@ -45,7 +45,8 @@ sheathblight <- function(tmp, rh, duration=120, startday=30) {
 	AgeCoefRc <- cbind(0:12 * 5, c(0.84, 0.84, 0.84, 0.84, 0.84, 0.84, 0.83, 0.88, 0.88, 1.0, 1.0, 1.0, 1.0))
 	RHCoefRc <- cbind(0:20 * 5, c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.24, 0.87, 0.96, 1.0))
 	TempCoefRc <- cbind(3:9 * 4, c(0, 0.42, 0.94, 0.94, 1.0, 0.85, 0.64))
-	RSenesced
+
+	RSenesced <- 0
 	RGrowth <- initSites
 	Rinfection <- 0
 	

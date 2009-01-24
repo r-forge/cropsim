@@ -1,5 +1,6 @@
 
 .yearFromDate <- function(date) {
+	date <- as.character(date)
 	as.numeric(format(as.Date(date), "%Y"))
 }
 
@@ -52,7 +53,6 @@ writeCABOwth <- function(wth, lon, lat, alt, path=getwd(), rainfact=1, tempfact=
 #			cat(txtf, 1, y:6, inttostr(i):5, rad:10:0, tmin:8:1, tmax:8:1, vapr:8:1, wind:8:1, prec:8:1);
 			cat("1  ", sprintf("%6.0f", year), sprintf("%5.0f", d), sprintf("%10.0f", rad), sprintf("%8.1f", tmin), sprintf("%8.1f", tmax), sprintf("%8.1f", vapr), sprintf("%8.1f", wind), sprintf("%8.1f", prec), "\n", file=thefile)
 		}
-		
 		close(thefile)
     }
 	return(TRUE)

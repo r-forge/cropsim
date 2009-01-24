@@ -5,7 +5,7 @@
 # Version 0.1
 # Licence GPL v3
 
-leafblast_v1 <- function(tmp, rh, duration=120, startday=1) {
+leafBlast_v1 <- function(tmp, rh, duration=120, startday=1) {
 # this is  a draft model. Not suited for reserach or applications. 
 	AGGR <- 1
 	Rc <- 1

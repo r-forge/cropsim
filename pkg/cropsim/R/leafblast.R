@@ -7,7 +7,7 @@
 # Licence GPL v3
 
 
-leafblast <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
+leafBlast <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 #    tmp <- (wth$tmax + wth$tmin) / 2
 #	rh <- wth$rh
 	RRG <- 0.1
@@ -117,8 +117,3 @@ leafblast <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased")
 	return(res)
 }
-
-res <- as.data.frame(leafblast(tmp, rh, duration=120, startday=15, rhlim=195))
-splot2(res)
-res[1:25,]
-
