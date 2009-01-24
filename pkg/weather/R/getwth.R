@@ -17,13 +17,16 @@ getWthXY <- function(lon, lat, start="1993-1-1", end="2009-12-31") {
 		stop("invalid coordinates")
 	} 
 	filename <- paste("daily_weather_", cell, ".nasa", sep="")
+
+	vars <- c("swv_dwn", "T2M", "T2MN", "T2MX", "RH2M", "RAIN")
+	nicevars <- c("year", "doy", "srad", "temp", "tmin", "tmax", "relh", "prec")
+
 	if (!file.exists(filename)) {
 		xy <- xyFromCell(raster, cell)
 		lon <- xy[1]
 		lat <- xy[2]
 
-		vars <- c("swv_dwn", "T2M", "T2MN", "T2MX", "RH2M", "RAIN")
-
+		
 		part1 <- "http://earth-www.larc.nasa.gov/cgi-bin/cgiwrap/solar/agro.cgi?email=agroclim%40larc.nasa.gov&step=1&lat="
 		part2 <- paste(lat, "&lon=", lon, "&sitelev=&ms=", smon, "&ds=", sday, "&ys=", syr, "&me=", emon, "&de=", eday, "&ye=", eyr, sep="")
 		part3 <- ''
@@ -41,7 +44,7 @@ getWthXY <- function(lon, lat, start="1993-1-1", end="2009-12-31") {
 	lns <- lns[15:length(lns)]
 	lns <- strsplit ( gsub("[[:space:]]+", " ", gsub("[[:space:]]+$", "", lns))  , " ")
 	lns <- matrix(as.numeric(unlist(lns)), ncol=length(lns[[1]]), byrow=T)
-	colnames(lns) <- hdr
+	colnames(lns) <- nicevars
 	return(lns)
 }
 
