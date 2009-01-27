@@ -84,36 +84,46 @@ leafBlast <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 				break 
 			}
 		}
-		Diseased[day] <- sum(infectious) + now_latent[day]
+		Diseased[day] <- sum(infectious) + now_latent[day] 
 		Removed[day] <- sum(infectious) - now_infectious[day]
 		TotalSites <- Diseased[day] + Sites[day]
 		
 	# Rate calculations
 		RcAgeTemp <- BaseRc * AFGen(AgeCoefRc, day) * AFGen(TempCoefRc, tmp[day]) * RHCoefRc[day]
 		Rinfection <- now_infectious[day] * RcAgeTemp * (COFR^AGGR)
-		RGrowth <- RRG * Sites[day] * (1-TotalSites/Sitemax)
+		RGrowth <- RRG * Sites[day] * (1-(TotalSites/Sitemax))
 
 # consider natural senescence...		
 #		MatScen <- -1*(day*Sitemax/MatPer) + (Sitemax * duration/MatPer)
 		
-		RSenesced <- Removed[day]* SenescType + RRPhysiolSenesc * Sites[day]
+		if (day > infectious_transit_time) {
+			removedToday <- infectious[infday-1]
+		} else {
+			removedToday <- 0
+		}
+		RSenesced <- removedToday * SenescType + RRPhysiolSenesc * Sites[day]
+		
 		COFR <- 1-(Diseased[day]/(Sites[day]+Diseased[day]))
 
 	# Boxcar transger to other staet 
 		if (day >= latency_transit_time ) {	
 			Rtransfer <- latency[latday]
-		} else { Rtransfer <- 0	}	
+		} else { 
+			Rtransfer <- 0	
+		}	
+		
 		if (day==startday) {
 		# initialization of the disease
 			Rinfection <- initInfection
 		}
-		
+#	print(c(day, RGrowth, Sites[day], TotalSites))		
 	}
 	
 	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased)
 	res <- res[1:day,]
 	#res <- Diseased / AllSites 
-	res <- cbind(1:duration, res)
+	res <- cbind(1:length(res[,1]), res)
 	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased")
 	return(res)
 }
+
