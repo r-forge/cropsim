@@ -33,8 +33,8 @@ leafBlast_v1(tmp, rh, duration=120, startday=1)
 \seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
 \examples{
 
-rhtable <- cbind(0:10*12, c(89.5, 89.5, 89.5, 89, 90.5, 88.5, 90, 92, 90, 90, 88.5))
-tmptable <- cbind(0:10*12, c(19.9, 20.3, 19.9, 20.3, 20.1, 20.1, 20, 20, 19.8, 20, 20))
+rhtable <- cbind(0:10*12, c(99, 97, 100, 97.5, 97.5, 96.5, 96.5, 98.5, 96.5, 97.5, 97.5))
+tmptable <- cbind(0:10*12, rep(20, 11))
 dur <- 120
 rh <- vector(length=dur)
 tmp  <- vector(length=dur)
