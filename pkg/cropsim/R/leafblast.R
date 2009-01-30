@@ -1,8 +1,8 @@
 
 # Author: Serge Savary & Rene Pangga. 
-# R translation: Robert J. Hijmans & Rene Pangga, r.hijmans@gmail.com
+# R translation: Robert J. Hijmans & Rene Pangga, r.hijmans@gmail.com (translated from STELLA LeafBlastMod v5)
 # International Rice Research Institute
-# Date :  November 2008
+# Date :  30 January 2009
 # Version 0.1
 # Licence GPL v3
 

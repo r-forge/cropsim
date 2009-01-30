@@ -1,31 +1,31 @@
 
 # Author: Serge Savary & Rene Pangga. 
-# R translation: Robert J. Hijmans & Rene Pangga, r.hijmans@gmail.com (translated from STELLA BLBMod v6.1)
+# R translation: Robert J. Hijmans & Rene Pangga, r.hijmans@gmail.com (translated from STELLA TungroMod v5)
 # International Rice Research Institute
-# Date :  28 January 2009
+# Date :  30 January 2009
 # Version 0.1
 # Licence GPL v3
 
 
-bactBlight <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
+tungro <- function(tmp, rh, duration=120, startday=1, rhlim=1) {
 #    tmp <- (wth$tmax + wth$tmin) / 2
 #	rh <- wth$rh
 	RRG <- 0.1
-	RRPhysiolSenesc <- 0.01
-	SenescType <- 1	
-	AGGR <- 4
-	BaseRc <- 0.87
-	Sitemax <- 3200
+#	RRPhysiolSenesc <- 0.01
+#	SenescType <- 1	
+	AGGR <- 1
+	BaseRc <- 0.18
+	Sitemax <- 100
 	initInfection <- 1
 	initSites <- 100
 
 
-	infectious_transit_time <- 30
+	infectious_transit_time <- 120
 	infectious <- vector(length=duration)
 	infectious[] <- 0
 	now_infectious <- vector(length=duration)
 	now_infectious[] <- 0
-	latency_transit_time <- 5
+	latency_transit_time <- 6
 	latency <- vector(length=duration)
 	latency[] <- 0
 	now_latent <- vector(length=duration)
@@ -37,21 +37,21 @@ bactBlight <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 	Sites <- vector (length=duration)
 	Sites[] <- 0
 	
-	AgeCoefRc <- cbind(0:12 * 10, c( 1, 1, 1, 0.9, 0.62, 0.43, 0.41, 0.42, 0.41, 0.41, 0.41, 0.41, 0.41))
+	AgeCoefRc <- cbind (0:8 * 15, c(1.0, 1.0, 0.98, 0.73, 0.51, 0.34, 0, 0, 0))
 	
 	RHCoefRc  <- rh
 	RHCoefRc[] <- 0
 	RHCoefRc[rh >= rhlim] <- 1
  	
-	TempCoefRc <- cbind(18.5 + (0:4 * 3.125), c(0.29, 0.44, 0.90, 0.90, 1.0))
+	TempCoefRc <- cbind (10 + (0:9 * 3.1111), c(0.13, 0.65, 0.75, 0.83, 0.89, 0.93, 0.97, 1.0, 0.96, 0.93))
 
 	RcAgeTemp <- vector (length=duration)
 	
 	Rtransfer <- 0
 	Rinfection <- 0
 	COFR <- 1
-	Senesced <- 0
-	MatPer <- 20
+#	Senesced <- 0
+#	MatPer <- 20
 	
 	for (day in 1:duration) {
 			
@@ -59,7 +59,7 @@ bactBlight <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 		if (day==1) {
 		# start crop growth 
 			Sites[day] <- initSites
-			Sites[day] <- 108.69
+			Sites[day] <- 100
 		}
 		infectious[day] <- Rtransfer
 				
@@ -75,15 +75,15 @@ bactBlight <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 		if (day > 1) {
 #			Sites[day] <- Sites[day-1] + RGrowth - Rinfection 
 # Or should it be:			
-			Sites[day] <- Sites[day-1] + RGrowth - Rinfection - RSenesced
+			Sites[day] <- Sites[day-1] + RGrowth - Rinfection
 
 # consider natural senescence...
 #			Sites[day] <- min(Sites[day], MatScen)
-			Senesced[day] <- Senesced[day-1] + RSenesced
-			if (Sites[day] < 0 ) { 
-				Sites[day] <- 0
-				break 
-			}
+#			Senesced[day] <- Senesced[day-1] + RSenesced
+#			if (Sites[day] < 0 ) { 
+#				Sites[day] <- 0
+#				break 
+#			}
 		}
 		
 		Diseased[day] <- sum(infectious) + now_latent[day] + Removed[day]
@@ -99,17 +99,17 @@ bactBlight <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 # consider natural senescence...		
 #		MatScen <- -1*(day*Sitemax/MatPer) + (Sitemax * duration/MatPer)
 		
-		if (day > infectious_transit_time) {
-			removedToday <- infectious[infday-1]
-		} else {
-			removedToday <- 0
-		}
-		if (day==1){
-			RSenesced <- removedToday * SenescType + RRPhysiolSenesc * initSites
-			Senesced[day] <- RSenesced
-		}
+#		if (day > infectious_transit_time) {
+#			removedToday <- infectious[infday-1]
+#		} else {
+#			removedToday <- 0
+#		}
+#		if (day==1){
+#			RSenesced <- removedToday * SenescType + RRPhysiolSenesc * initSites
+#			Senesced[day] <- RSenesced
+#		}
 
-		RSenesced <- removedToday * SenescType + RRPhysiolSenesc * Sites[day]		
+#		RSenesced <- removedToday * SenescType + RRPhysiolSenesc * Sites[day]		
 		COFR <- 1-(Diseased[day]/(Sites[day]+Diseased[day]))
 
 	# Boxcar transger to other staet 
@@ -124,14 +124,14 @@ bactBlight <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 		}		
 		
 		
-	 print(c(day, infday, Rinfection, Rtransfer, RGrowth, RSenesced, infectious[day], now_infectious[day]))		
+#	 print(c(day, infday, Rinfection, Rtransfer, RGrowth, RSenesced, infectious[day], now_infectious[day]))		
 	}
 	
-	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased, Senesced, infectious)
+	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased)
 	res <- res[1:day,]
 	#res <- Diseased / AllSites 
 	res <- cbind(1:length(res[,1]), res)
-	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased", "senesced", "infect")
+	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased")
 	return(res)
 }
 
