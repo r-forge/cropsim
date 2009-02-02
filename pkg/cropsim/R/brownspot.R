@@ -1,8 +1,8 @@
 
 # Author: Serge Savary & Rene Pangga. 
-# R translation: Robert J. Hijmans & Rene Pangga, r.hijmans@gmail.com (translated from STELLA BSMod v6)
+# R translation: Robert J. Hijmans , Rene Pangga, & Jorrel, Aunario r.hijmans@gmail.com (translated from STELLA BSMod v6)
 # International Rice Research Institute
-# Date :  28 January 2009
+# Date :  2 February 2009
 # Version 0.1
 # Licence GPL v3
 
@@ -36,6 +36,9 @@ brownSpot <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 	Diseased[] <- 0
 	Sites <- vector (length=duration)
 	Sites[] <- 0
+	Severity <- vector (length=duration)
+	Severity[] <- 0
+	
 	
 	AgeCoefRc <- cbind(0:6 * 20, c(0.35, 0.35, 0.35, 0.47, 0.59, 0.71, 1.0))
 
@@ -88,6 +91,7 @@ brownSpot <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 		Diseased[day] <- sum(infectious) + now_latent[day] + Removed[day]
 		Removed[day] <- sum(infectious) - now_infectious[day]
 		TotalSites <- Diseased[day] + Sites[day]
+#		brownspotincidence <- (Diseased[day]-Removed[day])/(Totalsites - Removed[day])*100	
 		
 	# Rate calculations
 		RcAgeTemp <- BaseRc * AFGen(AgeCoefRc, day) * AFGen(TempCoefRc, tmp[day]) * RHCoefRc[day]
@@ -122,15 +126,15 @@ brownSpot <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 		# initialization of the disease
 			Rinfection <- initInfection
 		}
-		
-#	print(c(day, RGrowth, Sites[day], TotalSites))		
+	Severity[day] <- (Diseased[day]-Removed[day])/(TotalSites - Removed[day])*100	
+#	print(c(day, Incidence))		
 	}
 	
-	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased, Senesced, latency)
+	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased, Senesced, Severity)
 	res <- res[1:day,]
 	#res <- Diseased / AllSites 
 	res <- cbind(1:length(res[,1]), res)
-	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased", "senesced", "latency")
+	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased", "senesced", "severity")
 	return(res)
 }
 

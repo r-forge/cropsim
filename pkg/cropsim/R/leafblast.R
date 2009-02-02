@@ -1,8 +1,8 @@
 
 # Author: Serge Savary & Rene Pangga. 
-# R translation: Robert J. Hijmans & Rene Pangga, r.hijmans@gmail.com (translated from STELLA LeafBlastMod v5)
+# R translation: Robert J. Hijmans, Rene Pangga, & Jorrel Aunario  r  hijmans@gmail.com (translated from STELLA LeafBlastMod v5)
 # International Rice Research Institute
-# Date :  30 January 2009
+# Date :  2 February 2009
 # Version 0.1
 # Licence GPL v3
 
@@ -36,6 +36,8 @@ leafBlast <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 	Diseased[] <- 0
 	Sites <- vector (length=duration)
 	Sites[] <- 0
+	Severity <- vector (length=duration)
+	Severity[] <- 0
 	
 	AgeCoefRc <- cbind(0:24 * 5, c(1, 1, 1, 0.9, 0.8, 0.7, 0.64, 0.59, 0.53, 0.43, 0.32, 0.22, 0.16, 0.09, 0.03, 0.02, 0.02, 0.02, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01))
 
@@ -84,7 +86,7 @@ leafBlast <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 				break 
 			}
 		}
-		Diseased[day] <- sum(infectious) + now_latent[day] 
+		Diseased[day] <- sum(infectious) + now_latent[day] + Removed[day]
 		Removed[day] <- sum(infectious) - now_infectious[day]
 		TotalSites <- Diseased[day] + Sites[day]
 		
@@ -116,14 +118,15 @@ leafBlast <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 		# initialization of the disease
 			Rinfection <- initInfection
 		}
-#	print(c(day, RGrowth, Sites[day], TotalSites))		
+#	print(c(day, RGrowth, Sites[day], TotalSites))	
+	Severity[day] <- (Diseased[day]-Removed[day])/(TotalSites - Removed[day])*100		
 	}
 	
-	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased)
+	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased, Severity)
 	res <- res[1:day,]
 	#res <- Diseased / AllSites 
 	res <- cbind(1:length(res[,1]), res)
-	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased")
+	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased", "severity")
 	return(res)
 }
 

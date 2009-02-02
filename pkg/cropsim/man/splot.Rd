@@ -1,6 +1,7 @@
 \name{plotting}
 \alias{splot}
 \alias{splot2}
+\alias{splot3}
 
 \title{ Plotting model results }
 \description{
@@ -9,6 +10,7 @@
 \usage{
 splot(x, ...)
 splot2(x, ...)
+splot3(x, ...)
 }
 \arguments{
     \item{x}{ A simulation result object }  

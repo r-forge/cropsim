@@ -3,7 +3,7 @@
 # Author: Serge Savary & Rene Pangga. 
 # R translation: Rene Pangga, RJH, JA (translated from STELLA ShBMod v6)
 # International Rice Research Institute
-# Date :  29 January 2009
+# Date :  2  February 2009
 # Version 0.1
 # Licence GPL v3
 
@@ -40,6 +40,8 @@ sheathBlight <- function(tmp, rh, duration=120, startday=30) {
 	now_Sites <- 0
 	Senesced <- vector (length=duration)
 	Senesced[] <- 0
+	Incidence <- vector (length=duration)
+	Incidence[] <- 0
 	
 	
 	AgeCoefRc <- cbind(0:12 * 10, c(0.84, 0.84, 0.84, 0.84, 0.84, 0.84, 0.83, 0.88, 0.88, 1.0, 1.0, 1.0, 1.0))
@@ -111,14 +113,14 @@ sheathBlight <- function(tmp, rh, duration=120, startday=30) {
 	#sday <- max(1, sday)
 	#now_Sites[day] <- sum(Sites[sday:day])
 		
-
+	Incidence[day] <- (Diseased[day]-Removed[day])/(TotalSites - Senesced[day] -Removed[day])*100	
 	}
 	
-	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased, Senesced)
+	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased, Senesced, Incidence)
 	res <- res[1:day,]
 	#res <- Diseased / AllSites 
 	res <- cbind(1:length(res[,1]), res)
-	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased", "senesced")
+	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased", "senesced", "incidence")
 	return(res)
 }
 

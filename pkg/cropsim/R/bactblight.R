@@ -1,8 +1,8 @@
 
 # Author: Serge Savary & Rene Pangga. 
-# R translation: Robert J. Hijmans & Rene Pangga, r.hijmans@gmail.com (translated from STELLA BLBMod v6.1)
+# R translation: Robert J. Hijmans , Rene Pangga & Jorrel Aunario, r.hijmans@gmail.com (translated from STELLA BLBMod v6.1)
 # International Rice Research Institute
-# Date :  28 January 2009
+# Date :  2 February 2009
 # Version 0.1
 # Licence GPL v3
 
@@ -36,6 +36,8 @@ bactBlight <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 	Diseased[] <- 0
 	Sites <- vector (length=duration)
 	Sites[] <- 0
+	Incidence <- vector (length=duration)
+	Incidence[] <- 0
 	
 	AgeCoefRc <- cbind(0:12 * 10, c( 1, 1, 1, 0.9, 0.62, 0.43, 0.41, 0.42, 0.41, 0.41, 0.41, 0.41, 0.41))
 	
@@ -123,15 +125,15 @@ bactBlight <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 			Rinfection <- initInfection
 		}		
 		
-		
-	 print(c(day, infday, Rinfection, Rtransfer, RGrowth, RSenesced, infectious[day], now_infectious[day]))		
+	Incidence[day] <- (Diseased[day]-Removed[day])/(TotalSites - Removed[day])*100		
+#	 print(c(day, infday, Rinfection, Rtransfer, RGrowth, RSenesced, infectious[day], now_infectious[day]))		
 	}
 	
-	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased, Senesced, infectious)
+	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased, Senesced, Incidence)
 	res <- res[1:day,]
 	#res <- Diseased / AllSites 
 	res <- cbind(1:length(res[,1]), res)
-	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased", "senesced", "infect")
+	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased", "senesced", "incidence")
 	return(res)
 }
 
