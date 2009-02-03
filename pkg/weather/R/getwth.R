@@ -56,11 +56,11 @@ DBgetWthXY <- function(database, table, lon, lat, raster=newRaster()) {
 
 DBgetWthCell <- function(database, table, cell) {
 	db <- odbcConnect(database)
-	query <- paste("SELECT * FROM", table, "WHERE cell = ", cell, sep="")
+	query <- paste("SELECT * FROM", table, "WHERE cell =", cell)
 	data <- sqlQuery(db, query)
 	odbcClose(db)
-	colnames(data) <- c("cell", "day", "prec", "relh", "srad", "tmax", "tmin")
-	return(data[,2:7])     
+	colnames(data) <- c("cell", "day", "srad", "tmax", "tmin", "prec", "tdew", "temp", "relh")
+	return(data[,2:9])     
 }	
 
 AccessGetWthXY <- function(database, table, lon, lat, raster=newRaster()) {
