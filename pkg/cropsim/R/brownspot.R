@@ -7,9 +7,17 @@
 # Licence GPL v3
 
 
-brownSpot <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
-#    tmp <- (wth$tmax + wth$tmin) / 2
-#	rh <- wth$rh
+brownSpot <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90) {
+
+	emergence <- as.Date(emergence)
+	wth <- subset(wth, wth$day >= emergence)
+    
+	tmp <- (wth$tmax + wth$tmin) / 2
+	rh <- wth$relh
+	if (length(tmp) < duration) {
+		print("Incomplete weather data")
+		stop()
+	}
 	RRG <- 0.1
 	RRPhysiolSenesc <- 0.01
 	SenescType <- 1	
@@ -18,7 +26,6 @@ brownSpot <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 	Sitemax <- 100000
 	initInfection <- 1
 	initSites <- 600
-
 
 	infectious_transit_time <- 19
 	infectious <- vector(length=duration)
@@ -38,7 +45,6 @@ brownSpot <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 	Sites[] <- 0
 	Severity <- vector (length=duration)
 	Severity[] <- 0
-	
 	
 	AgeCoefRc <- cbind(0:6 * 20, c(0.35, 0.35, 0.35, 0.47, 0.59, 0.71, 1.0))
 
@@ -122,7 +128,7 @@ brownSpot <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 			Rtransfer <- 0	
 		}	
 		
-		if (day==startday) {
+		if (day==onset) {
 		# initialization of the disease
 			Rinfection <- initInfection
 		}
