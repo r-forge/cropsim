@@ -8,15 +8,19 @@
   ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-leafBlast(tmp, rh, duration=120, startday=1, rhlim=90) 
+leafBlast(wth, emergence='2000-05-15', onset=1, duration=120, rhlim=90) 
 leafBlast_v1(tmp, rh, duration=120, startday=1) 
 }
 \arguments{
+  \item(wth) { Describe \code{xy} here }
+  \item(emergence) { Describe \code{xy} here }
+  \item(onset) { Describe \code{xy} here }
   \item{tmp}{ Describe \code{xy} here }
   \item{rh}{ Describe \code{xy} here }  
   \item{duration}{ Describe \code{x} here }  
   \item{startday}{ Describe \code{x} here }    
-  \item{rhlim}{ threshold to decide whethere leaves are wet or not }      
+  \item{rhlim}{ threshold to decide whethere leaves are wet or not }
+  
 }
 \details{
   ~~ If necessary, more details than the description above ~~
@@ -35,16 +39,23 @@ leafBlast_v1(tmp, rh, duration=120, startday=1)
 
 rhtable <- cbind(0:10*12, c(99, 97, 100, 97.5, 97.5, 96.5, 96.5, 98.5, 96.5, 97.5, 97.5))
 tmptable <- cbind(0:10*12, rep(20, 11))
+
 dur <- 120
-rh <- vector(length=dur)
+relh <- vector(length=dur)
 tmp  <- vector(length=dur)
+day  <- seq(as.Date('2000-5-15'), len = dur, by = "1 day")
 for (d in 1:dur) {
-	rh[d] <- AFGen(rhtable, d)
+	relh[d] <- AFGen(rhtable, d)
 	tmp[d] <- AFGen(tmptable, d)
 }	
-res <- leafBlast(tmp, rh)
-splot(res)
+#rh <- round(rh)
+tmin <- tmp - 5
+tmax <- tmp + 5
+wth <- as.data.frame(cbind(tmin, tmax, relh))
+wth$day <-day
 
+
+res <- as.data.frame(leafBlast(wth, duration=120, onset=15))
 
 
 
@@ -53,15 +64,22 @@ rhrange <- 1:10 * 3 + 70
 tmprange <- 1:4 * 3 + 14
 m <- matrix(NA, length(rhrange), length(tmprange))
 
+day  <- seq(as.Date('2000-5-15'), len = 120, by = "1 day")
+
 rhc <- 0
 for (r in rhrange) {
 	rhc <- rhc + 1
 	tc <- 0
 	for (t in tmprange) {
 		tc <- tc + 1
-		rh <- rep(r, 120)
+		relh <- rep(r, 120)
 		tmp <- rep(t, 120)
-		res <- leafBlast(tmp, rh)
+		tmin <- tmp - 5
+		tmax <- tmp + 5
+		wth <- as.data.frame(cbind(tmin, tmax, relh))
+		wth$day <-day
+
+		res <- leafBlast(wth)
 		raudpc <- sum(res[,6]) / 120
 		m[rhc, tc] <- raudpc
 	}

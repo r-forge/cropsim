@@ -7,9 +7,13 @@
 # Licence GPL v3
 
 
-leafBlast <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
-#    tmp <- (wth$tmax + wth$tmin) / 2
-#	rh <- wth$rh
+leafBlast <- function(wth, emergence='2000-05-15', onset=1, duration=120, rhlim=90) {
+#constants
+	emergence <- as.Date(emergence)
+	wth <- subset (wth, wth$day >= emergence)
+
+    tmp <- (wth$tmax + wth$tmin) / 2
+	rh <- wth$relh
 	RRG <- 0.1
 	RRPhysiolSenesc <- 0.01
 	SenescType <- 1	
@@ -114,7 +118,7 @@ leafBlast <- function(tmp, rh, duration=120, startday=1, rhlim=90) {
 			Rtransfer <- 0	
 		}	
 		
-		if (day==startday) {
+		if (day==onset) {
 		# initialization of the disease
 			Rinfection <- initInfection
 		}
