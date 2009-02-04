@@ -15,6 +15,7 @@ spatSim <- function(raster, model, emergence='2000-7-15', ...)  {
 	}
 	onedegworld <- raster()
 	cells <- cellsFromBbox(onedegworld, raster)
+	cells <- cells -1
 	if (ncell(raster) != length(cells)) { stop("not good") }
 
 	result <- vector(length=length(cells))
