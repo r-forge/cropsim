@@ -11,17 +11,18 @@
 leafBlast(wth, emergence='2000-05-15', onset=1, duration=120, rhlim=90) 
 leafBlast_v1(tmp, rh, duration=120, startday=1) 
 }
+
 \arguments{
-  \item(wth) { Describe \code{xy} here }
-  \item(emergence) { Describe \code{xy} here }
-  \item(onset) { Describe \code{xy} here }
-  \item{tmp}{ Describe \code{xy} here }
-  \item{rh}{ Describe \code{xy} here }  
-  \item{duration}{ Describe \code{x} here }  
-  \item{startday}{ Describe \code{x} here }    
+  \item(wth){ Describe \code{xy} here }
+  \item(emergence){ Describe \code{xy} here }
+  \item(onset){ Describe \code{xy} here }
+  \item{duration}{ Describe \code{x} here }
   \item{rhlim}{ threshold to decide whethere leaves are wet or not }
-  
+  \item{tmp}{ Describe \code{xy} here }
+  \item{rh}{ Describe \code{xy} here }
+  \item{startday}{ Describe \code{x} here }
 }
+
 \details{
   ~~ If necessary, more details than the description above ~~
 }
@@ -43,7 +44,7 @@ tmptable <- cbind(0:10*12, rep(20, 11))
 dur <- 120
 relh <- vector(length=dur)
 tmp  <- vector(length=dur)
-day  <- seq(as.Date('2000-5-15'), len = dur, by = "1 day")
+day  <- seq(as.Date('2000-5-15'), len = dur, by = '1 day')
 for (d in 1:dur) {
 	relh[d] <- AFGen(rhtable, d)
 	tmp[d] <- AFGen(tmptable, d)

@@ -1,4 +1,9 @@
 
+# Author: 	Robert J. Hijmans, r.hijmans@gmail.com; Jorrel Khalil S. Aunario
+#Date: 6 February 2009
+# Version 0.1  
+# License GPL3
+
 require(RODBC)
 
 getLandCells <- function(){
