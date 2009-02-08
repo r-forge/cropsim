@@ -1,33 +1,35 @@
 
 
 daylength <- function(lat, doy) {
-	if (lat > 90) { stop("lat should be <= 90")
-	} else if (lat < -90) { stop("lat should be >= -90")}	
-	if (doy == 366) {  doy <- 365	}
-	if (doy < 1) {  doy <- 365 + doy	
-	} else if (doy > 365) { doy <- doy - 365 }
-	if (doy < 1) { stop('cannot understand value for doy') 
-	} else if (doy > 365) { stop('cannot understand value for doy') }
+	if (class(doy) == 'Date') { doy <- doyFromDate(doy) }
+	if (lat > 90) { stop("lat should be <= 90") 
+	} else if (lat < -90) { stop("lat should be >= -90") }	
+
+	doy[doy==366] <- 365
+	doy[doy < 1] <- 365 + doy[doy < 1]
+	doy[doy > 365] <- doy[doy > 365] - 365 
+	if (sum(doy[doy<1]) > 0) { stop('cannot understand value for doy') }
+	if (sum(doy[doy>365]) > 0) { stop('cannot understand value for doy') }
 
 #Ecological Modeling_, volume 80 (1995) pp. 87-95, called "A Model
 #Comparison for Daylength as a Function of Latitude and Day of the Year."
-  P <- asin(0.39795 * cos(0.2163108 + 2 * atan(0.9671396 * tan(0.00860*(doy-186)))))
-  a <-  (sin(0.8333*pi/180) + sin(lat*pi/180)*sin(P)) / (cos(lat*pi/180)*cos(P));
-  a <- min(max(a, -1), 1)
-  DL <- 24 - (24/pi) * acos(a)
-  return(DL)
+	P <- asin(0.39795 * cos(0.2163108 + 2 * atan(0.9671396 * tan(0.00860*(doy-186)))))
+	a <-  (sin(0.8333 * pi/180) + sin(lat * pi/180) * sin(P)) / (cos(lat * pi/180) * cos(P));
+	a <- min(max(a, -1), 1)
+	DL <- 24 - (24/pi) * acos(a)
+	return(DL)
 }
 
 
-
 daylength2 <- function(lat, doy) {
+	if (class(doy) == 'Date') { doy <- doyFromDate(doy) }
 	if (lat > 90) { stop("lat should be <= 90")
 	} else if (lat < -90) { stop("lat should be >= -90")}	
-	if (doy == 366) {  doy <- 365	}
-	if (doy < 1) {  doy <- 365 + doy	
-	} else if (doy > 365) { doy <- doy - 365 }
-	if (doy < 1) { stop('cannot understand value for doy') 
-	} else if (doy > 365) { stop('cannot understand value for doy') }
+	doy[doy==366] <- 365
+	doy[doy < 1] <- 365 + doy[doy < 1]
+	doy[doy > 365] <- doy[doy > 365] - 365 
+	if (sum(doy[doy<1]) > 0) { stop('cannot understand value for doy') }
+	if (sum(doy[doy>365]) > 0) { stop('cannot understand value for doy') }
 
 # after Goudriaan and Van Laar
 	RAD <- pi/180
@@ -47,3 +49,4 @@ daylength2 <- function(lat, doy) {
     DAYL <- 12* (1+(2/pi)* atan(C/sqrt(C*C+1)))
 	return(DAYL)
 }
+

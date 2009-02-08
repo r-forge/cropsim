@@ -41,14 +41,14 @@ daylength2(lat, doy)
 
 \author{ Robert J. Hijmans }
 \examples{
-	doy <- 88
-	year <- 1970
-	date <- dateFromDoy(doy, year)
-	date
-	dateFromDoy(-15, 2000)
-	doyFromDate(date)
-	isLeapYear(2000)
-	daysInYear(2000)
-	daysInYear(1999)
+doy <- 88
+year <- 1970
+date <- dateFromDoy(doy, year)
+date
+dateFromDoy(-15, 2000)
+doyFromDate(date)
+isLeapYear(2000)
+daysInYear(2000)
+daysInYear(1999)
 }
 \keyword{ spatial }
