@@ -7,13 +7,14 @@
   ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-sheathBlight(tmp, rh, duration=120, startday=30) 
+sheathBlight(wth, emergence='2000-05-15', onset=30,  duration=120, rhlim=90) 
 }
 \arguments{
-  \item{tmp}{ Describe \code{xy} here }
-  \item{rh}{ Describe \code{xy} here }  
+  \item{wth}{ Describe \code{xy} here }
+  \item{emergence}{ Describe \code{xy} here }
+  \item{onset}{ Describe \code{x} here }
   \item{duration}{ Describe \code{x} here }  
-  \item{startday}{ Describe \code{x} here }    
+  \item{rhlim}{ Describe \code{x} here }
 }
 \details{
   ~~ If necessary, more details than the description above ~~
@@ -30,18 +31,25 @@ sheathBlight(tmp, rh, duration=120, startday=30)
 \seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
 \examples{
 
-rhtable <- cbind(0:10*12, c(99.0, 98.5, 97, 96, 98.5, 96, 95.5, 96.5, 96, 95.5, 96))
-tmptable <- cbind(0:10*12, c(27.8, 27.8, 28, 27.9, 27.8, 27.8, 27.8, 27.7, 27.7, 27.7, 27.5))
+rhtable <- cbind(0:10*12, c(99.0, 98.5, 97, 96, 98.5, 96, 95.5, 96.5, 97, 95.5, 96))
+tmaxtable <- cbind(0:10*12, rep(33,11))
+tmintable <- cbind(0:10*12, c(22.63, 22.63, 22.88, 22.75, 22.5, 22.5, 22.5, 22.25, 22.38, 22.25, 22))
 dur <- 120
-rh <- vector(length=dur)
-tmp  <- vector(length=dur)
+relh <- vector(length=dur)
+tmax  <- vector(length=dur)
+tmin  <- vector(length=dur)
+day  <- seq(as.Date('2000-5-15'), len=dur, by='1 day')
+
 for (d in 1:dur) {
-	rh[d] <- AFGen(rhtable, d)
-	tmp[d] <- AFGen(tmptable, d)
+	relh[d] <- AFGen(rhtable, d)
+	tmax[d] <- AFGen(tmaxtable, d)
+	tmin[d] <- AFGen(tmintable, d)
 }	
-res <- sheathBlight(tmp, rh)
-splot(res)
 
+wth <- as.data.frame(cbind(relh, tmax, tmin))
+wth$day <- day
 
+res <- as.data.frame(sheathBlight(wth))
+splot2(res)
 }
 \keyword{ spatial }
