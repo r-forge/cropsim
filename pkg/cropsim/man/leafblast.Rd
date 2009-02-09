@@ -13,11 +13,11 @@ leafBlast_v1(tmp, rh, duration=120, startday=1)
 }
 
 \arguments{
-  \item(wth){ Describe \code{xy} here }
-  \item(emergence){ Describe \code{xy} here }
-  \item(onset){ Describe \code{xy} here }
-  \item{duration}{ Describe \code{x} here }
-  \item{rhlim}{ threshold to decide whethere leaves are wet or not }
+  \item{wth}{daily weather data frame containing relative humidity (relh), minimum temeperature (tmin), and maximum temperature (tmax)}
+  \item{emergence}{expected date of plant emergence}
+  \item{onset}{expected number of days until the onset of disease after emergence date}
+  \item{duration}{simulation duration}  
+  \item{rhlim}{threshold to decide whethere leaves are wet or not}
   \item{tmp}{ Describe \code{xy} here }
   \item{rh}{ Describe \code{xy} here }
   \item{startday}{ Describe \code{x} here }
@@ -55,10 +55,7 @@ tmax <- tmp + 5
 wth <- as.data.frame(cbind(tmin, tmax, relh))
 wth$day <-day
 
-
 res <- as.data.frame(leafBlast(wth, duration=120, onset=15))
-
-
 
 # example runs to create contour plot
 rhrange <- 1:10 * 3 + 70

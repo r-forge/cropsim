@@ -8,15 +8,15 @@
   ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-bactBlight(tmp, rh, duration=120, startday=1, rhlim=90) 
+bactBlight(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90) 
  
 }
 \arguments{
-  \item{tmp}{ Describe \code{xy} here }
-  \item{rh}{ Describe \code{xy} here }  
-  \item{duration}{ Describe \code{x} here }  
-  \item{startday}{ Describe \code{x} here }    
-  \item{rhlim}{ threshold to decide whethere leaves are wet or not }      
+  \item{wth}{daily weather data frame containing relative humidity (relh), minimum temeperature (tmin), and maximum temperature (tmax)}
+  \item{emergence}{expected date of plant emergence}
+  \item{onset}{expected number of days until the onset of disease after emergence date}
+  \item{duration}{simulation duration}  
+  \item{rhlim}{threshold to decide whethere leaves are wet or not}
 }
 \details{
   ~~ If necessary, more details than the description above ~~
@@ -34,24 +34,33 @@ bactBlight(tmp, rh, duration=120, startday=1, rhlim=90)
 \examples{
 
 rhtable <- cbind(0:10*12, c(99, 98.5, 97, 96, 98.5, 96, 95.5, 96.5, 97, 95.5, 96))
-tmptable <- cbind(0:10*12, rep(28, 11))
+tmaxtable <- cbind(0:10*12, rep(33,11))
+tmintable <- cbind(0:10*12, rep(23,11))
 dur <- 120
-rh <- vector(length=dur)
-tmp  <- vector(length=dur)
+relh <- vector(length=dur)
+tmax  <- vector(length=dur)
+tmin  <- vector(length=dur)
+day  <- seq(as.Date('2000-5-15'), len=dur, by='1 day')
+
 for (d in 1:dur) {
-	rh[d] <- AFGen(rhtable, d)
-	tmp[d] <- AFGen(tmptable, d)
+	relh[d] <- AFGen(rhtable, d)
+	tmax[d] <- AFGen(tmaxtable, d)
+	tmin[d] <- AFGen(tmintable, d)
 }	
+	
+#rh <- round(rh)
+wth <- as.data.frame(cbind(relh, tmax, tmin))
+wth$day <- day
 
-res <- bactBlight(tmp, rh)
-splot(res)
-
-
+res <- as.data.frame(bactBlight(wth, duration=120, onset=20, rhlim=90))
+splot2(res)
 
 
 # example runs to create contour plot
 rhrange <- 1:10 * 3 + 70
 tmprange <- 1:4 * 3 + 14
+day  <- seq(as.Date('2000-5-15'), len=dur, by='1 day')
+
 m <- matrix(NA, length(rhrange), length(tmprange))
 
 rhc <- 0
@@ -60,9 +69,12 @@ for (r in rhrange) {
 	tc <- 0
 	for (t in tmprange) {
 		tc <- tc + 1
-		rh <- rep(r, 120)
-		tmp <- rep(t, 120)
-		res <- bactBlight(tmp, rh)
+		relh <- rep(r, 120)
+		tmax <- rep(t+3, 120)
+		tmin <- rep(t-3, 120)
+		wth <- as.data.frame(cbind(relh, tmax, tmin))
+		wth$day <- day
+		res <- bactBlight(wth)
 		raudpc <- sum(res[,6]) / 120
 		m[rhc, tc] <- raudpc
 	}

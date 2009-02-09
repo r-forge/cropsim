@@ -12,11 +12,11 @@ brownSpot(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90)
  
 }
 \arguments{
-  \item{wth}{ Describe \code{xy} here }
-  \item{emergence}{ Describe \code{xy} here }  
-  \item{onset}{ Describe \code{x} here }    
-  \item{duration}{ Describe \code{x} here }  
-  \item{rhlim}{ threshold to decide whethere leaves are wet or not }      
+  \item{wth}{daily weather data frame containing relative humidity (relh), minimum temeperature (tmin), and maximum temperature (tmax)}
+  \item{emergence}{expected date of plant emergence}
+  \item{onset}{expected number of days until the onset of disease after emergence date}
+  \item{duration}{simulation duration}  
+  \item{rhlim}{threshold to decide whethere leaves are wet or not}
 }
 \details{
   ~~ If necessary, more details than the description above ~~

@@ -8,15 +8,15 @@
   ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-tungro(tmp, rh, duration=120, startday=1, rhlim=1) 
+tungro(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90) 
 
 }
 \arguments{
-  \item{tmp}{ Describe \code{xy} here }
-  \item{rh}{ Describe \code{xy} here }  
-  \item{duration}{ Describe \code{x} here }  
-  \item{startday}{ Describe \code{x} here }    
-  \item{rhlim}{ threshold to decide whethere leaves are wet or not }      
+  \item{wth}{daily weather data frame containing relative humidity (relh), minimum temeperature (tmin), and maximum temperature (tmax)}
+  \item{emergence}{expected date of plant emergence}
+  \item{onset}{expected number of days until the onset of disease after emergence date}
+  \item{duration}{simulation duration}  
+  \item{rhlim}{threshold to decide whethere leaves are wet or not}
 }
 \details{
   ~~ If necessary, more details than the description above ~~
@@ -34,18 +34,27 @@ tungro(tmp, rh, duration=120, startday=1, rhlim=1)
 \examples{
 
 rhtable <- cbind(0:10*12, c(99, 98.5, 97, 96, 98.5, 96, 95.5, 96.5, 97, 95.5, 96))
-tmptable <- cbind(0:10*12, c(31.5, 31.3, 31.3, 31.5, 31.5, 31.5, 31.3, 31.3, 31.4, 31.4, 31.5))
+tmaxtable <- cbind(0:10*10, rep(35,11))
+tmintable <- cbind(0:10*12, c(27.88, 27.5, 27.63, 28, 27.88, 27.88, 27.63, 27.63, 27.75, 27.75, 27.88))
 dur <- 120
-rh <- vector(length=dur)
-tmp  <- vector(length=dur)
+relh <- vector(length=dur)
+tmax  <- vector(length=dur)
+tmin  <- vector(length=dur)
+day  <- seq(as.Date('2000-5-15'), len=dur, by='1 day')
+
 for (d in 1:dur) {
-	rh[d] <- AFGen(rhtable, d)
-	tmp[d] <- AFGen(tmptable, d)
+	relh[d] <- AFGen(rhtable, d)
+	tmax[d] <- AFGen(tmaxtable, d)
+	tmin[d] <- AFGen(tmintable, d)
 }	
+	
+#rh <- round(rh)
+wth <- as.data.frame(cbind(relh, tmax, tmin))
+wth$day <- day
 
-res <- tungro(tmp, rh)
-splot(res)
 
+res <- as.data.frame(tungro(wth, duration=120, onset=25, rhlim=1))
+splot2(res)
 
 
 }
