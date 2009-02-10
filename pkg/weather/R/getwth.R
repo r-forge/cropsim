@@ -3,7 +3,6 @@
 # License GPL3
 # Version 0.1  January 2009
 
-
 getWthXY <- function(lon, lat, start="1993-1-1", end="2009-12-31") {
 	sday <- dayFromDate(start)
 	smon <- monthFromDate(start)
@@ -49,7 +48,7 @@ getWthXY <- function(lon, lat, start="1993-1-1", end="2009-12-31") {
 }
 
 
-DBgetWthXY <- function(database, table, lon, lat, raster=newRaster()) {
+DBgetWthXY <- function(database, table, lon, lat, raster=raster()) {
 	cell <- cellFromXY(raster, c(lon, lat))
 	return(DBgetWthCell(database, table, cell))
 }	
@@ -63,7 +62,7 @@ DBgetWthCell <- function(database, table, cell) {
 	return(data[,2:9])     
 }	
 
-AccessGetWthXY <- function(database, table, lon, lat, raster=newRaster()) {
+AccessGetWthXY <- function(database, table, lon, lat, raster=raster()) {
 	cell <- cellFromXY(raster, c(lon, lat))
 	return(AccessGetWthCell(database, table, cell))   }	
 
