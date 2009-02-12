@@ -48,22 +48,38 @@ getWthXY <- function(lon, lat, start="1993-1-1", end="2009-12-31") {
 }
 
 
-DBgetWthXY <- function(database, table, lon, lat, raster=raster()) {
-	cell <- cellFromXY(raster, c(lon, lat))
+DBgetWthXY <- function(database, table, lon, lat, rst=raster()) {
+	cell <- cellFromXY(rst, c(lon, lat))
 	return(DBgetWthCell(database, table, cell))
 }	
 
 DBgetWthCell <- function(database, table, cell) {
 	db <- odbcConnect(database)
 	query <- paste("SELECT * FROM", table, "WHERE cell =", cell)
-	data <- sqlQuery(db, query)
+	w <- sqlQuery(db, query)
 	odbcClose(db)
-	colnames(data) <- c("cell", "day", "srad", "tmax", "tmin", "prec", "tdew", "temp", "relh")
-	return(data[,2:9])     
+	colnames(w) <- c("cell", "day", "srad", "tmax", "tmin", "prec", "tdew", "temp", "relh")
+	rhnx <- rhMinMax(w$relh, w$tmin, w$tmax, w$temp) 
+	w$rhmn <- rhnx[,1]
+	w$rhmx <- rhnx[,2]
+	return(w[,-1])     
 }	
 
-AccessGetWthXY <- function(database, table, lon, lat, raster=raster()) {
-	cell <- cellFromXY(raster, c(lon, lat))
+
+DBgetWthLWXY <- function(database, table, lon, lat, rst=raster()) {
+	cell <- cellFromXY(rst, c(lon, lat))
+	return(DBgetWthLWCell(database, table, cell, lat))
+}	
+
+DBgetWthLWCell <- function(database, table, cell, latitude) {
+	w <- DBgetWthCell(database, table, cell)
+	w$lfwt <- LeafWetWithRain(latitude, w$day, w$relh, w$tmin, w$tmax, w$prec, FALSE)
+	return(w)
+}	
+									
+
+AccessGetWthXY <- function(database, table, lon, lat, rst=raster()) {
+	cell <- cellFromXY(rst, c(lon, lat))
 	return(AccessGetWthCell(database, table, cell))   }	
 
 	

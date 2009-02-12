@@ -11,22 +11,37 @@ eLW <- function(rhmin, rhmax, tmin) {
 }
 
 
-LW <- function(lat, date, rhavg, tmin, tmax, simple=TRUE) {
-	rh <- diurnalRH(lat, date, rhavg, tmin, tmax, tavg=(tmin+tmax)/2)
-	if (simple) {
-		return(length(rh[rh>=90]))
-	} else {
-		w <- rh
-		x <- (rh - 80) / (95 - 80)
-		w[rh > 95] <- 1
-		w[rh < 95] <- x[rh < 95]
-		w[rh < 80] <- 0
-		return(sum(w))
+LeafWet <- function(lat, date, rhavg, tmin, tmax, simple=TRUE) {
+	lw <- vector()
+	for (d in 1:length(date)) {
+		rh <- diurnalRH(lat, date[d], rhavg[d], tmin[d], tmax[d], tavg=(tmin[d]+tmax[d])/2)
+		if (simple) {
+			lw[d] <- length(rh[rh>=90])
+		} else {
+			w <- rh
+			x <- (rh - 80) / (95 - 80)
+			w[rh > 95] <- 1
+			w[rh < 95] <- x[rh < 95]
+			w[rh < 80] <- 0
+			lw[d] <- sum(w)
+		}
 	}
+	return(lw)
+}
+
+
+LeafWetWithRain <- function(lat, date, rhavg, tmin, tmax, prec, simple=TRUE) {
+	lw <- LeafWet(lat, date, rhavg, tmin, tmax, simple=simple)
+	prec[is.na(prec)] <- 0 
+	prhrs <- max(12, prec / 5)
+	return(lw + (1 - lw/24) * prhrs)
 }
 
 
 rhMinMax <- function(rhavg, tmin, tmax, tavg=(tmin+tmax)/2) {
+	tmin <- max(tmin, -5)
+	tmax <- max(tmax, -5)
+	tavg <- max(tavg, -5)
     es <- saturatedVaporPressure(tavg)
 	vp <- rhavg / 100 * es
     es <- saturatedVaporPressure(tmax)

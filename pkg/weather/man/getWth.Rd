@@ -12,9 +12,9 @@
 }
 \usage{
 getWthXY(lon, lat, start="1993-1-1", end="2009-12-31") 
-AccessGetWthXY(database, table, lon, lat, raster=newRaster()) 
+AccessGetWthXY(database, table, lon, lat, rst=raster()) 
 AccessGetWthCell(database, table, cell) 
-DBgetWthXY(database, table, lon, lat, raster=newRaster()) 
+DBgetWthXY(database, table, lon, lat, rst=raster()) 
 DBgetWthCell(database, table, cell) 
 }
 
@@ -25,7 +25,7 @@ DBgetWthCell(database, table, cell)
   \item{end}{ Late date }  
   \item{database}{ }
   \item{table}{ }  
-  \item{raster}{ Describe \code{x} here }  
+  \item{rst}{ Describe \code{x} here }  
   \item{cell}{ Describe \code{x} here }    
 }
 \details{
