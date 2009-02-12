@@ -8,7 +8,7 @@
   ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-leafBlast(wth, emergence='2000-05-15', onset=1, duration=120, rhlim=90) 
+leafBlast(wth, emergence='2000-05-15', onset=1, duration=120, rhlim=90, rainlim=5, Switch=1) 
 leafBlast_v1(tmp, rh, duration=120, startday=1) 
 }
 
@@ -16,11 +16,13 @@ leafBlast_v1(tmp, rh, duration=120, startday=1)
   \item{wth}{daily weather data frame containing relative humidity (relh), minimum temeperature (tmin), and maximum temperature (tmax)}
   \item{emergence}{expected date of plant emergence}
   \item{onset}{expected number of days until the onset of disease after emergence date}
-  \item{duration}{simulation duration}  
+  \item{duration}{simulation duration}
   \item{rhlim}{threshold to decide whethere leaves are wet or not}
   \item{tmp}{ Describe \code{xy} here }
   \item{rh}{ Describe \code{xy} here }
   \item{startday}{ Describe \code{x} here }
+  \item{rainlim}{ Describe \code{x} here }
+  \item{Switch}{ Describe \code{x} here }
 }
 
 \details{
@@ -38,24 +40,31 @@ leafBlast_v1(tmp, rh, duration=120, startday=1)
 \seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
 \examples{
 
-rhtable <- cbind(0:10*12, c(99, 97, 100, 97.5, 97.5, 96.5, 96.5, 98.5, 96.5, 97.5, 97.5))
+prectable <- cbind(0:10*12, c(5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5))
+rhmxtable <- cbind(0:10*12, c(99, 97, 100, 97.5, 97.5, 96.5, 96.5, 98.5, 96.5, 97.5, 97.5))
 tmptable <- cbind(0:10*12, rep(20, 11))
+lfwttable <- cbind (0:10*12, rep(18, 11))
 
 dur <- 120
-relh <- vector(length=dur)
+prec <- vector (length=dur)
+rhmx <- vector(length=dur)
 tmp  <- vector(length=dur)
-day  <- seq(as.Date('2000-5-15'), len = dur, by = '1 day')
+lfwt <- vector(length=dur)
+day  <- seq(as.Date('2000-5-15'), len = dur, by = "1 day")
 for (d in 1:dur) {
-	relh[d] <- AFGen(rhtable, d)
+	rhmx[d] <- AFGen(rhmxtable, d)
 	tmp[d] <- AFGen(tmptable, d)
-}	
+	prec[d] <- AFGen(prectable, d)
+    lfwt[d] <- AFGen(lfwttable, d)
+	}	
 #rh <- round(rh)
 tmin <- tmp - 5
 tmax <- tmp + 5
-wth <- as.data.frame(cbind(tmin, tmax, relh))
+wth <- as.data.frame(cbind(tmin, tmax, rhmx, prec, lfwt))
 wth$day <-day
 
-res <- as.data.frame(leafBlast(wth, duration=120, onset=15))
+
+res <- as.data.frame(leafBlast(wth, onset=15, duration=120))
 
 # example runs to create contour plot
 rhrange <- 1:10 * 3 + 70
@@ -70,11 +79,11 @@ for (r in rhrange) {
 	tc <- 0
 	for (t in tmprange) {
 		tc <- tc + 1
-		relh <- rep(r, 120)
+		rhmx <- rep(r, 120)
 		tmp <- rep(t, 120)
 		tmin <- tmp - 5
 		tmax <- tmp + 5
-		wth <- as.data.frame(cbind(tmin, tmax, relh))
+		wth <- as.data.frame(cbind(tmin, tmax, rhmx, prec, lfwt))
 		wth$day <-day
 
 		res <- leafBlast(wth)

@@ -1,18 +1,27 @@
 # Author: Serge Savary & Rene Pangga. 
 # R translation: Robert J. Hijmans, Rene Pangga, & Jorrel Aunario  r  hijmans@gmail.com (translated from STELLA LeafBlastMod v5)
 # International Rice Research Institute
-# Date :  2 February 2009
+# Date :  12 February 2009
 # Version 0.1
 # Licence GPL v3
+#Comparison of the use of wetness vs. RH + rain threshold
 
-
-leafBlast <- function(wth, emergence='2000-05-15', onset=1, duration=120, rhlim=90) {
+leafBlast <- function(wth, emergence='2000-05-15', onset=1, duration=120, rhlim=90, rainlim=5, Switch=1) {
 	emergence <- as.Date(emergence)
 	wth <- subset(wth, wth$day >= emergence)
-
+#average temperature
     tmp <- (wth$tmax + wth$tmin) / 2
-	rh <- wth$relh
-
+#maximum RH
+	rhx <- wth$rhmx
+#rain amount
+	rain <- wth$prec
+#rain intensity
+	rainhr <- wth$prhrs
+# wetness
+	W <- wth$lfwt
+#	crainint <- (1-(CW[day]/24))* rainint[day] 
+#	W <- CW[day] + crainint[day] 
+	
 	if (length(tmp) < duration) {
 		print("Incomplete weather data")
 		stop()
@@ -63,15 +72,23 @@ leafBlast <- function(wth, emergence='2000-05-15', onset=1, duration=120, rhlim=
 
 	# Parameters
 	AgeCoefRc <- cbind(0:24 * 5, c(1, 1, 1, 0.9, 0.8, 0.7, 0.64, 0.59, 0.53, 0.43, 0.32, 0.22, 0.16, 0.09, 0.03, 0.02, 0.02, 0.02, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01))
-	RHCoefRc  <- rh
-	RHCoefRc[] <- 0
-	RHCoefRc[rh >= rhlim] <- 1
- 	TempCoefRc <- cbind(2:9 * 5, c(0, 0.5, 1, 0.6, 0.2, 0.05, 0.01, 0))
+	
+	if (Switch==0) {
+		RHCoef  <- rhx
+
+	} else {
+		RHCoef <- W
+	}
+	
+	TempCoefRc <- cbind(2:9 * 5, c(0, 0.5, 1, 0.6, 0.2, 0.05, 0.01, 0))
+	RHCoefRc <- cbind (4 + (0:10) * 2, c(0, 0.02, 0.09, 0.19, 0.29, 0.43, 0.54, 0.63, 0.77, 0.88, 1.0))	
 	RcAgeTemp <- vector(length=duration)
 	RcAgeTemp[] <- 0
 	COFR <- vector(length=duration)
 	COFR[] <- 0
 	MatPer <- 20
+	
+	
 
 	for (day in 1:duration) {
 
@@ -109,8 +126,19 @@ leafBlast <- function(wth, emergence='2000-05-15', onset=1, duration=120, rhlim=
 			Sites[day] <- 0
 			break 
 		}
+		
+		if (Switch==0){
+			if (rhx[day] >= rhlim | rain[day] >= rainlim) {
+				RHCoef[day] <- 1
+			}
+		} else {
+#		W <- CW + rainint
+			RHCoef[day]<- AFGen (RHCoefRc, W[day])
+#		RHCoefRc <- W
+#		RHCoefRc[day] <- AFGen(RHCoefRc, day)
+		}		
 
-		RcAgeTemp[day] <- BaseRc * AFGen(AgeCoefRc, day) * AFGen(TempCoefRc, tmp[day]) * RHCoefRc[day]
+		RcAgeTemp[day] <- BaseRc * AFGen(AgeCoefRc, day) * AFGen(TempCoefRc, tmp[day]) * RHCoef[day]
 		Diseased[day] <- sum(infectious) + now_latent[day] + Removed[day]
 		Removed[day] <- sum(infectious) - now_infectious[day]
 
@@ -134,7 +162,7 @@ leafBlast <- function(wth, emergence='2000-05-15', onset=1, duration=120, rhlim=
 		TotalSites[day] <- Diseased[day] + Sites[day]
 		RGrowth[day] <- RRG * Sites[day] * (1-(TotalSites[day]/Sitemax))
 		Severity[day] <- (Diseased[day]-Removed[day])/(TotalSites[day] - Removed[day])*100
-
+#	print(c(day, RHCoef[day]))	
 	}
 
 	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased, Senesced, Rinfection, Rtransfer, RGrowth, RSenesced, Severity)
