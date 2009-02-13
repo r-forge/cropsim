@@ -63,8 +63,30 @@ DBgetWthCell <- function(database, table, cell) {
 	w$rhmn <- rhnx[,1]
 	w$rhmx <- rhnx[,2]
 	return(w[,-1])     
-}	
+}
 
+DBgetWthCellNoDSN <- function(table, cell, user, pwd, driver="MySQL ODBC 5.1 Driver", server="geo.irri.org", database="nasa") {
+	connString <- paste("DRIVER={",driver,"};SERVER=",server,";DATABASE=",database,";USER=",user,";PASSWORD=", pwd,";OPTION=27;",sep="")
+	cnt <-0
+	repeat {
+		cnt<-cnt+1
+		db <- odbcDriverConnect(connString)
+		if (db!=-1){
+			break
+		}
+		else if (cnt > 4) {
+			print(paste("Unable to connect to server (cell=", cell,")"))
+			break
+		}
+		rm(db)		
+	}
+	query <- paste("SELECT * FROM", table, "WHERE cell =", cell)
+	data <- sqlQuery(db, query)
+	odbcClose(db)
+	rm(db)
+	colnames(data) <- c("cell", "day", "srad", "tmax", "tmin", "prec", "tdew", "temp", "relh")
+	return(data[,2:9])     
+}
 
 DBgetWthLWXY <- function(database, table, lon, lat, rst=raster()) {
 	cell <- cellFromXY(rst, c(lon, lat))

@@ -5,6 +5,7 @@
 # License GPL3
 
 require(RODBC)
+require(raster)
 
 getLandCells <- function(){
 	con <- odbcConnect('NASAclim')
@@ -20,7 +21,6 @@ spatSim <- function(raster, model, emergence='2000-7-15', ...)  {
 	}
 	onedegworld <- raster()
 	cells <- cellsFromBbox(onedegworld, raster)
-	cells <- cells -1
 	if (ncell(raster) != length(cells)) { stop("not good") }
 
 	result <- vector(length=length(cells))
@@ -28,12 +28,13 @@ spatSim <- function(raster, model, emergence='2000-7-15', ...)  {
 	cnt <- 0
 	for (cell in cells) {
 		cnt <- cnt + 1			
-		if(sum(cell==land)>0){
-			wth <- DBgetWthCell('NASAclim', 'daily', cell)
+		if(sum((cell-1)==land)>0){
+            xy <- xyFromCell(onedegworld, cell)		    
+			wth <- DBgetWthLWCell('NASAclim', 'daily', cell, xy[2])
 			wth$year <- yearFromDate(wth$day)
 			wth$prec[is.na(wth$prec)] <- 0
 			res  <- model(wth, ...)
-			result[cnt] <- sum(res[,6]) / 120
+			result[cnt] <- sum(res[,12])
 		}
 		else{
 			result[cnt] <- NA

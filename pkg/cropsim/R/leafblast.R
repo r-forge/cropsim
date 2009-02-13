@@ -15,8 +15,6 @@ leafBlast <- function(wth, emergence='2000-05-15', onset=1, duration=120, rhlim=
 	rhx <- wth$rhmx
 #rain amount
 	rain <- wth$prec
-#rain intensity
-	rainhr <- wth$prhrs
 # wetness
 	W <- wth$lfwt
 #	crainint <- (1-(CW[day]/24))* rainint[day] 

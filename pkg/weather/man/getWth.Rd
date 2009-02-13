@@ -3,6 +3,7 @@
 \alias{AccessGetWthCell}
 \alias{DBgetWthXY}
 \alias{DBgetWthCell}
+\alias{DBgetWthCellNoDSN}
 \alias{getWthXY}
 
 
@@ -15,7 +16,8 @@ getWthXY(lon, lat, start="1993-1-1", end="2009-12-31")
 AccessGetWthXY(database, table, lon, lat, rst=raster()) 
 AccessGetWthCell(database, table, cell) 
 DBgetWthXY(database, table, lon, lat, rst=raster()) 
-DBgetWthCell(database, table, cell) 
+DBgetWthCell(database, table, cell)
+DBgetWthCellNoDSN(table, cell, user, pwd, driver="MySQL ODBC 5.1 Driver", server="geo.irri.org", database="nasa") 
 }
 
 \arguments{
@@ -26,7 +28,11 @@ DBgetWthCell(database, table, cell)
   \item{database}{ }
   \item{table}{ }  
   \item{rst}{ Describe \code{x} here }  
-  \item{cell}{ Describe \code{x} here }    
+  \item{cell}{ Describe \code{x} here }
+  \item{user}{ Describe \code{x} here }
+  \item{pwd}{ Describe \code{x} here }
+  \item{driver}{ Describe \code{x} here }
+  \item{server}{ Describe \code{x} here }
 }
 \details{
   ~~ If necessary, more details than the description above ~~
