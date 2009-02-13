@@ -1,17 +1,23 @@
 # Author: Serge Savary & Rene Pangga. 
-# R translation: Robert J. Hijmans & Rene Pangga, r.hijmans@gmail.com (translated from STELLA BSMod v6)
+# R translation: Robert J. Hijmans , Rene Pangga &  Jorrel Aunario r.hijmans@gmail.com (translated from STELLA BSMod v6)
 # International Rice Research Institute
-# Date :  28 January 2009
+# Date :  13 February 2009
 # Version 0.1
 # Licence GPL v3
+# comparison of wetness (Switch=1) vs. maximum RH + rain threshold (Switch=0)
 
-brownSpot <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90) {
+brownSpot <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainlim=5, Switch=1) {
 	emergence <- as.Date(emergence)
 	wth <- subset(wth, wth$day >= emergence)
-
+#average temperature
 	tmp <- (wth$tmax + wth$tmin) / 2
-	rh <- wth$relh
-
+#maximum RH
+	rhx <- wth$rhmx
+#rain amount
+	rain <- wth$prec
+#wetness
+	W <- wth$lfwt
+	
 	if (length(tmp) < duration) {
 		print("Incomplete weather data")
 		stop()
@@ -52,6 +58,8 @@ brownSpot <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim
 	RGrowth[] <- 0
 	RSenesced <- vector(length=duration)
 	RSenesced[] <- 0
+	Severity <- vector (length=duration)
+	Severity[] <- 0
 
 	# Boxcar
 	infectious <- vector(length=duration)
@@ -61,10 +69,15 @@ brownSpot <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim
 
 	# Parameters
 	AgeCoefRc <- cbind(0:6 * 20, c(0.35, 0.35, 0.35, 0.47, 0.59, 0.71, 1.0))
-	RHCoefRc <- rh
-	RHCoefRc[] <- 0
-	RHCoefRc[rh >= rhlim] <- 1
+	
+	if (Switch==0){
+		RHCoef <- rhx
+	} else {
+		RHCoef <- W
+	}
+	
 	TempCoefRc <- cbind(15+(0:4) * 5, c(0, 0.06, 1.0, 0.85, 0.16))
+	RHCoefRc <- cbind(3 + (0:7) * 3, c(0.12, 0.20, 0.38, 0.46, 0.60, 0.73, 0.87, 1.0))
 	RcAgeTemp <- vector(length=duration)
 	RcAgeTemp[] <- 0
 	COFR <- vector(length=duration)
@@ -107,8 +120,17 @@ brownSpot <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim
 			break 
 		}
 
-
-		RcAgeTemp[day] <- BaseRc * AFGen(AgeCoefRc, day) * AFGen(TempCoefRc, tmp[day]) * RHCoefRc[day]
+		if (Switch==0){
+			if (rhx[day] >= rhlim | rain[day] >= rainlim) {
+				RHCoef[day] <- 1
+			}
+		} else {
+#		W <- CW + rainint
+			RHCoef[day]<- AFGen (RHCoefRc, W[day])
+#		RHCoefRc <- W
+#		RHCoefRc[day] <- AFGen(RHCoefRc, day)
+		}		
+		RcAgeTemp[day] <- BaseRc * AFGen(AgeCoefRc, day) * AFGen(TempCoefRc, tmp[day]) * RHCoef[day]
 			
 		Diseased[day] <- sum(infectious) + now_latent[day] + Removed[day]
 		Removed[day] <- sum(infectious) - now_infectious[day]
@@ -132,13 +154,14 @@ brownSpot <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim
 
 		TotalSites[day] <- Diseased[day] + Sites[day]
 		RGrowth[day] <- RRG * Sites[day] * (1-(TotalSites[day]/Sitemax))
+		Severity[day] <- (Diseased[day]-Removed[day])/(TotalSites[day] - Removed[day])*100
 	}
 
-	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased, Senesced, Rinfection, Rtransfer, RGrowth, RSenesced)
+	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased, Senesced, Rinfection, Rtransfer, RGrowth, RSenesced, Severity)
 	res <- res[1:day,]
 	#res <- Diseased / AllSites 
 	res <- cbind(1:length(res[,1]), res)
-	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased", "senesced", "rateinf", "rtransfer", "rgrowth", "rsenesced")
+	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased", "senesced", "rateinf", "rtransfer", "rgrowth", "rsenesced", "severity")
 	return(res)
 }
 
