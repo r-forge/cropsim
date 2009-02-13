@@ -30,7 +30,7 @@ spatSim <- function(raster, model, emergence='2000-7-15', ...)  {
 		cnt <- cnt + 1			
 		if(sum((cell-1)==land)>0){
             xy <- xyFromCell(onedegworld, cell)		    
-			wth <- DBgetWthLWCell('NASAclim', 'daily', cell, xy[2])
+			wth <- DBgetWthLWCellNoDSN('daily', cell, xy[2], "gisuser", "gis1234")
 			wth$year <- yearFromDate(wth$day)
 			wth$prec[is.na(wth$prec)] <- 0
 			res  <- model(wth, ...)

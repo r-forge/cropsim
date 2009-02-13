@@ -98,7 +98,12 @@ DBgetWthLWCell <- function(database, table, cell, latitude) {
 	w$lfwt <- LeafWetWithRain(latitude, w$day, w$relh, w$tmin, w$tmax, w$prec, FALSE)
 	return(w)
 }	
-									
+
+DBgetWthLWCellNoDSN <- function(table, cell, latitude, user, pwd, ...) {
+	w <- DBgetWthCellNoDSN(table, cell, user, pwd)
+	w$lfwt <- LeafWetWithRain(latitude, w$day, w$relh, w$tmin, w$tmax, w$prec, FALSE)
+	return(w)
+}
 
 AccessGetWthXY <- function(database, table, lon, lat, rst=raster()) {
 	cell <- cellFromXY(rst, c(lon, lat))
