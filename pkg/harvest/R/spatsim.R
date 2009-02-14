@@ -20,7 +20,7 @@ spatSim <- function(raster, model, emergence='2000-7-15', track=1:ncell(raster),
 	if (!all(resolution(raster) == c(1,1))) {
 		stop('raster has wrong resolution')
 	}
-	
+
 	onedegworld <- raster()
 	cells <- cellsFromBbox(onedegworld, raster)
 	if (ncell(raster) != length(cells)) { stop("not good") }
@@ -29,14 +29,14 @@ spatSim <- function(raster, model, emergence='2000-7-15', track=1:ncell(raster),
 	land <- getLandCells()
 	cnt <- 0
 	for (cell in cells) {
-		if (cell %in% track) {
-			# for debugging or progress tracking
-			print(cell) 
-		}
 		cnt <- cnt + 1			
+		if (cnt %in% track) {
+			# for debugging or progress tracking
+			cat(cell, '\n' ) 
+		}
 		if(sum((cell-1)==land)>0){
             xy <- xyFromCell(onedegworld, cell)		    
-			wth <- DBgetWthLWCellNoDSN('daily', cell, xy[2], user, pwd)
+			wth <- DBgetWthCell('nasaclim', 'daily', cell)
 			wth$year <- yearFromDate(wth$day)
 			wth$prec[is.na(wth$prec)] <- 0
 			res  <- model(wth, ...)
