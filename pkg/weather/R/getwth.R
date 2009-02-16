@@ -54,7 +54,20 @@ DBgetWthXY <- function(database, table, lon, lat, rst=raster()) {
 }	
 
 DBgetWthCell <- function(database, table, cell) {
-	db <- odbcConnect(database)
+	cnt <-0
+	repeat {
+		cnt<-cnt+1
+		db <- odbcConnect(database)
+		if (db!=-1){
+			break
+		}
+		else if (cnt > 4) {
+			print(paste("Unable to connect to server (cell=", cell,")"))
+			break
+		}
+		rm(db)
+		print(paste("Retrying. (cell =",cell,", retries =",cnt))
+	}
 	query <- paste("SELECT * FROM", table, "WHERE cell =", cell)
 	w <- sqlQuery(db, query)
 	odbcClose(db)
