@@ -47,7 +47,6 @@ getWthXY <- function(lon, lat, start="1993-1-1", end="2009-12-31") {
 	return(lns)
 }
 
-
 DBgetWthXY <- function(database, table, lon, lat, rst=raster()) {
 	cell <- cellFromXY(rst, c(lon, lat))
 	return(DBgetWthCell(database, table, cell))
@@ -62,11 +61,11 @@ DBgetWthCell <- function(database, table, cell) {
 			break
 		}
 		else if (cnt > 4) {
-			print(paste("Unable to connect to server (cell=", cell,")"))
-			break
+			cat("Unable to connect to server (cell=", cell,") \n", sep="")
+			stop();
 		}
 		rm(db)
-		print(paste("Retrying. (cell =",cell,", retries =",cnt))
+		cat("Retrying to connect. (cell=",cell,", retries=",cnt, ") \n", sep="")
 	}
 	query <- paste("SELECT * FROM", table, "WHERE cell =", cell)
 	w <- sqlQuery(db, query)
@@ -88,10 +87,11 @@ DBgetWthCellNoDSN <- function(table, cell, user, pwd, driver="MySQL ODBC 5.1 Dri
 			break
 		}
 		else if (cnt > 4) {
-			print(paste("Unable to connect to server (cell=", cell,")"))
-			break
+			cat("Unable to connect to server (cell=", cell,") \n", sep="")
+			stop();
 		}
-		rm(db)		
+		rm(db)
+		cat("Retrying to connect. (cell=",cell,", retries=",cnt, ") \n", sep="")
 	}
 	query <- paste("SELECT * FROM", table, "WHERE cell =", cell)
 	data <- sqlQuery(db, query)
