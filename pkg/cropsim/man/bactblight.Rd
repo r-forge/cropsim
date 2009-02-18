@@ -8,7 +8,7 @@
   ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-bactBlight(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90) 
+bactBlight(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainlim=5, switch=1) 
  
 }
 \arguments{
@@ -16,7 +16,12 @@ bactBlight(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90)
   \item{emergence}{expected date of plant emergence}
   \item{onset}{expected number of days until the onset of disease after emergence date}
   \item{duration}{simulation duration}  
-  \item{rhlim}{threshold to decide whethere leaves are wet or not}
+  \item{rhlim}{threshold to decide whether leaves are wet or not}
+  \item{tmp}{ Describe \code{xy} here }
+  \item{rh}{ Describe \code{xy} here }
+  \item{startday}{ Describe \code{x} here }
+  \item{rainlim}{threshold to decide whether leaves are wet or not}
+  \item{switch}{simulate RHmax or rain threshold (0) or wetness (1)}
 }
 \details{
   ~~ If necessary, more details than the description above ~~
@@ -33,35 +38,38 @@ bactBlight(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90)
 \seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
 \examples{
 
-rhtable <- cbind(0:10*12, c(99, 98.5, 97, 96, 98.5, 96, 95.5, 96.5, 97, 95.5, 96))
-tmaxtable <- cbind(0:10*12, rep(33,11))
-tmintable <- cbind(0:10*12, rep(23,11))
+prectable <- cbind(0:10*12, c(5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5))
+rhmxtable <- cbind(0:10*12, c(99, 98.5, 97, 96, 98.5, 96, 95.5, 96.5, 97, 95.5, 96))
+tmptable <- cbind(0:10*12, rep(28, 11))
+lfwttable <- cbind (0:10*12, rep(24, 11))
+
 dur <- 120
-relh <- vector(length=dur)
-tmax  <- vector(length=dur)
-tmin  <- vector(length=dur)
-day  <- seq(as.Date('2000-5-15'), len=dur, by='1 day')
-
+prec <- vector (length=dur)
+rhmx <- vector(length=dur)
+tmp  <- vector(length=dur)
+lfwt <- vector(length=dur)
+day  <- seq(as.Date('2000-5-15'), len = dur, by = "1 day")
 for (d in 1:dur) {
-	relh[d] <- AFGen(rhtable, d)
-	tmax[d] <- AFGen(tmaxtable, d)
-	tmin[d] <- AFGen(tmintable, d)
-}	
-	
+	rhmx[d] <- AFGen(rhmxtable, d)
+	tmp[d] <- AFGen(tmptable, d)
+	prec[d] <- AFGen(prectable, d)
+    lfwt[d] <- AFGen(lfwttable, d)
+	}	
 #rh <- round(rh)
-wth <- as.data.frame(cbind(relh, tmax, tmin))
-wth$day <- day
+tmin <- tmp - 5
+tmax <- tmp + 5
+wth <- as.data.frame(cbind(tmin, tmax, rhmx, prec, lfwt))
+wth$day <-day
 
-res <- as.data.frame(bactBlight(wth, duration=120, onset=20, rhlim=90))
-splot2(res)
 
+res <- as.data.frame(bactBlight(wth, onset=30, duration=120))
 
 # example runs to create contour plot
 rhrange <- 1:10 * 3 + 70
 tmprange <- 1:4 * 3 + 14
-day  <- seq(as.Date('2000-5-15'), len=dur, by='1 day')
-
 m <- matrix(NA, length(rhrange), length(tmprange))
+
+day  <- seq(as.Date('2000-5-15'), len = 120, by = "1 day")
 
 rhc <- 0
 for (r in rhrange) {
@@ -69,11 +77,13 @@ for (r in rhrange) {
 	tc <- 0
 	for (t in tmprange) {
 		tc <- tc + 1
-		relh <- rep(r, 120)
-		tmax <- rep(t+3, 120)
-		tmin <- rep(t-3, 120)
-		wth <- as.data.frame(cbind(relh, tmax, tmin))
-		wth$day <- day
+		rhmx <- rep(r, 120)
+		tmp <- rep(t, 120)
+		tmin <- tmp - 5
+		tmax <- tmp + 5
+		wth <- as.data.frame(cbind(tmin, tmax, rhmx, prec, lfwt))
+		wth$day <-day
+
 		res <- bactBlight(wth)
 		raudpc <- sum(res[,6]) / 120
 		m[rhc, tc] <- raudpc

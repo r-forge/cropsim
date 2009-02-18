@@ -1,12 +1,12 @@
 # Author: Serge Savary & Rene Pangga. 
 # R translation: Robert J. Hijmans , Rene Pangga &  Jorrel Aunario r.hijmans@gmail.com (translated from STELLA BSMod v6)
 # International Rice Research Institute
-# Date :  13 February 2009
+# Date :  19 February 2009
 # Version 0.1
 # Licence GPL v3
 # comparison of wetness (Switch=1) vs. maximum RH + rain threshold (Switch=0)
 
-brownSpot <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainlim=5, Switch=1) {
+brownSpot <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainlim=5, switch=1) {
 	emergence <- as.Date(emergence)
 	wth <- subset(wth, wth$day >= emergence)
 #average temperature
@@ -68,18 +68,18 @@ brownSpot <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim
 	latency[] <- 0
 
 	# Parameters
-	AgeCoefRc <- cbind(0:6 * 20, c(0.35, 0.35, 0.35, 0.47, 0.59, 0.71, 1.0))
 	
-	if (Switch==0){
+	if (switch==0){
 		RHCoef <- rhx
 	} else {
 		RHCoef <- W
 	}
 	
+	AgeCoefRc <- cbind(0:6 * 20, c(0.35, 0.35, 0.35, 0.47, 0.59, 0.71, 1.0))
 	TempCoefRc <- cbind(15+(0:4) * 5, c(0, 0.06, 1.0, 0.85, 0.16))
 	RHCoefRc <- cbind(3 + (0:7) * 3, c(0.12, 0.20, 0.38, 0.46, 0.60, 0.73, 0.87, 1.0))
-	RcAgeTemp <- vector(length=duration)
-	RcAgeTemp[] <- 0
+	Rc <- vector(length=duration)
+	Rc[] <- 0
 	COFR <- vector(length=duration)
 	COFR[] <- 0
 	MatPer <- 20
@@ -120,17 +120,15 @@ brownSpot <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim
 			break 
 		}
 
-		if (Switch==0){
+		if (switch==0){
 			if (rhx[day] >= rhlim | rain[day] >= rainlim) {
 				RHCoef[day] <- 1
 			}
 		} else {
-#		W <- CW + rainint
 			RHCoef[day]<- AFGen (RHCoefRc, W[day])
-#		RHCoefRc <- W
-#		RHCoefRc[day] <- AFGen(RHCoefRc, day)
 		}		
-		RcAgeTemp[day] <- BaseRc * AFGen(AgeCoefRc, day) * AFGen(TempCoefRc, tmp[day]) * RHCoef[day]
+
+		Rc[day] <- BaseRc * AFGen(AgeCoefRc, day) * AFGen(TempCoefRc, tmp[day]) * RHCoef[day]
 			
 		Diseased[day] <- sum(infectious) + now_latent[day] + Removed[day]
 		Removed[day] <- sum(infectious) - now_infectious[day]
@@ -141,7 +139,7 @@ brownSpot <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim
 			# initialization of the disease
 			Rinfection[day] <- initInfection
 		} else if (day > onset) {
-			Rinfection[day] <- now_infectious[day] * RcAgeTemp[day] * (COFR[day]^AGGR)
+			Rinfection[day] <- now_infectious[day] * Rc[day] * (COFR[day]^AGGR)
 		} else {
 			Rinfection[day] <- 0
 		}
