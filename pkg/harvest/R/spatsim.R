@@ -36,7 +36,7 @@ spatSim <- function(raster, model, emergence='2000-7-15', track=1:ncell(raster),
 		}
 		if(sum((cell-1)==land)>0){
             xy <- xyFromCell(onedegworld, cell)		    
-			wth <- DBgetWthCell('nasaclim', 'daily', cell)
+			wth <- DBgetWthCell('nasaclim', 'daily', cell-1)
 			wth$year <- yearFromDate(wth$day)
 			wth$prec[is.na(wth$prec)] <- 0
 			res  <- model(wth, ...)
