@@ -1,17 +1,24 @@
 # Author: Serge Savary & Rene Pangga. 
 # R translation: Rene Pangga, RJH, JA (translated from STELLA ShBMod v6)
 # International Rice Research Institute
-# Date :  2  February 2009
+# Date :  19  February 2009
 # Version 0.1
 # Licence GPL v3
+#Comparison of the use of wetness (wetness=1) vs. RH + rain threshold (wetness=0)
 
-sheathBlight <- function(wth, emergence='2000-05-15', onset=30,  duration=120, rhlim=90) {
+sheathBlight <- function(wth, emergence='2000-05-15', onset=30, duration=120, rhlim=90, rainlim=5, wetness=1) {
 	emergence <- as.Date(emergence)
 	wth <- subset(wth, wth$day >= emergence)
 
-	tmp <- (wth$tmax + wth$tmin) / 2
-	rh <- wth$relh
-
+#average temperature
+    tmp <- (wth$tmax + wth$tmin) / 2
+#maximum RH
+	rhx <- wth$rhmx
+#rain amount
+	rain <- wth$prec
+# wetness
+	W <- wth$lfwt	
+	
 	if (length(tmp) < duration) {
 		print("Incomplete weather data")
 		stop()
@@ -64,11 +71,18 @@ sheathBlight <- function(wth, emergence='2000-05-15', onset=30,  duration=120, r
 	latency[] <- 0
 
 	# Parameters
+	if (wetness==0) {
+		RHCoef  <- rhx
+
+	} else {
+		RHCoef <- W
+	}
+	
 	AgeCoefRc <- cbind(0:12 * 10, c(0.84, 0.84, 0.84, 0.84, 0.84, 0.84, 0.83, 0.88, 0.88, 1.0, 1.0, 1.0, 1.0))
-	RHCoefRc <- cbind(0:20 * 5, c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.24, 0.87, 0.96, 1.0))
+	RHCoefRc <- cbind(9 + (0:5) * 3, c(0.24, 0.41, 0.68, 0.94, 0.97, 1.0))
 	TempCoefRc <- cbind(3:9 * 4, c(0, 0.42, 0.94, 0.94, 1.0, 0.85, 0.64))
-	RcAgeTemp <- vector(length=duration)
-	RcAgeTemp[] <- 0
+	Rc <- vector(length=duration)
+	Rc[] <- 0
 	COFR <- vector(length=duration)
 	COFR[] <- 0
 
@@ -107,8 +121,15 @@ sheathBlight <- function(wth, emergence='2000-05-15', onset=30,  duration=120, r
 			Sites[day] <- 0
 			break 
 		}
+		if (wetness==0){
+			if (rhx[day] >= rhlim | rain[day] >= rainlim) {
+				RHCoef[day] <- 1
+			}
+		} else {
+			RHCoef[day]<- AFGen (RHCoefRc, W[day])
+		}		
 		
-		RcAgeTemp[day] <- BaseRc * AFGen(AgeCoefRc, day) * AFGen(TempCoefRc, tmp[day]) * AFGen(RHCoefRc, rh[day])
+		Rc[day] <- BaseRc * AFGen(AgeCoefRc, day) * AFGen(TempCoefRc, tmp[day]) * RHCoef[day]
 		
 		Diseased[day] <- sum(infectious) + now_latent[day]
 		Removed[day] <- sum(infectious) - now_infectious[day]
@@ -119,7 +140,7 @@ sheathBlight <- function(wth, emergence='2000-05-15', onset=30,  duration=120, r
 			# start disease 
 			Rinfection[day] <- initInfection
 		} else if (day > onset) {
-			Rinfection[day] <- now_infectious[day] * RcAgeTemp[day] * (COFR[day]^AGGR)
+			Rinfection[day] <- now_infectious[day] * Rc[day] * (COFR[day]^AGGR)
 		} else {
 			Rinfection[day] <- 0
 		}
