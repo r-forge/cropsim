@@ -6,7 +6,7 @@
 # Licence GPL v3
 #Comparison of the use of wetness (wetness=1) vs. RH + rain threshold (wetness=0)
 
-sheathBlight <- function(wth, emergence='2000-05-15', onset=30, duration=120, rhlim=90, rainlim=5, wetness=1) {
+sheathBlight <- function(wth, emergence='2000-05-15', onset=30, duration=120, rhlim=90, rainlim=5, wetness=0) {
 	emergence <- as.Date(emergence)
 	wth <- subset(wth, wth$day >= emergence)
 
@@ -79,7 +79,7 @@ sheathBlight <- function(wth, emergence='2000-05-15', onset=30, duration=120, rh
 	}
 	
 	AgeCoefRc <- cbind(0:12 * 10, c(0.84, 0.84, 0.84, 0.84, 0.84, 0.84, 0.83, 0.88, 0.88, 1.0, 1.0, 1.0, 1.0))
-	RHCoefRc <- cbind(9 + (0:5) * 3, c(0.24, 0.41, 0.68, 0.94, 0.97, 1.0))
+	RHCoefRc <- cbind(0:8 * 3, c(0, 0, 0, 0.24, 0.41, 0.68, 0.94, 0.97, 1.0))
 	TempCoefRc <- cbind(3:9 * 4, c(0, 0.42, 0.94, 0.94, 1.0, 0.85, 0.64))
 	Rc <- vector(length=duration)
 	Rc[] <- 0

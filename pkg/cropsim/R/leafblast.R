@@ -4,9 +4,9 @@
 # Date :  18 February 2009
 # Version 0.1
 # Licence GPL v3
-#Comparison of the use of wetness (switch=1) vs. RH + rain threshold (switch=0)
+#Comparison of the use of wetness (1) vs. RH + rain threshold (0)
 
-leafBlast <- function(wth, emergence='2000-05-15', onset=1, duration=120, rhlim=90, rainlim=5, switch=1) {
+leafBlast <- function(wth, emergence='2000-05-15', onset=1, duration=120, rhlim=90, rainlim=5, wetness=0) {
 	emergence <- as.Date(emergence)
 	wth <- subset(wth, wth$day >= emergence)
 #average temperature
@@ -67,7 +67,7 @@ leafBlast <- function(wth, emergence='2000-05-15', onset=1, duration=120, rhlim=
 	latency[] <- 0
 
 	# Parameters
-	if (switch==0) {
+	if (wetness==0) {
 		RHCoef  <- rhx
 
 	} else {
@@ -122,7 +122,7 @@ leafBlast <- function(wth, emergence='2000-05-15', onset=1, duration=120, rhlim=
 			break 
 		}
 		
-		if (switch==0){
+		if (wetness==0){
 			if (rhx[day] >= rhlim | rain[day] >= rainlim) {
 				RHCoef[day] <- 1
 			}

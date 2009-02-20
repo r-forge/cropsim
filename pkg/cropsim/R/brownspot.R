@@ -6,7 +6,7 @@
 # Licence GPL v3
 # comparison of wetness (Switch=1) vs. maximum RH + rain threshold (Switch=0)
 
-brownSpot <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainlim=5, switch=1) {
+brownSpot <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainlim=5, wetness=0) {
 	emergence <- as.Date(emergence)
 	wth <- subset(wth, wth$day >= emergence)
 #average temperature
@@ -69,7 +69,7 @@ brownSpot <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim
 
 	# Parameters
 	
-	if (switch==0){
+	if (wetness==0){
 		RHCoef <- rhx
 	} else {
 		RHCoef <- W
@@ -120,7 +120,7 @@ brownSpot <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim
 			break 
 		}
 
-		if (switch==0){
+		if (wetness==0){
 			if (rhx[day] >= rhlim | rain[day] >= rainlim) {
 				RHCoef[day] <- 1
 			}

@@ -8,7 +8,7 @@
   ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-brownSpot(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainlim=5, switch=1) 
+brownSpot(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainlim=5, wetness=0) 
  
 }
 \arguments{
@@ -18,7 +18,7 @@ brownSpot(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainlim
   \item{duration}{simulation duration}  
   \item{rhlim}{threshold to decide whether leaves are wet or not}
   \item{rainlim} {threshold to decide whether leaves are wet or not due to rain}
-  \item{switch} {switch to simulate wetness (1) or use RH max or rain threshold (0)}
+  \item{wetness} {switch to simulate wetness (1) or use RH max or rain threshold (0)}
 }
 \details{
   ~~ If necessary, more details than the description above ~~

@@ -8,7 +8,7 @@
   ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-bactBlight(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainlim=5, switch=1) 
+bactBlight(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainlim=5, wetness=0) 
  
 }
 \arguments{
@@ -21,7 +21,7 @@ bactBlight(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainli
   \item{rh}{ Describe \code{xy} here }
   \item{startday}{ Describe \code{x} here }
   \item{rainlim}{threshold to decide whether leaves are wet or not}
-  \item{switch}{simulate RHmax or rain threshold (0) or wetness (1)}
+  \item{wetness}{simulate RHmax or rain threshold (0) or wetness (1)}
 }
 \details{
   ~~ If necessary, more details than the description above ~~

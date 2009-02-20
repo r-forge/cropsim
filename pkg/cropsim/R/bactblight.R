@@ -8,7 +8,7 @@
 # comparison of wetness (switch=1) vs. maximum RH + rain threshold (switch=0)
 
 
-bactBlight <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainlim=5, switch=1) {
+bactBlight <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainlim=5, wetness=0) {
 	emergence <- as.Date(emergence)
 	wth <- subset(wth, wth$day >= emergence)
 
@@ -71,7 +71,7 @@ bactBlight <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhli
 	latency[] <- 0
 
 	#Parameters
-	if (switch==0){
+	if (wetness==0){
 		RHCoef <- rhx
 	} else {
 		RHCoef <- W
@@ -122,7 +122,7 @@ bactBlight <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhli
 			Sites[day] <- 0
 			break 
 		}
-		if (switch==0){
+		if (wetness==0){
 			if (rhx[day] >= rhlim | rain[day] >= rainlim) {
 				RHCoef[day] <- 1
 			}

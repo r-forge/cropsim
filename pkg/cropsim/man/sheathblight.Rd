@@ -1,13 +1,14 @@
 \name{sheathBlight}
 \alias{sheathBlight}
-\alias{sheathBlight_v1)
+\alias{sheathBlight_v1}
+
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{ ~~function to do ... ~~ }
 \description{
   ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-sheathBlight(wth, emergence='2000-05-15', onset=30,  duration=120, rhlim=90, rainlim=5, wetness=1) 
+sheathBlight(wth, emergence='2000-05-15', onset=30,  duration=120, rhlim=90, rainlim=5, wetness=0) 
 }
 \arguments{
   \item{wth}{daily weather data frame containing relative humidity (relh), minimum temeperature (tmin), and maximum temperature (tmax)}
