@@ -16,7 +16,7 @@ getLandCells <- function(){
 }
 
 
-spatSim <- function(raster, model, emergence='2000-7-15', track=1:ncell(raster), ...)  {
+spatSim <- function(raster, model, emergence='2000-7-15', track=1:ncell(raster), wetness=0,...)  {
 	if (!all(resolution(raster) == c(1,1))) {
 		stop('raster has wrong resolution')
 	}
@@ -35,12 +35,17 @@ spatSim <- function(raster, model, emergence='2000-7-15', track=1:ncell(raster),
 			cat(cell, '\n' ) 
 		}
 		if(sum((cell-1)==land)>0){
-            xy <- xyFromCell(onedegworld, cell)		    
-			wth <- DBgetWthCell('nasaclim', 'daily', cell-1)
-			wth$year <- yearFromDate(wth$day)
-			wth$prec[is.na(wth$prec)] <- 0
-			res  <- model(wth, ...)
-			result[cnt] <- sum(res[,12])
+		  if(wetness==0){
+            wth <- DBgetWthCell('nasaclim', 'daily', cell-1)			
+          }
+          else{
+            xy <- xyFromCell(onedegworld, cell)
+            wth <- DBgetWthLWCell('nasaclim', 'daily', cell-1, xy[2])
+          }
+          wth$year <- yearFromDate(wth$day)
+          wth$prec[is.na(wth$prec)] <- 0
+          res  <- model(wth, ...)
+          result[cnt] <- sum(res[,12])
 		}
 		else{
 			result[cnt] <- NA
