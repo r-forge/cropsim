@@ -2,17 +2,23 @@
 # Author: Serge Savary & Rene Pangga. 
 # R translation: Robert J. Hijmans , Rene Pangga & Jorrel Aunario, r.hijmans@gmail.com (translated from STELLA BLBMod v6.1)
 # International Rice Research Institute
-# Date :  2 February 2009
+# Date :  23 F ebruary 2009
 # Version 0.1
 # Licence GPL v3
+# comparison of wetness (wetness=1) vs. maximum RH + rain threshold (wetness=0)
 
-
-tungro <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90) {
+tungro <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=0, rainlim=0, wetness=0) {
 	emergence <- as.Date(emergence)
 	wth <- subset(wth, wth$day >= emergence)
 
+#average temperature
 	tmp <- (wth$tmax + wth$tmin) / 2
-	rh <- wth$relh
+#maximum RH
+	rhx <- wth$rhmx
+#rain amount
+	rain <- wth$prec
+#wetness
+	W <- wth$lfwt
 
 	if (length(tmp) < duration) {
 		print("Incomplete weather data")
@@ -41,8 +47,8 @@ tungro <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90
 	now_infectious[] <- 0
 	Removed <- vector(length=duration)
 	Removed[] <- 0
-	#Senesced <- vector(length=duration)
-	#Senesced[] <- 0
+	Senesced <- vector(length=duration)
+	Senesced[] <- 0
 	Diseased <- vector(length=duration)
 	Diseased[] <- 0
 	Rinfection <- vector(length=duration)
@@ -51,8 +57,8 @@ tungro <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90
 	Rtransfer[] <- 0
 	RGrowth <- vector(length=duration)
 	RGrowth[] <- 0
-	#RSenesced <- vector(length=duration)
-	#RSenesced[] <- 0
+	RSenesced <- vector(length=duration)
+	RSenesced[] <- 0
 	
 	Incidence <- vector (length=duration)
 	Incidence[] <- 0
@@ -63,15 +69,17 @@ tungro <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90
 	latency <- vector(length=duration)
 	latency[] <- 0
 
-	
+	#parameters
+	if (wetness==0){
+		RHCoef <- rhx
+	} else {
+		RHCoef <- W
+	}
 	AgeCoefRc <- cbind (0:8 * 15, c(1.0, 1.0, 0.98, 0.73, 0.51, 0.34, 0, 0, 0))
-	RHCoefRc  <- rh
-	RHCoefRc[] <- 0
-	RHCoefRc[rh >= rhlim] <- 1
- 	TempCoefRc <- cbind (10 + (0:9 * 3.1111), c(0.13, 0.65, 0.75, 0.83, 0.89, 0.93, 0.97, 1.0, 0.96, 0.93))
-
-	RcAgeTemp <- vector (length=duration)
-	RcAgeTemp[] <- 0
+	TempCoefRc <- cbind (c(9,10 + (0:9 * 3.1111),40), c(0,0.13, 0.65, 0.75, 0.83, 0.89, 0.93, 0.97, 1.0, 0.96, 0.93,0))
+	RHCoefRc <- 1
+	Rc <- vector (length=duration)
+	Rc[] <- 0
 	COFR <- vector(length=duration)
 	COFR[] <- 0
 	
@@ -114,7 +122,15 @@ tungro <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90
 			break 
 		}
 		
-		RcAgeTemp[day] <- BaseRc * AFGen(AgeCoefRc, day) * AFGen(TempCoefRc, tmp[day]) * RHCoefRc[day]
+		if (wetness==0){
+			if (rhx[day] >= rhlim | rain[day] >= rainlim) {
+				RHCoef[day] <- 1
+			}
+		} else {
+		RHCoef[day]<- RHCoefRc
+		}		
+		
+		Rc[day] <- BaseRc * AFGen(AgeCoefRc, day) * AFGen(TempCoefRc, tmp[day]) * RHCoef[day]
 		
 		Diseased[day] <- sum(infectious) + now_latent[day] + Removed[day]
 		Removed[day] <- sum(infectious) - now_infectious[day]
@@ -124,7 +140,7 @@ tungro <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90
 		if (day==onset) {
 			Rinfection[day] <- initInfection
 		} else if (day > onset) {
-			Rinfection[day] <- now_infectious[day] * RcAgeTemp[day] * (COFR[day]^AGGR)
+			Rinfection[day] <- now_infectious[day] * Rc[day] * (COFR[day]^AGGR)
 		} else {
 			Rinfection[day] <- 0
 		}
@@ -143,14 +159,14 @@ tungro <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90
 # consider natural senescence...		
 #		MatScen <- -1*(day*Sitemax/MatPer) + (Sitemax * duration/MatPer)
 		Incidence[day] <- (Diseased[day]-Removed[day])/(TotalSites[day] - Removed[day])*100		
-
+print (c(RHCoefRc,RHCoef[day]))
 	}
 	
-	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased, Rinfection, Rtransfer, RGrowth, Incidence)
+	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased, Senesced, Rinfection, Rtransfer, RGrowth, RSenesced, Incidence)
 	res <- res[1:day,]
 	#res <- Diseased / AllSites 
 	res <- cbind(1:length(res[,1]), res)
-	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased", "rateinf", "rtransfer", "rgrowth", "incidence")
+	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased", "senesced", "rateinf", "rtransfer", "rgrowth", "rsenesced", "incidence")
 	return(res)
 }
 

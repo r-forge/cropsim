@@ -1,10 +1,10 @@
 # Author: Serge Savary & Rene Pangga. 
 # R translation: Robert J. Hijmans , Rene Pangga &  Jorrel Aunario r.hijmans@gmail.com (translated from STELLA BSMod v6)
 # International Rice Research Institute
-# Date :  19 February 2009
+# Date :  23 February 2009
 # Version 0.1
 # Licence GPL v3
-# comparison of wetness (Switch=1) vs. maximum RH + rain threshold (Switch=0)
+# comparison of wetness (wetness=1) vs. maximum RH + rain threshold (wetness=0)
 
 brownSpot <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainlim=5, wetness=0) {
 	emergence <- as.Date(emergence)
@@ -76,8 +76,8 @@ brownSpot <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim
 	}
 	
 	AgeCoefRc <- cbind(0:6 * 20, c(0.35, 0.35, 0.35, 0.47, 0.59, 0.71, 1.0))
-	TempCoefRc <- cbind(15+(0:4) * 5, c(0, 0.06, 1.0, 0.85, 0.16))
-	RHCoefRc <- cbind(3 + (0:7) * 3, c(0.12, 0.20, 0.38, 0.46, 0.60, 0.73, 0.87, 1.0))
+	TempCoefRc <- cbind(15+(0:5) * 5, c(0, 0.06, 1.0, 0.85, 0.16, 0))
+	RHCoefRc <- cbind(0:8 * 3, c(0, 0.12, 0.20, 0.38, 0.46, 0.60, 0.73, 0.87, 1.0))
 	Rc <- vector(length=duration)
 	Rc[] <- 0
 	COFR <- vector(length=duration)

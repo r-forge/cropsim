@@ -2,10 +2,10 @@
 # Author: Serge Savary & Rene Pangga. 
 # R translation: Robert J. Hijmans , Rene Pangga & Jorrel Aunario, r.hijmans@gmail.com (translated from STELLA BLBMod v6.1)
 # International Rice Research Institute
-# Date :  19 February 2009
+# Date :  23 February 2009
 # Version 0.1
 # Licence GPL v3
-# comparison of wetness (switch=1) vs. maximum RH + rain threshold (switch=0)
+# comparison of wetness (wetness=1) vs. maximum RH + rain threshold (wetness=0)
 
 
 bactBlight <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainlim=5, wetness=0) {
@@ -77,8 +77,8 @@ bactBlight <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhli
 		RHCoef <- W
 	}
 	AgeCoefRc <- cbind(0:12 * 10, c( 1, 1, 1, 0.9, 0.62, 0.43, 0.41, 0.42, 0.41, 0.41, 0.41, 0.41, 0.41))
- 	TempCoefRc <- cbind(18.5 + (0:4 * 3.125), c(0.29, 0.44, 0.90, 0.90, 1.0))
-	RHCoefRc <- cbind(3+ (0:3) * 7, c(0.67, 0.85, 0.93, 1.0))
+ 	TempCoefRc <- cbind(16 + (0:8 * 3), c(0, 0.29, 0.44, 0.90, 0.90, 1.0, 0.88, 0.01, 0))
+	RHCoefRc <- cbind(c(2,1:8 * 3), c(0, 0.67, 0.81, 0.84, 0.87, 0.91, 0.94, 0.97, 1.0))
 	Rc <- vector(length=duration)
 	Rc[] <- 0
 	COFR <- vector(length=duration)

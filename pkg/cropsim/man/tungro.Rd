@@ -8,7 +8,7 @@
   ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-tungro(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90) 
+tungro(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=0, rainlim=0, wetness=0) 
 
 }
 \arguments{
@@ -17,6 +17,10 @@ tungro(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90)
   \item{onset}{expected number of days until the onset of disease after emergence date}
   \item{duration}{simulation duration}  
   \item{rhlim}{threshold to decide whethere leaves are wet or not}
+  \item{tmp}{ Describe \code{xy} here }
+  \item{startday}{ Describe \code{x} here }
+  \item{rainlim}{threshold to decide whether leaves are wet or not}
+  \item{wetness}{simulate RHmax or rain threshold (0) or wetness (1)} 
 }
 \details{
   ~~ If necessary, more details than the description above ~~
@@ -33,27 +37,30 @@ tungro(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90)
 \seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
 \examples{
 
-rhtable <- cbind(0:10*12, c(99, 98.5, 97, 96, 98.5, 96, 95.5, 96.5, 97, 95.5, 96))
-tmaxtable <- cbind(0:10*10, rep(35,11))
-tmintable <- cbind(0:10*12, c(27.88, 27.5, 27.63, 28, 27.88, 27.88, 27.63, 27.63, 27.75, 27.75, 27.88))
+prectable <- cbind(0:10*12, c(5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5))
+rhmxtable <- cbind(0:10*12, c(99, 98.5, 97, 96, 98.5, 96, 95.5, 96.5, 97, 95.5, 96))
+tmptable <- cbind(0:10*12, c(31.5, 31.3, 31.3, 31.5, 31.5, 31.5, 31.3, 31.3, 31.4, 31.4, 31.5))
+lfwttable <- cbind (0:10*12, rep(24, 11))
+
 dur <- 120
-relh <- vector(length=dur)
-tmax  <- vector(length=dur)
-tmin  <- vector(length=dur)
-day  <- seq(as.Date('2000-5-15'), len=dur, by='1 day')
+rhmx <- vector(length=dur)
+tmp  <- vector(length=dur)
+prec <- vector(length=dur)
+lfwt <- vector(length=dur)
+day  <- seq(as.Date('2000-5-15'), len = dur, by = "1 day")
 
 for (d in 1:dur) {
-	relh[d] <- AFGen(rhtable, d)
-	tmax[d] <- AFGen(tmaxtable, d)
-	tmin[d] <- AFGen(tmintable, d)
+	prec[d] <- AFGen(prectable, d)
+	rhmx[d] <- AFGen(rhmxtable, d)
+	tmp[d] <- AFGen(tmptable, d)
+	lfwt[d] <- AFGen(lfwttable, d)
 }	
-	
-#rh <- round(rh)
-wth <- as.data.frame(cbind(relh, tmax, tmin))
-wth$day <- day
+tmin <- tmp - 5
+tmax <- tmp + 5
+wth <- as.data.frame(cbind(tmin, tmax, rhmx, prec, lfwt))
+wth$day <-day
 
-
-res <- as.data.frame(tungro(wth, duration=120, onset=25, rhlim=1))
+res <- as.data.frame(tungro(wth, duration=120, onset=25))
 splot2(res)
 
 
