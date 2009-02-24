@@ -1,5 +1,6 @@
 \name{spatSim}
 \alias{spatSim}
+\alias{multiRunSpatSim}
 \alias{getLandCells}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{ ~~function to do ... ~~ }
@@ -8,6 +9,7 @@
 }
 \usage{
 spatSim(raster, model, emergence='2000-7-15', track=1:ncell(raster), wetness=0,...)
+multiRunSpatSim(raster, model, track=1:ncell(raster), wetness=0,...)
 getLandCells()
 }
 %- maybe also 'usage' for other objects documented here.
