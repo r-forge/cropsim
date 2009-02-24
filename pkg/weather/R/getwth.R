@@ -10,7 +10,7 @@ getWthXY <- function(lon, lat, start="1993-1-1", end="2009-12-31") {
 	eday <- dayFromDate(end)
 	emon <- monthFromDate(end)
 	eyr <- yearFromDate(end)
-	raster <- newRaster()
+	raster <- raster()
 	cell <- cellFromXY(raster, c(lon, lat))
 	if (is.na(cell)) {
 		stop("invalid coordinates")
