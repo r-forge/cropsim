@@ -110,7 +110,13 @@ multiRunSpatSim <- function(raster, model, track=1:ncell(raster), wetness=0,...)
         else{
             result[cnt, ] <- NA
         }        
-    }    
+    }
     raster <- setValues(raster, rowMeans(result))
-	return(raster)
+    rStack <- stack(raster)
+    for (i in 1:120){
+        raster <- setValues(raster, result[,i])
+        rStack <- addRasters(rStack,rasters)        
+    }    
+    
+	return(rStack)
 }

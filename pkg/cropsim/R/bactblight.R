@@ -71,12 +71,10 @@ bactBlight <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhli
 	latency[] <- 0
 
 	#Parameters
-	if (wetness==0){
-		RHCoef <- rhx
-	} else {
-		RHCoef <- W
-	}
-	AgeCoefRc <- cbind(0:12 * 10, c( 1, 1, 1, 0.9, 0.62, 0.43, 0.41, 0.42, 0.41, 0.41, 0.41, 0.41, 0.41))
+	RHCoef <- vector(length=duration)
+	RHCoef[] <- 0
+	
+    AgeCoefRc <- cbind(0:12 * 10, c( 1, 1, 1, 0.9, 0.62, 0.43, 0.41, 0.42, 0.41, 0.41, 0.41, 0.41, 0.41))
  	TempCoefRc <- cbind(16 + (0:8 * 3), c(0, 0.29, 0.44, 0.90, 0.90, 1.0, 0.88, 0.01, 0))
 	RHCoefRc <- cbind(c(2,1:8 * 3), c(0, 0.67, 0.81, 0.84, 0.87, 0.91, 0.94, 0.97, 1.0))
 	Rc <- vector(length=duration)

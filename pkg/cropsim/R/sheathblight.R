@@ -71,12 +71,9 @@ sheathBlight <- function(wth, emergence='2000-05-15', onset=30, duration=120, rh
 	latency[] <- 0
 
 	# Parameters
-	if (wetness==0) {
-		RHCoef  <- rhx
-
-	} else {
-		RHCoef <- W
-	}
+	
+	RHCoef <- vector(length=duration)
+	RHCoef[] <- 0
 	
 	AgeCoefRc <- cbind(0:12 * 10, c(0.84, 0.84, 0.84, 0.84, 0.84, 0.84, 0.83, 0.88, 0.88, 1.0, 1.0, 1.0, 1.0))
 	RHCoefRc <- cbind(c(8,3:8 * 3), c(0, 0.24, 0.41, 0.68, 0.94, 0.97, 1.0))

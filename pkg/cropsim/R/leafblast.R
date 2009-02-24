@@ -67,12 +67,8 @@ leafBlast <- function(wth, emergence='2000-05-15', onset=1, duration=120, rhlim=
 	latency[] <- 0
 
 	# Parameters
-	if (wetness==0) {
-		RHCoef  <- rhx
-
-	} else {
-		RHCoef <- W
-	}
+	RHCoef <- vector(length=duration)
+	RHCoef[] <- 0
 	
 	AgeCoefRc <- cbind(0:24 * 5, c(1, 1, 1, 0.9, 0.8, 0.7, 0.64, 0.59, 0.53, 0.43, 0.32, 0.22, 0.16, 0.09, 0.03, 0.02, 0.02, 0.02, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01))
 	TempCoefRc <- cbind(2:9 * 5, c(0, 0.5, 1, 0.6, 0.2, 0.05, 0.01, 0))

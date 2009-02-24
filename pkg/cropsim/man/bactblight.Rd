@@ -17,9 +17,6 @@ bactBlight(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainli
   \item{onset}{expected number of days until the onset of disease after emergence date}
   \item{duration}{simulation duration}  
   \item{rhlim}{threshold to decide whether leaves are wet or not}
-  \item{tmp}{ Describe \code{xy} here }
-  \item{rh}{ Describe \code{xy} here }
-  \item{startday}{ Describe \code{x} here }
   \item{rainlim}{threshold to decide whether leaves are wet or not}
   \item{wetness}{simulate RHmax or rain threshold (0) or wetness (1)}
 }

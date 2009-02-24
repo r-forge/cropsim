@@ -69,11 +69,8 @@ brownSpot <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim
 
 	# Parameters
 	
-	if (wetness==0){
-		RHCoef <- rhx
-	} else {
-		RHCoef <- W
-	}
+	RHCoef <- vector(length=duration)
+	RHCoef[] <- 0
 	
 	AgeCoefRc <- cbind(0:6 * 20, c(0.35, 0.35, 0.35, 0.47, 0.59, 0.71, 1.0))
 	TempCoefRc <- cbind(15+(0:5) * 5, c(0, 0.06, 1.0, 0.85, 0.16, 0))

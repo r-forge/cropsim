@@ -70,12 +70,10 @@ tungro <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=0,
 	latency[] <- 0
 
 	#parameters
-	if (wetness==0){
-		RHCoef <- rhx
-	} else {
-		RHCoef <- W
-	}
-	AgeCoefRc <- cbind (0:8 * 15, c(1.0, 1.0, 0.98, 0.73, 0.51, 0.34, 0, 0, 0))
+	RHCoef <- vector(length=duration)
+	RHCoef[] <- 0
+	
+    AgeCoefRc <- cbind (0:8 * 15, c(1.0, 1.0, 0.98, 0.73, 0.51, 0.34, 0, 0, 0))
 	TempCoefRc <- cbind (c(9,10 + (0:9 * 3.1111),40), c(0,0.13, 0.65, 0.75, 0.83, 0.89, 0.93, 0.97, 1.0, 0.96, 0.93,0))
 	RHCoefRc <- 1
 	Rc <- vector (length=duration)
@@ -159,7 +157,7 @@ tungro <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=0,
 # consider natural senescence...		
 #		MatScen <- -1*(day*Sitemax/MatPer) + (Sitemax * duration/MatPer)
 		Incidence[day] <- (Diseased[day]-Removed[day])/(TotalSites[day] - Removed[day])*100		
-print (c(RHCoefRc,RHCoef[day]))
+
 	}
 	
 	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased, Senesced, Rinfection, Rtransfer, RGrowth, RSenesced, Incidence)
