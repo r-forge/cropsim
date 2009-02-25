@@ -115,7 +115,7 @@ multiRunSpatSim <- function(raster, model, track=1:ncell(raster), wetness=0,...)
     rStack <- stack(raster)
     for (i in 1:120){
         raster <- setValues(raster, result[,i])
-        rStack <- addRasters(rStack,rasters)        
+        rStack <- addRasters(rStack,c(raster))        
     }    
     
 	return(rStack)
