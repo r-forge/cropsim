@@ -129,7 +129,7 @@ AccessGetWthCell <- function(database, table, cell) {
 	w <- sqlQuery(db, query)
 	odbcClose(db)
 	colnames(w) <- c("cell", "day", "prec", "relh", "srad", "tmax", "tmin")
-	rhnx <- rhMinMax(w$relh, w$tmin, w$tmax, w$temp) 
+	rhnx <- rhMinMax(w$relh, w$tmin, w$tmax) 
 	w$rhmn <- rhnx[,1]
 	w$rhmx <- rhnx[,2]
 	return(w[,-1])     
