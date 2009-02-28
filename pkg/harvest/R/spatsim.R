@@ -47,8 +47,8 @@ spatSim <- function(raster, model, emergence='2000-7-15', track=1:ncell(raster),
 			# for debugging or progress tracking
 			cat(cell, '\n' ) 
 		}
-		if(sum((cell-1)==land)>0){
-		  if(wetness==0){
+		if (sum((cell-1)==land)>0) {
+		  if (wetness==0) {
             wth <- DBgetWthCell('nasaclim', 'daily', cell-1)			
           }
           else{
@@ -58,9 +58,9 @@ spatSim <- function(raster, model, emergence='2000-7-15', track=1:ncell(raster),
           wth$year <- yearFromDate(wth$day)
           wth$prec[is.na(wth$prec)] <- 0
           res  <- model(wth, ...)
-          result[cnt] <- sum(res[,12])
+          result[cnt] <- sum(res[,'severity'])
 		}
-		else{
+		else {
 			result[cnt] <- NA
 		}
 	}
