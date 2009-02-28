@@ -39,9 +39,9 @@ LeafWetWithRain <- function(lat, date, rhavg, tmin, tmax, prec, simple=TRUE) {
 
 
 rhMinMax <- function(rhavg, tmin, tmax, tavg=(tmin+tmax)/2) {
-	tmin <- max(tmin, -5)
-	tmax <- max(tmax, -5)
-	tavg <- max(tavg, -5)
+	tmin <- pmax(tmin, -5)
+	tmax <- pmax(tmax, -5)
+	tavg <- pmax(tavg, -5)
     es <- saturatedVaporPressure(tavg)
 	vp <- rhavg / 100 * es
     es <- saturatedVaporPressure(tmax)

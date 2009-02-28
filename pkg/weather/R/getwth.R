@@ -1,4 +1,3 @@
-
 # Author: Robert J. Hijmans, r.hijmans@gmail.com
 # License GPL3
 # Version 0.1  January 2009
@@ -24,8 +23,6 @@ getWthXY <- function(lon, lat, start="1993-1-1", end="2009-12-31") {
 		xy <- xyFromCell(raster, cell)
 		lon <- xy[1]
 		lat <- xy[2]
-
-		
 		part1 <- "http://earth-www.larc.nasa.gov/cgi-bin/cgiwrap/solar/agro.cgi?email=agroclim%40larc.nasa.gov&step=1&lat="
 		part2 <- paste(lat, "&lon=", lon, "&sitelev=&ms=", smon, "&ds=", sday, "&ys=", syr, "&me=", emon, "&de=", eday, "&ye=", eyr, sep="")
 		part3 <- ''
@@ -34,7 +31,6 @@ getWthXY <- function(lon, lat, start="1993-1-1", end="2009-12-31") {
 		}
 		part3 <- paste(part3, "&submit=Submit", sep="")
 		theurl <- paste(part1, part2, part3, sep="")
-	
 		download.file(url=theurl, destfile=filename, method="auto", quiet = FALSE, mode = "wb", cacheOK = TRUE)
 	}
 	lns <- readLines(filename)
@@ -44,13 +40,17 @@ getWthXY <- function(lon, lat, start="1993-1-1", end="2009-12-31") {
 	lns <- strsplit ( gsub("[[:space:]]+", " ", gsub("[[:space:]]+$", "", lns))  , " ")
 	lns <- matrix(as.numeric(unlist(lns)), ncol=length(lns[[1]]), byrow=T)
 	colnames(lns) <- nicevars
+	rhnx <- rhMinMax(lns[,'relh'], lns[,'tmin'], lns[,'tmax'], lns[,'temp']) 
+	lns <- cbind(lns, rhnx)
 	return(lns)
 }
+
 
 DBgetWthXY <- function(database, table, lon, lat, rst=raster()) {
 	cell <- cellFromXY(rst, c(lon, lat))
 	return(DBgetWthCell(database, table, cell))
-}	
+}
+
 
 DBgetWthCell <- function(database, table, cell) {
 	cnt <-0
@@ -78,7 +78,7 @@ DBgetWthCell <- function(database, table, cell) {
 }
 
 DBgetWthCellNoDSN <- function(table, cell, user, pwd, driver="MySQL ODBC 5.1 Driver", server="geo.irri.org", database="nasa") {
-	connString <- paste("DRIVER={",driver,"};SERVER=",server,";DATABASE=",database,";USER=",user,";PASSWORD=", pwd,";OPTION=27;",sep="")
+	connString <- paste('DRIVER={",driver,"};SERVER=",server,";DATABASE=",database,";USER=",user,";PASSWORD=", pwd,";OPTION=27;",sep="')
 	cnt <-0
 	repeat {
 		cnt<-cnt+1
@@ -98,7 +98,7 @@ DBgetWthCellNoDSN <- function(table, cell, user, pwd, driver="MySQL ODBC 5.1 Dri
 	odbcClose(db)
 	rm(db)
 	colnames(data) <- c("cell", "day", "srad", "tmax", "tmin", "prec", "tdew", "temp", "relh")
-	return(data[,2:9])     
+	return(data[,-1])     
 }
 
 DBgetWthLWXY <- function(database, table, lon, lat, rst=raster()) {
@@ -126,10 +126,13 @@ AccessGetWthXY <- function(database, table, lon, lat, rst=raster()) {
 AccessGetWthCell <- function(database, table, cell) {
 	query <- paste("SELECT * FROM", table, "WHERE cell =", cell)
 	db <- odbcConnectAccess(database)
-	data <- sqlQuery(db, query)
+	w <- sqlQuery(db, query)
 	odbcClose(db)
-	colnames(data) <- c("cell", "day", "prec", "relh", "srad", "tmax", "tmin")
-	return(data[,2:7])     
+	colnames(w) <- c("cell", "day", "prec", "relh", "srad", "tmax", "tmin")
+	rhnx <- rhMinMax(w$relh, w$tmin, w$tmax, w$temp) 
+	w$rhmn <- rhnx[,1]
+	w$rhmx <- rhnx[,2]
+	return(w[,-1])     
 }	
 
 AccessGetCellNumbers <- function(database, table) {
