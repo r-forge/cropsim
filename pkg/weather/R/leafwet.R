@@ -33,7 +33,7 @@ LeafWet <- function(lat, date, rhavg, tmin, tmax, simple=TRUE) {
 LeafWetWithRain <- function(lat, date, rhavg, tmin, tmax, prec, simple=TRUE) {
 	lw <- LeafWet(lat, date, rhavg, tmin, tmax, simple=simple)
 	prec[is.na(prec)] <- 0 
-	prhrs <- min(12, prec / 5)
+	prhrs <- pmin(12, prec / 5)
 	return(lw + (1 - lw/24) * prhrs)
 }
 
