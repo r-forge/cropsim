@@ -60,8 +60,8 @@ tungro <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=0,
 	RSenesced <- vector(length=duration)
 	RSenesced[] <- 0
 	
-	Incidence <- vector (length=duration)
-	Incidence[] <- 0
+	Severity <- vector (length=duration)
+	Severity[] <- 0
 
 	# Boxcar
 	infectious <- vector(length=duration)
@@ -156,15 +156,15 @@ tungro <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=0,
 
 # consider natural senescence...		
 #		MatScen <- -1*(day*Sitemax/MatPer) + (Sitemax * duration/MatPer)
-		Incidence[day] <- (Diseased[day]-Removed[day])/(TotalSites[day] - Removed[day])*100		
+		Severity[day] <- (Diseased[day]-Removed[day])/(TotalSites[day] - Removed[day])*100		
 
 	}
 	
-	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased, Senesced, Rinfection, Rtransfer, RGrowth, RSenesced, Incidence)
+	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased, Senesced, Rinfection, Rtransfer, RGrowth, RSenesced, Severity)
 	res <- res[1:day,]
 	#res <- Diseased / AllSites 
 	res <- cbind(1:length(res[,1]), res)
-	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased", "senesced", "rateinf", "rtransfer", "rgrowth", "rsenesced", "incidence")
+	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased", "senesced", "rateinf", "rtransfer", "rgrowth", "rsenesced", "severity")
 	return(res)
 }
 
