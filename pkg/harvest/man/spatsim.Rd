@@ -8,17 +8,17 @@
   ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-spatSim(raster, model, emergence='2000-7-15', track=1:ncell(raster), wetness=0,...)
-multiRunSpatSim(raster, model, track=1:ncell(raster), wetness=0,...)
+spatSim <- function(raster, model, emerge="2000-7-15", wtness=0, quiet=FALSE, ...)
+multiRunSpatSim(raster, model, wtness=0, quiet=FALSE, ...)
 getLandCells()
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{raster}{ ~~Describe \code{yields} here~~ }
   \item{model}{ ~~Describe \code{fact} here~~ }
-  \item{emergence}{ ~~Describe \code{fact} here~~ }
-  \item{track}{ ~~Describe \code{fact} here~~ }
-  \item{wetness}{ ~~Describe \code{fact} here~~ }
+  \item{emerge}{ ~~Describe \code{fact} here~~ }
+  \item{wtness}{ ~~Describe \code{fact} here~~ }
+  \item{quiet}{ ~~Describe \code{fact} here~~ }
   \item{...}{ ~~Describe \code{fact} here~~ }
 }
 \details{

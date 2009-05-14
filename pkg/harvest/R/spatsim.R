@@ -21,6 +21,7 @@ getLandCells <- function(){
 		}
 		rm(con)
 		cat("Retrying to connect. \n")
+		flush.console()
 	}
 	lc <- sqlQuery(con, "SELECT cell_id AS cell FROM masks WHERE resolution = 1 AND arable = TRUE")
 	odbcClose(con)
@@ -29,8 +30,8 @@ getLandCells <- function(){
 }
 
 
-spatSim <- function(raster, model, emergence='2000-7-15', track=1:ncell(raster), wetness=0,...)  {
-	if (!all(resolution(raster) == c(1,1))) {
+spatSim <- function(raster, model, emerge= "2000-7-15", wtness=0, quiet=FALSE, ...)  {
+	if (!all(res(raster) == c(1,1))) {
 		stop('raster has wrong resolution')
 	}
 
@@ -43,12 +44,14 @@ spatSim <- function(raster, model, emergence='2000-7-15', track=1:ncell(raster),
 	cnt <- 0
 	for (cell in cells) {
 		cnt <- cnt + 1			
-		if (cnt %in% track) {
+		if (!quiet) {
 			# for debugging or progress tracking
-			cat(cell, '\n' ) 
+			cat("\r", rep.int(" ", getOption("width")), sep="")
+			cat("\r", "cell: " , cell)
+            flush.console() 
 		}
-		if (sum((cell-1)==land)>0) {
-		  if (wetness==0) {
+		if ((cell-1) %in% land) {
+		  if (wtness==0) {
             wth <- DBgetWthCell('nasaclim', 'daily', cell-1)			
           }
           else{
@@ -57,7 +60,7 @@ spatSim <- function(raster, model, emergence='2000-7-15', track=1:ncell(raster),
           }
           wth$year <- yearFromDate(wth$day)
           wth$prec[is.na(wth$prec)] <- 0
-          res  <- model(wth, ...)
+          res  <- model(wth, emergence=emerge, wetness=wtness, ...)
           result[cnt] <- sum(res[,'severity'])
 		}
 		else {
@@ -68,8 +71,8 @@ spatSim <- function(raster, model, emergence='2000-7-15', track=1:ncell(raster),
 	return(raster)
 }
 
-multiRunSpatSim <- function(raster, model, track=1:ncell(raster), wetness=0,...)  {
-	if (!all(resolution(raster) == c(1,1))) {
+multiRunSpatSim <- function(raster, model, wtness=0, quiet=FALSE,...)  {
+	if (!all(res(raster) == c(1,1))) {
         stop('raster has wrong resolution')
     }
     
@@ -86,12 +89,14 @@ multiRunSpatSim <- function(raster, model, track=1:ncell(raster), wetness=0,...)
 	cnt <- 0
 	for (cell in cells) {
         cnt <- cnt + 1
-        if (cnt %in% track) {
-            # for debugging or progress tracking
-            cat(cell, '\n' )
-        }
-        if(sum((cell-1)==land)>0){
-            if(wetness==0){
+        if (!quiet) {
+			# for debugging or progress tracking
+			cat("\r", rep.int(" ", getOption("width")), sep="")
+            cat("\rProcessing cell " , cell)
+            flush.console() 
+		}
+		if ((cell-1) %in% land){
+            if(wtness==0){
                 wth <- DBgetWthCell('nasaclim', 'daily', cell-1)
             }
             else{
@@ -103,7 +108,7 @@ multiRunSpatSim <- function(raster, model, track=1:ncell(raster), wetness=0,...)
             run <- 0
             for (pdate in pdates){
                 run <- run + 1            
-                res  <- model(wth, emergence=pdate, ...)
+                res  <- model(wth, emergence=pdate, wetness=wtness, ...)
                 result[cnt,run] <- sum(res[,12])            
             }            
         }
@@ -115,7 +120,7 @@ multiRunSpatSim <- function(raster, model, track=1:ncell(raster), wetness=0,...)
     rStack <- stack(raster)
     for (i in 1:120){
         raster <- setValues(raster, result[,i])
-        rStack <- addRasters(rStack,c(raster))        
+        rStack <- addLayer(rStack,c(raster))        
     }    
     
 	return(rStack)
