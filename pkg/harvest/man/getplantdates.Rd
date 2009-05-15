@@ -29,7 +29,7 @@ getplantdates(yields, fact = 2, yp=10000, yt=0.5)
 \author{ ~~who you are~~ }
 \note{ ~~further notes~~ 
 
- ~Make other sections like Warning with \section{Warning }{....} ~
+ 
 }
 \seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
 \examples{
