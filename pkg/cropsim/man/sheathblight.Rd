@@ -30,7 +30,7 @@ sheathBlight(wth, emergence='2000-05-15', onset=30,  duration=120, rhlim=90, rai
 \author{ ~~who you are~~ }
 \note{ ~~further notes~~ 
 
- ~Make other sections like Warning with \section{Warning }{....} ~
+ 
 }
 \seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
 \examples{

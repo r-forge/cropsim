@@ -1,10 +1,9 @@
 \name{AFGen}
 \alias{AFGen}
 
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{ ~~function to do ... ~~ }
+\title{ Function generator}
 \description{
-  ~~ A concise (1-5 lines) description of what the function does. ~~
+  Function generator. 
 }
 \usage{
 AFGen(xy, x) 
@@ -23,9 +22,9 @@ AFGen(xy, x)
 \author{ ~~who you are~~ }
 \note{ ~~further notes~~ 
 
- ~Make other sections like Warning with \section{Warning }{....} ~
+
 }
 \seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
 \examples{
 }
-\keyword{ spatial }
+

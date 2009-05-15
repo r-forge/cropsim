@@ -1,11 +1,9 @@
 \name{brownSpot}
 \alias{brownSpot}
 
-
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{ ~~function to do ... ~~ }
+\title{ Brown Spot model}
 \description{
-  ~~ A concise (1-5 lines) description of what the function does. ~~
+A dynamic mechanistic simulation of rice Brown Spot disease. The model is driven by daily weather data. 
 }
 \usage{
 brownSpot(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainlim=5, wetness=0) 
@@ -17,24 +15,20 @@ brownSpot(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainlim
   \item{onset}{expected number of days until the onset of disease after emergence date}
   \item{duration}{simulation duration}  
   \item{rhlim}{threshold to decide whether leaves are wet or not}
-  \item{rainlim} {threshold to decide whether leaves are wet or not due to rain}
-  \item{wetness} {switch to simulate wetness (1) or use RH max or rain threshold (0)}
+  \item{rainlim}{threshold to decide whether leaves are wet or not due to rain}
+  \item{wetness}{switch to simulate wetness (1) or use RH max or rain threshold (0)}
 }
-\details{
-  ~~ If necessary, more details than the description above ~~
-}
+
 \value{
   ...
 }
+
 \references{ ~put references to the literature/web site here ~ }
-\author{ ~~who you are~~ }
-\note{ ~~further notes~~ 
 
- ~Make other sections like Warning with \section{Warning }{....} ~
-}
-\seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
+\author{ Serge Savary, Ireneo Pangga, Robert Hijmans }
+
+
 \examples{
-
 prectable <- cbind(0:10*12, c(5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5))
 rhmxtable <- cbind(0:10*12, c(99, 98.5, 97, 96, 98.5, 96, 95.5, 96.5, 97, 95.5, 96.0))
 tmptable <- cbind(0:10*12, rep(25, 11))
