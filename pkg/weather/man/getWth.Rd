@@ -44,7 +44,6 @@ DBgetWthCellNoDSN(table, cell, user, pwd, driver="MySQL ODBC 5.1 Driver", server
 \author{ ~~who you are~~ }
 \note{ ~~further notes~~ 
 
- ~Make other sections like Warning with \section{Warning }{....} ~
 }
 \seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
 \examples{

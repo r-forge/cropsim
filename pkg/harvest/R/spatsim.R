@@ -1,17 +1,13 @@
-
 # Author: 	Robert J. Hijmans, r.hijmans@gmail.com; Jorrel Khalil S. Aunario
 #Date: 6 February 2009
 # Version 0.1  
 # License GPL3
 
-require(RODBC)
-require(raster)
-
-getLandCells <- function(){
+getLandCells <- function(odbcname='NASAclim'){
     cnt <- 0
     repeat {
 		cnt<-cnt+1
-		con <- odbcConnect('NASAclim')	
+		con <- odbcConnect(odbcname)	
 		if (con!=-1){
 			break
 		}
@@ -30,46 +26,58 @@ getLandCells <- function(){
 }
 
 
-spatSim <- function(raster, model, emerge= "2000-7-15", wtness=0, quiet=FALSE, ...)  {
-	if (!all(res(raster) == c(1,1))) {
-		stop('raster has wrong resolution')
-	}
+#myfun <- function(...){sum(leafBlast(..., wetness=0)[,'severity'])}
 
+spatSim <- function(raster, model, starts, verbose=FALSE, ...)  {
+	raster <- nudgeExtent(raster)
+	res(raster) <- 1
+
+	nruns <- length(start)
 	onedegworld <- raster()
 	cells <- cellsFromBbox(onedegworld, raster)
 	if (ncell(raster) != length(cells)) { stop("not good") }
-
-	result <- vector(length=length(cells))
+	
+	result <- matrix(NA, nrow=length(cells), ncol=length(starts))
+	
 	land <- getLandCells()
 	cnt <- 0
 	for (cell in cells) {
 		cnt <- cnt + 1			
-		if (!quiet) {
+		if (verbose) {
 			# for debugging or progress tracking
 			cat("\r", rep.int(" ", getOption("width")), sep="")
 			cat("\r", "cell: " , cell)
             flush.console() 
 		}
 		if ((cell-1) %in% land) {
-		  if (wtness==0) {
-            wth <- DBgetWthCell('nasaclim', 'daily', cell-1)			
-          }
-          else{
-            xy <- xyFromCell(onedegworld, cell)
-            wth <- DBgetWthLWCell('nasaclim', 'daily', cell-1, xy[2])
-          }
-          wth$year <- yearFromDate(wth$day)
-          wth$prec[is.na(wth$prec)] <- 0
-          res  <- model(wth, emergence=emerge, wetness=wtness, ...)
-          result[cnt] <- sum(res[,'severity'])
+#			if (wtness==0) {
+			wth <- DBgetWthCell('nasaclim', 'daily', cell-1)			
+#			}
+#			else{
+#				xy <- xyFromCell(onedegworld, cell)
+#				wth <- DBgetWthLWCell('nasaclim', 'daily', cell-1, xy[2])
+#			}
+			wth$year <- yearFromDate(wth$day)
+			wth$prec[is.na(wth$prec)] <- 0
+			
+			for (d in 1:length(starts)) {
+				result[cnt, d] <- model(wth, emergence=starts[d], ...)
+			}
 		}
 		else {
 			result[cnt] <- NA
 		}
 	}
-	raster <- setValues(raster, result)
-	return(raster)
+
+    rStack <- new('RasterStack')
+	for (d in 1:length(starts)) {
+		r <- setValues(raster, result[,d])
+		rStack <- addLayer(rStack, r)    
+	}
+	return(rStack)
 }
+
+
 
 multiRunSpatSim <- function(raster, model, wtness=0, quiet=FALSE,...)  {
 	if (!all(res(raster) == c(1,1))) {
