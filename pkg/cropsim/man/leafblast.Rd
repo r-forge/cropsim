@@ -8,7 +8,7 @@
   ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-leafBlast(wth, emergence='2000-05-15', onset=1, duration=120, rhlim=90, rainlim=5, wetness=0) 
+leafBlast(wth, emergence='2000-05-15', onset=1, duration=120, rhlim=90, rainlim=5, wetness=0, rc=1.14, latrans=5, inftrans=20) 
 leafBlast_v1(tmp, rh, duration=120, startday=1) 
 }
 
@@ -23,6 +23,9 @@ leafBlast_v1(tmp, rh, duration=120, startday=1)
   \item{startday}{ Describe \code{x} here }
   \item{rainlim}{threshold to decide whether leaves are wet or not}
   \item{wetness}{simulate RHmax or rain threshold (0) or wetness (1)}
+  \item{rc}{ Describe \code{xy} here }
+  \item{latrans}{ Describe \code{xy} here }
+  \item{inftrans}{ Describe \code{xy} here }
 }
 
 \details{

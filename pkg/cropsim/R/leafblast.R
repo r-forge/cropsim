@@ -6,7 +6,7 @@
 # Licence GPL v3
 #Comparison of the use of wetness (1) vs. RH + rain threshold (0)
 
-leafBlast <- function(wth, emergence='2000-05-15', onset=1, duration=120, rhlim=90, rainlim=5, wetness=0) {
+leafBlast <- function(wth, emergence='2000-05-15', onset=1, duration=120, rhlim=90, rainlim=5, wetness=0, rc=1.14, latrans=5, inftrans=20) {
 	emergence <- as.Date(emergence)
 	wth <- subset(wth, wth$day >= emergence)
 #average temperature
@@ -28,12 +28,12 @@ leafBlast <- function(wth, emergence='2000-05-15', onset=1, duration=120, rhlim=
 	RRPhysiolSenesc <- 0.01
 	SenescType <- 1	
 	AGGR <- 1
-	BaseRc <- 1.14
+	BaseRc <- rc
 	Sitemax <- 30000
 	initInfection <- 1
 	initSites <- 600
-	infectious_transit_time <- 20
-	latency_transit_time <- 5
+	infectious_transit_time <- inftrans
+	latency_transit_time <- latrans
 
 	# outputvars
 	TotalSites <- vector(length=duration)
