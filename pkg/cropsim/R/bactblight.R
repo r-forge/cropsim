@@ -8,7 +8,7 @@
 # comparison of wetness (wetness=1) vs. maximum RH + rain threshold (wetness=0)
 
 
-bactBlight <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainlim=5, wetness=0) {
+bactBlight <- function(wth, emergence='2000-05-15', onset=20, duration=120, rhlim=90, rainlim=5, wetness=0) {
 	emergence <- as.Date(emergence)
 	wth <- subset(wth, wth$day >= emergence)
 
@@ -61,8 +61,8 @@ bactBlight <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhli
 	RSenesced <- vector(length=duration)
 	RSenesced[] <- 0
 	
-	Severity <- vector (length=duration)
-	Severity[] <- 0
+	Incidence <- vector (length=duration)
+	Incidence[] <- 0
 
 	# Boxcar
 	infectious <- vector(length=duration)
@@ -156,15 +156,15 @@ bactBlight <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhli
 
 # consider natural senescence...		
 #		MatScen <- -1*(day*Sitemax/MatPer) + (Sitemax * duration/MatPer)
-		Severity[day] <- (Diseased[day]-Removed[day])/(TotalSites[day] - Removed[day])*100		
+		Incidence[day] <- (Diseased[day]-Removed[day])/(TotalSites[day] - Removed[day])*100		
 
 	}
 	
-	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased, Senesced, Rinfection, Rtransfer, RGrowth, RSenesced, Severity)
+	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased, Senesced, Rinfection, Rtransfer, RGrowth, RSenesced, Incidence)
 	res <- res[1:day,]
 	#res <- Diseased / AllSites 
 	res <- cbind(1:length(res[,1]), res)
-	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased", "senesced", "rateinf", "rtransfer", "rgrowth", "rsenesced", "severity")
+	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased", "senesced", "rateinf", "rtransfer", "rgrowth", "rsenesced", "incidence")
 	return(res)
 }
 

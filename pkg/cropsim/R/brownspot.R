@@ -6,7 +6,7 @@
 # Licence GPL v3
 # comparison of wetness (wetness=1) vs. maximum RH + rain threshold (wetness=0)
 
-brownSpot <- function(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainlim=5, wetness=0) {
+brownSpot <- function(wth, emergence='2000-05-15', onset=20, duration=120, rhlim=90, rainlim=5, wetness=0) {
 	emergence <- as.Date(emergence)
 	wth <- subset(wth, wth$day >= emergence)
 #average temperature

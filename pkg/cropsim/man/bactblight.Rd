@@ -3,12 +3,12 @@
 
 
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{ ~~function to do ... ~~ }
+\title{ STELLA-R Bacterial Blight Model }
 \description{
-  ~~ A concise (1-5 lines) description of what the function does. ~~
+  A dynamic mechanistic simulation of rice bacterial blight disease. The model is driven by daily weather data. 
 }
 \usage{
-bactBlight(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainlim=5, wetness=0) 
+bactBlight(wth, emergence='2000-05-15', onset=20, duration=120, rhlim=90, rainlim=5, wetness=0) 
  
 }
 \arguments{
@@ -26,8 +26,14 @@ bactBlight(wth, emergence='2000-05-15', onset=1,  duration=120, rhlim=90, rainli
 \value{
   ...
 }
-\references{ ~put references to the literature/web site here ~ }
-\author{ ~~who you are~~ }
+\references{ 
+Adhikari, T.B., 1991. Effects of rice genotype and environment on bacterial blight progression. PhD thesis, University of the Philippines at Los Baños, 143 p. 
+Nayak, P., Suriya Rao, A.V., Chakrabarti, N.K., 1987. Components of resistance to bacterial blight disease of rice. Journal of Phytopathology 119:312-318.
+Baw A. and Mew, T.W., 1988. Scoring systems for evaluating rice varietal resistance to bacterial blight (BB): lesion size by growth stage. International Rice Research Newsletter 13:10-11.
+Luo Wei-Hong, 1996. Simulation  and measurement of leaf wetness formation in paddy rice crops. PhD, Wageningen Agricultural University, 87 p.
+Horino, O., Mew, T.W., Yamada, T., 1982. The effect of temperature on the development of bacterial leaf blight on rice. Annals of the Phytopathological Society of Japan 48: 72-75
+}
+\author{ S. Savary, R. Hijmans, I. Pangga, J.K. Aunario }
 \note{ ~~further notes~~ 
 
  

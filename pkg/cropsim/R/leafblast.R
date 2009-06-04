@@ -6,7 +6,7 @@
 # Licence GPL v3
 #Comparison of the use of wetness (1) vs. RH + rain threshold (0)
 
-leafBlast <- function(wth, emergence='2000-05-15', onset=1, duration=120, rhlim=90, rainlim=5, wetness=0, rc=1.14, latrans=5, inftrans=20) {
+leafBlast <- function(wth, emergence='2000-05-15', onset=15, duration=120, rhlim=90, rainlim=5, wetness=0, rc=1.14, latrans=5, inftrans=20) {
 	emergence <- as.Date(emergence)
 	wth <- subset(wth, wth$day >= emergence)
 #average temperature
