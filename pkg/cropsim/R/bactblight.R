@@ -1,11 +1,11 @@
 
 # Author: Serge Savary & Rene Pangga. 
-# R translation: Robert J. Hijmans , Rene Pangga & Jorrel Aunario, r.hijmans@gmail.com (translated from STELLA BLBMod v6.1)
+# R translation: Robert J. Hijmans , Rene Pangga & Jorrel Aunario, r.hijmans@gmail.com (translated from STELLA BLBMod v6.1T and BLBMod6.1W)
 # International Rice Research Institute
 # Date :  23 February 2009
 # Version 0.1
 # Licence GPL v3
-# comparison of wetness (wetness=1) vs. maximum RH + rain threshold (wetness=0)
+#switch :  wetness (1) uses leaf wetness duration corresponding to  STELLA  BLBMod v6.1W vs. wetness (0)  uses RH + rain threshold corresponding to  STELLA  BLBModv6.1T 
 
 
 bactBlight <- function(wth, emergence='2000-05-15', onset=20, duration=120, rhlim=90, rainlim=5, wetness=0) {

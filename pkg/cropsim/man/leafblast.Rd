@@ -2,7 +2,7 @@
 \alias{leafBlast}
 \alias{leafBlast_v1}
 
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{ STELLA-R Leaf Blast Model }
 \description{
   A dynamic mechanistic simulation of rice leaf blast. The model is driven by daily weather data. 
@@ -22,7 +22,7 @@ leafBlast_v1(tmp, rh, duration=120, startday=1)
   \item{rh}{ relative humidity }
   \item{startday}{ start day of simulation }
   \item{rainlim}{threshold to decide whether leaves are wet or not}
-  \item{wetness}{simulate RHmax or rain threshold (0) or wetness (1)}
+  \item{wetness}{simulate RHmax or rain threshold (0) or leaf wetness duration (1)}
   \item{rc}{ corrected basic infection rate }
   \item{latrans}{ latent period }
   \item{inftrans}{ infectious period }

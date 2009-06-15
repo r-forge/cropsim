@@ -1,10 +1,11 @@
 # Author: Serge Savary & Rene Pangga. 
-# R translation: Rene Pangga, RJH, JA (translated from STELLA ShBMod v6)
+# R translation: Rene Pangga, RJH, JA (translated from STELLA ShbMod v6.1T and ShbMod6.1W)
 # International Rice Research Institute
-# Date :  19  February 2009
+# Date :  10 June 2009
 # Version 0.1
 # Licence GPL v3
-#Comparison of the use of wetness (wetness=1) vs. RH + rain threshold (wetness=0)
+#switch :  wetness (1) uses leaf wetness duration corresponding to  STELLA ShbMod v6.1W vs. wetness (0)  uses RH + rain threshold corresponding to  STELLA  ShbModv6.1T 
+
 
 sheathBlight <- function(wth, emergence='2000-05-15', onset=30, duration=120, rhlim=90, rainlim=5, wetness=0) {
 	emergence <- as.Date(emergence)

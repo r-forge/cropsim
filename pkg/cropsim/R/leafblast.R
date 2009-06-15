@@ -1,10 +1,10 @@
 # Author: Serge Savary & Rene Pangga. 
-# R translation: Robert J. Hijmans, Rene Pangga, & Jorrel Aunario  r  hijmans@gmail.com (translated from STELLA LeafBlastMod v5)
+# R translation: Robert J. Hijmans, Rene Pangga, & Jorrel Aunario  r  hijmans@gmail.com (translated from STELLA LeafBlastMod v5T and  LeafBlastMod v5W  )
 # International Rice Research Institute
-# Date :  18 February 2009
+# Date :  10 June 2009
 # Version 0.1
 # Licence GPL v3
-#Comparison of the use of wetness (1) vs. RH + rain threshold (0)
+#switch :  wetness (1) uses leaf wetness duration corresponding to  STELLA LeafBlastMod v5W vs. wetness (0)  uses RH + rain threshold corresponding to  STELLA LeafBlastMod v5T 
 
 leafBlast <- function(wth, emergence='2000-05-15', onset=15, duration=120, rhlim=90, rainlim=5, wetness=0, rc=1.14, latrans=5, inftrans=20) {
 	emergence <- as.Date(emergence)

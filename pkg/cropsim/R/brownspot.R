@@ -1,10 +1,11 @@
 # Author: Serge Savary & Rene Pangga. 
-# R translation: Robert J. Hijmans , Rene Pangga &  Jorrel Aunario r.hijmans@gmail.com (translated from STELLA BSMod v6)
+# R translation: Robert J. Hijmans , Rene Pangga &  Jorrel Aunario r.hijmans@gmail.com (translated from STELLA BSMod v6T and  BSMod v6W)
 # International Rice Research Institute
-# Date :  23 February 2009
+# Date :  10 June 2009
 # Version 0.1
 # Licence GPL v3
-# comparison of wetness (wetness=1) vs. maximum RH + rain threshold (wetness=0)
+#switch :  wetness (1) uses leaf wetness duration corresponding to  STELLA BSMod v6W vs. wetness (0)  uses RH + rain threshold corresponding to  STELLA  BSModv6T 
+
 
 brownSpot <- function(wth, emergence='2000-05-15', onset=20, duration=120, rhlim=90, rainlim=5, wetness=0) {
 	emergence <- as.Date(emergence)

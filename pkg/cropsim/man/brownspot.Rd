@@ -16,7 +16,7 @@ brownSpot(wth, emergence='2000-05-15', onset=20, duration=120, rhlim=90, rainlim
   \item{duration}{simulation duration}  
   \item{rhlim}{threshold to decide whether leaves are wet or not}
   \item{rainlim}{threshold to decide whether leaves are wet or not due to rain}
-  \item{wetness}{switch to simulate wetness (1) or use RH max or rain threshold (0)}
+  \item{wetness}{switch to simulate leaf wetness duration (1) or use RH max or rain threshold (0)}
 }
 
 \value{
@@ -29,6 +29,7 @@ Levy, Y. and Cohen, Y., 1980. Sporulation of Helminthosporium turcicum on sweet 
 Padmanabhan, S.Y. and Ganguly, D. 1954. Relation between the age of rice plant and its susceptibility to Helminthosporium and blast disease. Proceedings of the Indian Academy of Sciences B 29:44-50.
 Sarkar, A.K. and Sen Gupta, P.K., 1977. Effect of temperature and humidity on disease development and sporulation of Helminthosporium oryzae on rice. Indian Phytopathology 30:258-259.
 Luo Wei-Hong, 1996. Simulation  and measurement of leaf wetness formation in paddy rice crops. PhD, Wageningen Agricultural University, 87 p.
+Waggoner. P.E., Horsfall, J.G., and Lukens, R.J. 1972. EPIMAY. A Simulator pf Southern Corn Leaf Blight. Bulletin of the Connecticut Experiment Station, New Haven, 85 p.
 }
 
 \author{ Serge Savary, Ireneo Pangga, Robert Hijmans, Jorrel Khalil Aunario }

@@ -1,11 +1,12 @@
 
 # Author: Serge Savary & Rene Pangga. 
-# R translation: Robert J. Hijmans , Rene Pangga & Jorrel Aunario, r.hijmans@gmail.com (translated from STELLA BLBMod v6.1)
+# R translation: Robert J. Hijmans , Rene Pangga & Jorrel Aunario, r.hijmans@gmail.com (translated from STELLA TungroMod v5T)
 # International Rice Research Institute
-# Date :  23 F ebruary 2009
+# Date :  10 June 2009
 # Version 0.1
 # Licence GPL v3
-# comparison of wetness (wetness=1) vs. maximum RH + rain threshold (wetness=0)
+#switch :  wetness (1) uses RHCoefRc=1 vs wetness (0)  uses RH + rain threshold corresponding to  STELLA  TungroModv5T 
+
 
 tungro <- function(wth, emergence='2000-05-15', onset=25,  duration=120, rhlim=0, rainlim=0, wetness=0) {
 	emergence <- as.Date(emergence)
