@@ -52,7 +52,7 @@ DBgetWthXY <- function(database, table, lon, lat, rst=raster()) {
 }
 
 
-DBgetWthCell <- function(database, table, cell) {
+DBgetWthCell <- function(database, table, cell, verbose=FALSE) {
 	cnt <-0
 	repeat {
 		cnt<-cnt+1
@@ -65,7 +65,11 @@ DBgetWthCell <- function(database, table, cell) {
 			stop();
 		}
 		rm(db)
-		cat("Retrying to connect. (cell=",cell,", retries=",cnt, ") \n", sep="")
+		if (verbose){
+            cat("Retrying to connect. (cell=",cell,", retries=",cnt, ") \n", sep="")
+            flush.console()    
+        }
+		
 	}
 	query <- paste("SELECT * FROM", table, "WHERE cell =", cell)
 	w <- sqlQuery(db, query)

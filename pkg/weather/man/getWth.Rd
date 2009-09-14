@@ -16,7 +16,7 @@ getWthXY(lon, lat, start="1993-1-1", end="2009-12-31")
 AccessGetWthXY(database, table, lon, lat, rst=raster()) 
 AccessGetWthCell(database, table, cell) 
 DBgetWthXY(database, table, lon, lat, rst=raster()) 
-DBgetWthCell(database, table, cell)
+DBgetWthCell(database, table, cell, verbose=FALSE)
 DBgetWthCellNoDSN(table, cell, user, pwd, driver="MySQL ODBC 5.1 Driver", server="geo.irri.org", database="nasa") 
 }
 
@@ -33,6 +33,7 @@ DBgetWthCellNoDSN(table, cell, user, pwd, driver="MySQL ODBC 5.1 Driver", server
   \item{pwd}{ Describe \code{x} here }
   \item{driver}{ Describe \code{x} here }
   \item{server}{ Describe \code{x} here }
+  \item{verbose}{ Describe \code{x} here }
 }
 \details{
   ~~ If necessary, more details than the description above ~~

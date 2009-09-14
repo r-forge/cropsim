@@ -1,6 +1,6 @@
 \name{spatSim}
 \alias{spatSim}
-\alias{multiRunSpatSim}
+\alias{spatSimFlex}
 \alias{getLandCells}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{ ~~function to do ... ~~ }
@@ -8,17 +8,22 @@
   ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-spatSim <- function(raster, model, emerge="2000-7-15", wtness=0, quiet=FALSE, ...)
-multiRunSpatSim(raster, model, wtness=0, quiet=FALSE, ...)
-getLandCells()
+spatSim(raster, model, starts, verbose=FALSE, ...)
+spatSimFlex(raster, pdateraster, model, years, period=14, periodpt=7, skipzero=TRUE, verbose=FALSE, ...)
+getLandCells(odbcname="NASAclim")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{raster}{ ~~Describe \code{yields} here~~ }
   \item{model}{ ~~Describe \code{fact} here~~ }
-  \item{emerge}{ ~~Describe \code{fact} here~~ }
-  \item{wtness}{ ~~Describe \code{fact} here~~ }
-  \item{quiet}{ ~~Describe \code{fact} here~~ }
+  \item{starts}{ ~~Describe \code{fact} here~~ }
+  \item{years}{ ~~Describe \code{fact} here~~ }
+  \item{verbose}{ ~~Describe \code{fact} here~~ }
+  \item{pdateraster}{ ~~Describe \code{fact} here~~ }
+  \item{period}{ ~~Describe \code{fact} here~~ }
+  \item{periodpt}{ ~~Describe \code{fact} here~~ }
+  \item{skipzero}{ ~~Describe \code{fact} here~~ }
+  \item{odbcname}{ ~~Describe \code{fact} here~~ }
   \item{...}{ ~~Describe \code{fact} here~~ }
 }
 \details{
