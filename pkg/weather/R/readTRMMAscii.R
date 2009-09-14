@@ -6,10 +6,10 @@
 # Function for converting TRMM 3B43 v6 ascii data to raster 
 #  Indicate the number of header lines to remove (except column names)
 
-readTRMMAscii <- function(filename, outputFName="trmm.tif", hdrs=5){
+readTRMMAscii <- function(inputfile, outputfile, hdrs=5, ...){
     tf <- tempfile()
 
-	write.table(readLines(filename)[-(1:hdrs)], tf, row.names=F, col.names=F, quote=F)
+	write.table(readLines(inputfile)[-(1:hdrs)], tf, row.names=F, col.names=F, quote=F)
 	coor <- read.table(tf, header=T)
 	
 	file.remove(tf)
@@ -31,6 +31,10 @@ readTRMMAscii <- function(filename, outputFName="trmm.tif", hdrs=5){
 
 	rast <- setValues(rast, vec)
 
-	filename(rast) <- outputFName
-	writeRaster(rast, file="GTiff")
+	filename(rast) <- outputfile
+	if (filename(rast) != "") {
+		rast <- writeRaster(rast, ...)
+	}
+	
+	return(rast)
 }
