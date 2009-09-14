@@ -31,7 +31,7 @@ spatSim <- function(raster, model, starts, verbose=FALSE, ...)  {
 
 	nruns <- length(start)
 	onedegworld <- raster()
-	cells <- cellsFromBbox(onedegworld, raster)
+	cells <- cellsFromExtent(onedegworld, raster)
 	if (ncell(raster) != length(cells)) { stop("not good") }
 	
 	result <- matrix(NA, nrow=length(cells), ncol=length(starts))
@@ -80,8 +80,8 @@ spatSimFlex <- function(raster, pdateraster, model, years, period=14, periodpt=7
 	
 	nruns <- length(start)
 	onedegworld <- raster()
-	pcells <- cellsFromBbox(onedegworld, pdateraster)
-	cells <- cellsFromBbox(onedegworld, raster)
+	pcells <- cellsFromExtent(onedegworld, pdateraster)
+	cells <- cellsFromExtent(onedegworld, raster)
 	if (ncell(raster) != length(cells)) { stop("not good") }
 	
 	result <- matrix(NA, nrow=length(cells), ncol=length(years))
