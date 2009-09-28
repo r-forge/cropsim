@@ -1,15 +1,14 @@
 #     SIMRIW.FOR
 #     SImulation Model for RIce-Weather Relationships
-#     by Takeshi Horie, Lab. Crop Science, Kyoto Univ.,
-#     Kyoto,Japan 
+#     by Takeshi Horie, Lab. Crop Science, Kyoto Univ., Kyoto,Japan 
 
-
+# implemented in R by Robert Hijmans, r.hijmans@gmail.com
+# September 2009
+# Version 0.1
 
 # CROPARAM
-# This file gives values of crop parameters
-# used in SIMRIW
-# Parameters in the line 1 to 6 (GO to DVSAS)
-# are related to crop phenology up to heading,
+# This file gives values of crop parameters used in SIMRIW
+# Parameters in the line 1 to 6 (GO to DVSAS) are related to crop phenology up to heading,
 # and VERY CULTIVAR - SPECif IC!
 # Those in the line 7 to 8 (GR to KCR) are for crop phenology during ripening phase.
 # Those in the line 10 to 11 (EXTC and COVES) are  related to dry matter production.
@@ -17,50 +16,152 @@
 # CTR (line 13) is the critical temp. for autumn coolness.
 # Those in the line 14 to 19 (A to BETA) are related to leaf  area growth.
 # Those in the line 20 to 23 are related to cooling-degree-days for spikelet sterility.
-#
-# Current total numbers of cultivars are:
 
+
+setClass('SIMRIWsimulation',
+	representation (
+		PYBROD = 'numeric', 
+		PYBRON = 'numeric',
+		PYPADY = 'numeric',
+		PANDW  = 'numeric',
+		DWT    = 'numeric',
+		d      = 'data.frame'
+	),
+	prototype (	
+		PYBROD = 0, 
+		PYBRON = 0, 
+		PYPADY = 0, 
+		PANDW  = 0, 
+		DWT    = 0, 
+		d = data.frame()
+	),	
+	validity = function(object)
+	{
+		return(TRUE)
+	}
+)
+	
+
+
+setMethod ('show' , 'SIMRIWsimulation', 
+	function(object) {
+		cat('class   :' , class(object), '\n')
+		cat('\n')	
+		cat('PYBROD :' , object@PYBROD, '\n')
+		cat('PYBRON :' , object@PYBRON, '\n')
+		cat('PYPADY :' , object@PYPADY, '\n')
+		cat('PANDW  :' , object@PANDW, '\n')
+		cat('DWT    :' , object@DWT, '\n')
+		
+		cat('\n')
+		l <- dim(object@d)[1]
+		if (l == 0) {
+			cat('no daily data\n')
+		} else {
+			cat(l ,'rows: \n')
+			if (l < 25) {
+				print(object@d)
+			} else {
+				print(object@d[1:5,])
+				cat('\n')
+				cat('  (... ...  ...)\n')
+				cat('\n')
+				print(object@d[(l-5):l,])
+			}
+		}
+	}
+)	
+
+
+
+setMethod ('plot', signature(x='SIMRIWsimulation', y='missing'),
+	function(x, ...) {
+		plot(x@d$date, x@d$DW,  ylab="Yield (g/m2)", ...)
+		points(x@d$date, x@d$GY, col='blue')
+		points(x@d$date, x@d$PY, col='red')
+		legend(sim@d$date[1], sim@d$DW[dim(sim@d)[1]], c("DW", "GY", "PY"), col=c("black", "blue", "red"), pch=21)
+	}
+)
+
+
+	
 
 setClass('SIMRIWcultivar',
 	representation (
-		name = 'character',
-		GV = 'numeric',
-		ALF = 'numeric',
-		TH = 'numeric',
-		BDL = 'numeric',
-		LC = 'numeric',
-		DVIA  = 'numeric',
-		TCR   = 'numeric',
-		GR    = 'numeric',
-		KCR   = 'numeric',
-		EXTC  = 'numeric',
-		COVES = 'numeric',
-		HIMX  = 'numeric', 
-		CTR   = 'numeric',
-		A     = 'numeric',
-		KF    = 'numeric',
-		ETA   = 'numeric',
-		FAS   = 'numeric',
-		TCF   = 'numeric',
-		BETA  = 'numeric', 
-		THOT  = 'numeric',
-		STO   = 'numeric',
-		BST   = 'numeric',
-		PST   = 'numeric'
+		name  = 'character',
+		GV    = 'numeric', #unit=days; related to crop phenology up to heading
+		ALF   = 'numeric', #no unit; related to crop phenology up to heading
+		TH    = 'numeric', #unit=C; related to crop phenology up to heading
+		BDL   = 'numeric', #no unit; related to crop phenology up to heading
+		LC    = 'numeric', #unit=hours; related to crop phenology up to heading
+		DVIA  = 'numeric', #no unit; related to crop phenology up to heading
+		TCR   = 'numeric', #unit=C
+		GR    = 'numeric', #unit=days; for crop phenology during ripening phase
+		KCR   = 'numeric', #no unit; for crop phenology during ripening phase
+		EXTC  = 'numeric', #no unit; related to dry matter production
+		COVES = 'numeric', #unit=G/MJ; related to dry matter production
+		HIMX  = 'numeric', #no unit; maximum harvest index
+		CTR   = 'numeric', #unit=C; critical temp. for autumn coolness.
+		A     = 'numeric', #unit=/day; related to leaf  area growth
+		KF    = 'numeric', #no unit; related to leaf  area growth
+		ETA   = 'numeric', #no unit; related to leaf  area growth
+		FAS   = 'numeric', #no unit; related to leaf  area growth
+		TCF   = 'numeric', #unit=C; related to leaf  area growth
+		BETA  = 'numeric', #no unit; related to leaf  area growth
+		THOT  = 'numeric', #unit=C; related to cooling-degree-days for spikelet sterility
+		STO   = 'numeric', #unit=%; related to cooling-degree-days for spikelet sterility
+		BST   = 'numeric', #no unit; related to cooling-degree-days for spikelet sterility
+		PST   = 'numeric'  #no unit; related to cooling-degree-days for spikelet sterility
  )
 )
 
 
-simriw <- function(wth, lat, cultivar, startday, CO2=350) {
+setMethod ('show' , 'SIMRIWcultivar', 
+	function(object) {
+	   str(object)
+	}
+)	
 
-#      TMN0=0.0
-#      TMX0=20.0
-#      RAD0=10000
-##     Conversion from KJ to MJ 
-    AVT = wth$temp
-	RAD <- wth$srad
-	TMX <- wth$tmax
-	
+showCultivars <- function() {
+	tab <-  read.table(system.file("simriw/cultivars.txt", package="cropsim"), sep=',', header=T)
+	return(colnames(tab)[-2:-1])
+}
+
+cultivar <- function(cultivar) {
+	tab <-  read.table(system.file("simriw/cultivars.txt", package="cropsim"), sep=',', header=T, row.names=1)
+	if (! (cultivar %in% colnames(tab)[-2:-1]) ) {
+		stop('Unknown cultivar. Choose from: ', showCultivars())
+	} 
+	cv <- new('SIMRIWcultivar')
+	cv@name <- colnames(tab[cultivar])
+	cv@GV <- tab['GV', cultivar]
+	cv@ALF <- tab['ALF', cultivar]
+	cv@TH <- tab['TH', cultivar]
+	cv@BDL <- tab['BDL', cultivar]
+	cv@LC <- tab['LC', cultivar]
+	cv@DVIA <- tab['DVIA', cultivar]
+	cv@TCR <- tab['TCR', cultivar]
+	cv@GR <- tab['GR', cultivar]
+	cv@KCR <- tab['KCR', cultivar]
+	cv@EXTC <- tab['EXTC', cultivar]
+	cv@COVES <- tab['COVES', cultivar]
+	cv@HIMX <- tab['HIMX', cultivar]
+	cv@CTR <- tab['CTR', cultivar]
+	cv@A <- tab['A', cultivar]
+	cv@KF <- tab['KF', cultivar]
+	cv@ETA <- tab['ETA', cultivar]
+	cv@FAS <- tab['FAS', cultivar]
+	cv@TCF <- tab['TCF', cultivar]
+	cv@BETA <- tab['BETA', cultivar]
+	cv@THOT <- tab['THOT', cultivar]
+	cv@STO <- tab['STO', cultivar]
+	cv@BST <- tab['BST', cultivar]
+	cv@PST <- tab['PST', cultivar]
+	return(cv)	
+}
+
+
+simriw <- function(wth, cultivar, startday, transplant=FALSE, CO2=350) {
 #     Constants and parameters which may not be cutivar specific
 #     Constants related to optcal properties of canopy
     SCAT = 0.25
@@ -76,8 +177,6 @@ simriw <- function(wth, lat, cultivar, startday, CO2=350) {
  
 #     Initial conditions for simulation
 
-	transplant <- TRUE
-	
 	if (transplant) {
 		DVII = 0.15  #transplant	
 		LAII = 0.05
@@ -87,8 +186,6 @@ simriw <- function(wth, lat, cultivar, startday, CO2=350) {
 		LAII = 0.0025
 		DWI = 4
 	}
-#      OPEN(30,FILE='RESULTS.SIM')
-#  850 FORMAT(// ,' MON',' DAT',' DAY','    DVI','    LAI',   +' DW(g/m)',' GY(g/m)',' PY(g/m)','   T(#)',' R(MJ)',' DL(H)',/ )
 
     IFLUG1=0
     IFLUG2=0
@@ -107,17 +204,43 @@ simriw <- function(wth, lat, cultivar, startday, CO2=350) {
     DW=DWI
     DWGRAIN=0.0
     DWPAN=0.0
-#     Dynamic Section of The Model  ************************************************************
+	STHT=0
+	STLT=0
 
-	endday <- as.Date(startday) + 300
+# weather data	
+    AVT <- wth@w$temp
+	RAD <- wth@w$srad
+	TMX <- wth@w$tmax
+    startday <- as.Date(startday)
+	endday <- startday + 200
 	days <- seq(startday, endday, 1)
-	DL <- daylength(lat, days)
-
+	DL <- daylength(wth@lat, wth@w$doy)
 	
+	startindex <- which(wth@w[,'date'] == startday)
+	endindex <- which(wth@w[,'date'] == endday)
+	
+	day <- startindex-1
 	growing <- TRUE
-	day <- 0
+	simday <- 0
+
+	res <- as.data.frame(matrix(ncol=9, nrow=length(days)))
+	colnames(res) <- c('date','TMP', 'RAD','DL','DVI','LAI', 'DW', 'GY', 'PY')
+	class(res[,'date']) <- 'Date'
+	
+	#     Dynamic Section of The Model  ************************************************************
 	while (growing) {
 		day <- day + 1
+		simday <- simday + 1
+		res[simday,'date'] <- wth@w$date[day]
+		res[simday,'TMP'] <- AVT[day]
+		res[simday,'RAD'] <- RAD[day]
+		res[simday,'DL'] <- DL[day]
+		res[simday,'DVI'] <- DVI
+		res[simday,'LAI'] <- LAI
+		res[simday,'DW'] <- DW
+		res[simday,'GY'] <- DWGRAIN
+		res[simday,'PY'] <- DWPAN
+			
 #     Culculation of Developmental Index DVI
 		if (DVI < cultivar@DVIA) {
 			EFT <- AVT[day]-cultivar@TH
@@ -207,10 +330,32 @@ simriw <- function(wth, lat, cultivar, startday, CO2=350) {
 		}
 	}
 
+	simday <- simday + 1
+	res[simday,'date'] <- wth@w$date[day]
+	res[simday,'TMP'] <- AVT[day]
+	res[simday,'RAD'] <- RAD[day]
+	res[simday,'DL'] <- DL[day]
+	res[simday,'DVI'] <- DVI
+	res[simday,'LAI'] <- LAI
+	res[simday,'DW'] <- DW
+	res[simday,'GY'] <- DWGRAIN
+	res[simday,'PY'] <- DWPAN
+	
 #    Terminal Section of  Simulation
     PYBROD <- DWGRAIN/100.0
     PYBRON <- PYBROD/0.86
     PYPADY <- PYBRON/CVBP
     PANDW <- PYBROD/CVBP/CVPP
     DWT <- DW/100.0
+	
+	r <- new('SIMRIWsimulation')
+	r@PYBROD <- PYBROD
+	r@PYBRON <- PYBRON
+	r@PYPADY <- PYPADY
+	r@PANDW <- PANDW
+	r@DWT <- DWT
+	r@d <- res[1:simday,]
+	
+	return(r)
 } 
+

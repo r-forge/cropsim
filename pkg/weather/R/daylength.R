@@ -15,7 +15,7 @@ daylength <- function(lat, doy) {
 #Comparison for Daylength as a Function of Latitude and Day of the Year."
 	P <- asin(0.39795 * cos(0.2163108 + 2 * atan(0.9671396 * tan(0.00860*(doy-186)))))
 	a <-  (sin(0.8333 * pi/180) + sin(lat * pi/180) * sin(P)) / (cos(lat * pi/180) * cos(P));
-	a <- min(max(a, -1), 1)
+	a <- pmin(pmax(a, -1), 1)
 	DL <- 24 - (24/pi) * acos(a)
 	return(DL)
 }

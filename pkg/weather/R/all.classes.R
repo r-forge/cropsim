@@ -7,46 +7,51 @@
 # Licence GPL v3
 
 
-setClass('location', 
-	representation (
-		x ='numeric',
-		y ='numeric',		
-		alt ='numeric'
-	)
-)
-
-
 setClass('weather', 
 	representation (
-		temp ='vector',
-		prec = 'vector',
-		rad = 'vector',
-		wind = 'vector',
-		vapr = 'vector',
-		relh  = 'vector',
-		time = 'vector'
+		lon ='numeric',
+		lat ='numeric',		
+		alt ='numeric',
+		w = 'data.frame'
 	),
 	prototype (	
-		
+		lon = 0,
+		lat = 0,
+		alt = 0,
+		w = data.frame()
 	),	
 	validity = function(object)
-	{ # all vectors should have same length 
+	{
+		con <- (x >= -180 & x <= 180 & y <= 90 & y >= -90)
+		return(con)
 	}
 )
 
-	
-setClass ('dailyweather',
-	contains = 'weather',
-	representation (
-		mintmp ='numeric',
-		maxtmp ='numeric'
-		),
-	validity = function(object)
-	{
-		cond1 <- isTRUE(object@mintmp <= object@maxtmp)
-		cond <- cond1 #& cond2 & cond3
-		return(cond)
+
+
+setMethod ('show' , 'weather', 
+	function(object) {
+		cat('class   :' , class(object), '\n')
+		cat('\n')	
+		cat('location' , '\n')
+		cat('longitude:' , object@lon, '\n')
+		cat('latitude :' , object@lat, '\n')
+		cat('altitude :' , object@alt, '\n')
+		cat('\n')
+		l <- dim(object@w)[1]
+		if (l == 0) {
+			cat('no weather data\n')
+		} else {
+			cat(l ,'rows: \n')
+			if (l < 25) {
+				print(object@w)
+			} else {
+				print(object@w[1:5,])
+				cat('\n')
+				cat('  (... ...  ...)\n')
+				cat('\n')
+				print(object@w[(l-5):l,])
+			}
+		}
 	}
-)
-	
-	
+)	
