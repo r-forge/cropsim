@@ -79,7 +79,7 @@ setMethod ('plot', signature(x='SIMRIWsimulation', y='missing'),
 		plot(x@d$date, x@d$DW,  ylab="Yield (g/m2)", ...)
 		points(x@d$date, x@d$GY, col='blue')
 		points(x@d$date, x@d$PY, col='red')
-		legend(sim@d$date[1], sim@d$DW[dim(sim@d)[1]], c("DW", "GY", "PY"), col=c("black", "blue", "red"), pch=21)
+		legend(x@d$date[1], x@d$DW[dim(x@d)[1]], c("DW", "GY", "PY"), col=c("black", "blue", "red"), pch=21)
 	}
 )
 
