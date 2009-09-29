@@ -17,7 +17,7 @@ getWthXY <- function(lon, lat, start="1993-1-1", end="2009-12-31") {
 	filename <- paste("daily_weather_", cell, ".nasa", sep="")
 
 	vars <- c("swv_dwn", "T2M", "T2MN", "T2MX", "RH2M", "RAIN")
-	nicevars <- c("year", "doy", "srad", "temp", "tmin", "tmax", "relh", "prec")
+	nicevars <- c("year", "doy", "srad", "tavg", "tmin", "tmax", "relh", "prec")
 
 	xy <- xyFromCell(raster, cell)
 	lon <- xy[1]
@@ -42,7 +42,7 @@ getWthXY <- function(lon, lat, start="1993-1-1", end="2009-12-31") {
 	lns <- strsplit ( gsub("[[:space:]]+", " ", gsub("[[:space:]]+$", "", lns))  , " ")
 	lns <- matrix(as.numeric(unlist(lns)), ncol=length(lns[[1]]), byrow=T)
 	colnames(lns) <- nicevars
-	rhnx <- rhMinMax(lns[,'relh'], lns[,'tmin'], lns[,'tmax'], lns[,'temp']) 
+	rhnx <- rhMinMax(lns[,'relh'], lns[,'tmin'], lns[,'tmax'], lns[,'tavg']) 
 	lns <- cbind(lns, rhnx)
 	
 	date <- dateFromDoy(lns[,'doy'], lns[,'year'])

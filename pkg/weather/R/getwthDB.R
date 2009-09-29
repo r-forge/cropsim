@@ -69,13 +69,13 @@ DBgetWthLWXY <- function(database, table, lon, lat, rst=raster()) {
 
 DBgetWthLWCell <- function(database, table, cell, latitude) {
 	w <- DBgetWthCell(database, table, cell)
-	w$lfwt <- LeafWetWithRain(latitude, w$day, w$relh, w$tmin, w$tmax, w$prec, FALSE)
+	w$lfwt <- leafWetWithRain(w, FALSE)
 	return(w)
 }	
 
 DBgetWthLWCellNoDSN <- function(table, cell, latitude, user, pwd, ...) {
 	w <- DBgetWthCellNoDSN(table, cell, user, pwd)
-	w$lfwt <- LeafWetWithRain(latitude, w$day, w$relh, w$tmin, w$tmax, w$prec, FALSE)
+	w$lfwt <- leafWetWithRain(w, FALSE)
 	return(w)
 }
 

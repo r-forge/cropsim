@@ -3,6 +3,7 @@
 # Version 0.1  January 2009
 
 eLW <- function(rhmin, rhmax, tmin) {
+# emperical leaf wetness estimation according to Hijmans, Forbes and Walker, 2001
     ewhr <- exp(-8.093137318+0.11636662*rhmax-0.03715678*rhmin+0.000358713*rhmin*rhmin)
     if (rhmin < 52) {
       ewhr52 <- exp(-8.093137318+0.11636662*rhmax-0.03715678*52+0.000358713*52*52);
@@ -14,10 +15,11 @@ eLW <- function(rhmin, rhmax, tmin) {
 }
 
 
-LeafWet <- function(lat, date, rhavg, tmin, tmax, simple=TRUE) {
-	lw <- vector()
-	for (d in 1:length(date)) {
-		rh <- diurnalRH(lat, date[d], rhavg[d], tmin[d], tmax[d], tavg=(tmin[d]+tmax[d])/2)
+leafWet <- function(wth, simple=TRUE) {
+	lw <- vector(length=dim(wth@w)[1])
+	wth@w$rhavg <- (wth@w$rhmin + wth@w$rhmax) / 2
+	for (d in 1:length(lw)) {
+		rh <- diurnalRH(wth@lat, wth@w$date[d], wth@w$rhavg[d], wth@w$tmin[d], wth@w$tmax[d], wth@w$tavg[d])
 		if (simple) {
 			lw[d] <- length(rh[rh>=90])
 		} else {
@@ -33,10 +35,10 @@ LeafWet <- function(lat, date, rhavg, tmin, tmax, simple=TRUE) {
 }
 
 
-LeafWetWithRain <- function(lat, date, rhavg, tmin, tmax, prec, simple=TRUE) {
-	lw <- LeafWet(lat, date, rhavg, tmin, tmax, simple=simple)
-	prec[is.na(prec)] <- 0 
-	prhrs <- pmin(12, prec / 5)
+leafWetWithRain <- function(wth, simple=TRUE) {
+	lw <- leafWet(wth, simple=simple)
+	prec[is.na(wth@w$prec)] <- 0 
+	prhrs <- pmin(12, wth@w$prec / 5)
 	return(lw + (1 - lw/24) * prhrs)
 }
 
@@ -101,5 +103,4 @@ diurnalRH <- function(lat, date, rhavg, tmin, tmax, tavg=(tmin+tmax)/2) {
 	rh <- pmin(100, pmax(0, rh))
 	return(rh)
 }
-
 

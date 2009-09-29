@@ -31,7 +31,7 @@ setMethod ('show' , 'weather',
 	function(object) {
 		cat('class   :' , class(object), '\n')
 		cat('\n')	
-		cat('location' , '\n')
+		cat('Location' , '\n')
 		cat('longitude:' , object@lon, '\n')
 		cat('latitude :' , object@lat, '\n')
 		cat('altitude :' , object@alt, '\n')
