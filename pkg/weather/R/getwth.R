@@ -2,6 +2,13 @@
 # License GPL3
 # Version 0.1  January 2009
 
+getWthFile <- function(filename, type='NASA') {
+	if (type=='NASA') {
+		return(.getWthFileNASA(filename))
+	}
+
+}
+
 getWthXY <- function(lon, lat, start="1993-1-1", end="2009-12-31") {
 	sday <- dayFromDate(start)
 	smon <- monthFromDate(start)
@@ -17,7 +24,6 @@ getWthXY <- function(lon, lat, start="1993-1-1", end="2009-12-31") {
 	filename <- paste("daily_weather_", cell, ".nasa", sep="")
 
 	vars <- c("swv_dwn", "T2M", "T2MN", "T2MX", "RH2M", "RAIN")
-	nicevars <- c("year", "doy", "srad", "tavg", "tmin", "tmax", "relh", "prec")
 
 	xy <- xyFromCell(raster, cell)
 	lon <- xy[1]
@@ -33,14 +39,28 @@ getWthXY <- function(lon, lat, start="1993-1-1", end="2009-12-31") {
 		theurl <- paste(part1, part2, part3, sep="")
 		download.file(url=theurl, destfile=filename, method="auto", quiet = FALSE, mode = "wb", cacheOK = TRUE)
 	}
+	return(.getWthFileNASA(filename, xy))
+}
+
+.getWthFileNASA <- function(filename, xy=NULL) {
 	lns <- readLines(filename)
 	alt <- NA
 	try(alt <- as.numeric(substr(lns[4],60,66)), silent=TRUE)
+	if (is.null(xy)) {
+		x <- 0
+		y <- 0
+		try(x <- as.numeric(substr(lns[3],36,41)), silent=TRUE)
+		try(y <- as.numeric(substr(lns[3],19,24)), silent=TRUE)
+		xy <- cbind(x,y)
+	}
+	
 	hdr <- strsplit ( gsub("[[:space:]]+", " ", gsub("[[:space:]]+$", "", lns[14]))  , " ")[[1]]
 	if (hdr[1] != "YEAR") { stop("Something (not so) funny is going on") }
 	lns <- lns[15:length(lns)]
 	lns <- strsplit ( gsub("[[:space:]]+", " ", gsub("[[:space:]]+$", "", lns))  , " ")
 	lns <- matrix(as.numeric(unlist(lns)), ncol=length(lns[[1]]), byrow=T)
+
+	nicevars <- c("year", "doy", "srad", "tavg", "tmin", "tmax", "relh", "prec")
 	colnames(lns) <- nicevars
 	rhnx <- rhMinMax(lns[,'relh'], lns[,'tmin'], lns[,'tmax'], lns[,'tavg']) 
 	lns <- cbind(lns, rhnx)

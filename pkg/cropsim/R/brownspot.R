@@ -9,19 +9,15 @@
 
 brownSpot <- function(wth, emergence='2000-05-15', onset=20, duration=120, rhlim=90, rainlim=5, wetness=0) {
 	emergence <- as.Date(emergence)
-	wth <- subset(wth, wth$day >= emergence)
-#average temperature
-	tmp <- (wth$tmax + wth$tmin) / 2
-#maximum RH
-	rhx <- wth$rhmx
-#rain amount
-	rain <- wth$prec
-#wetness
-	W <- wth$lfwt
+	wth@w <- subset(wth@w, wth@w$date >= emergence)
+	if (dim(wth@w)[1] < duration) {
+		stop("Incomplete weather data")
+	}
+	wth@w <- wth@w[1:duration,]
 	
-	if (length(tmp) < duration) {
-		print("Incomplete weather data")
-		stop()
+# wetness
+	if (wetness == 1) {
+		W <- leafWet(wth, simple=TRUE)
 	}
 
 	# constants	
@@ -119,14 +115,14 @@ brownSpot <- function(wth, emergence='2000-05-15', onset=20, duration=120, rhlim
 		}
 
 		if (wetness==0){
-			if (rhx[day] >= rhlim | rain[day] >= rainlim) {
+			if (wth@w$rhmax[day] >= rhlim | wth@w$prec[day] >= rainlim) {
 				RHCoef[day] <- 1
 			}
 		} else {
 			RHCoef[day]<- AFGen (RHCoefRc, W[day])
 		}		
 
-		Rc[day] <- BaseRc * AFGen(AgeCoefRc, day) * AFGen(TempCoefRc, tmp[day]) * RHCoef[day]
+		Rc[day] <- BaseRc * AFGen(AgeCoefRc, day) * AFGen(TempCoefRc, wth@w$tavg[day]) * RHCoef[day]
 			
 		Diseased[day] <- sum(infectious) + now_latent[day] + Removed[day]
 		Removed[day] <- sum(infectious) - now_infectious[day]
@@ -154,10 +150,13 @@ brownSpot <- function(wth, emergence='2000-05-15', onset=20, duration=120, rhlim
 	}
 
 	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased, Senesced, Rinfection, Rtransfer, RGrowth, RSenesced, Severity)
-	res <- res[1:day,]
-	#res <- Diseased / AllSites 
-	res <- cbind(1:length(res[,1]), res)
-	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased", "senesced", "rateinf", "rtransfer", "rgrowth", "rsenesced", "severity")
-	return(res)
+	res <- as.data.frame(res[1:day,])
+	dates <- seq(emergence, emergence+duration, 1)
+	res <- cbind(dates[1:day], res)
+	colnames(res) <- c("date", "sites", "latent", "infectious", "removed", "diseased", "senesced", "rateinf", "rtransfer", "rgrowth", "rsenesced", "severity")
+
+	result <- new('SEIR')
+	result@d <- res
+	return(result)
 }
 

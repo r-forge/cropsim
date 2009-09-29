@@ -35,38 +35,16 @@ Hashiba, T. and Ijiri, T., 1989. Estimation of yield loss and computerized forec
 Tu, C.C., Chang, Y.C., Wang, C.W., 1979. Studies on the ecology of Rhizoctonia solani, the causal organism of rice sheath blight. Natl. Sci. Counc. Monthly, ROC 7:1208-1219.
 Gross, M.K., Santini, J.B., Tikhonova, I. and Latin, R. 1998. The influence of temperature and leaf wetness duration on infection of perennial ryegrass by Rhizoctonia solani. Plant Disease 82:1012-1016.
 }
+
 \author{ S. Savary, R. Hijmans, I. Pangga, J.K. Aunario }
-\note{ ~~further notes~~ 
 
- 
-}
-\seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
+
+\seealso{ \code{\link[cropsim]{brownspot}}, \link[cropsim]{leafblast}  }
+
 \examples{
-
-prectable <- cbind(0:10*12, c(5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5))
-rhmxtable <- cbind(0:10*12, c(99.0, 98.5, 97, 96, 98.5, 96, 95.5, 96.5, 96, 95.5, 96))
-tmptable <- cbind(0:10*12, c(27.8, 27.8, 28, 27.9, 27.8, 27.8, 27.8, 27.7, 27.7, 27.7, 27.5))
-lfwttable <- cbind (0:10*12, rep(24, 11))
-
-dur <- 120
-prec <- vector (length=dur)
-rhmx <- vector(length=dur)
-tmp  <- vector(length=dur)
-lfwt <- vector(length=dur)
-day  <- seq(as.Date('2000-5-15'), len = dur, by = "1 day")
-
-for (d in 1:dur) {
-	rhmx[d] <- AFGen(rhmxtable, d)
-	tmp[d] <- AFGen(tmptable, d)
-	prec[d] <- AFGen(prectable, d)
-    lfwt[d] <- AFGen(lfwttable, d)
-}	
-tmin <- tmp - 5
-tmax <- tmp + 5
-wth <- as.data.frame(cbind(tmin, tmax, rhmx, prec, lfwt))
-wth$day <-day
-
-res <- as.data.frame(sheathBlight(wth, duration=120, onset=30))
-splot2(res)
+wth <- getWthFile(system.file("weather/daily_weather_28368.nasa", package = "cropsim"))
+#res <- sheathBlight(wth, duration=120, onset=30)
+#splot(res)
 }
+
 \keyword{ spatial }
