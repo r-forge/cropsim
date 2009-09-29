@@ -1,3 +1,6 @@
+# Author: Robert J. Hijmans, r.hijmans@gmail.com
+# License GPL3
+# Version 0.1  January 2009
 
 
 daylength <- function(lat, doy) {

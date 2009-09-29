@@ -1,9 +1,7 @@
-# R classes for spatial data (raster data specifically) 
-# Author: Robert J. Hijmans
-# International Rice Research Institute
-# contact: r.hijmans@gmail.com
-# Date : October 2008
-# Version 0,3
+# R classes 
+# Author: Robert J. Hijmans, r.hijmans@gmail.com
+# Date : September 2009
+# Version 0.1
 # Licence GPL v3
 
 

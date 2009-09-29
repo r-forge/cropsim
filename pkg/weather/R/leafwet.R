@@ -1,3 +1,6 @@
+# Author: Robert J. Hijmans, r.hijmans@gmail.com
+# License GPL3
+# Version 0.1  January 2009
 
 eLW <- function(rhmin, rhmax, tmin) {
     ewhr <- exp(-8.093137318+0.11636662*rhmax-0.03715678*rhmin+0.000358713*rhmin*rhmin)
