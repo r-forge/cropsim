@@ -10,22 +10,17 @@
 
 bactBlight <- function(wth, emergence='2000-05-15', onset=20, duration=120, rhlim=90, rainlim=5, wetness=0) {
 	emergence <- as.Date(emergence)
-	wth <- subset(wth, wth$day >= emergence)
-
-#average temperature
-	tmp <- (wth$tmax + wth$tmin) / 2
-#maximum RH
-	rhx <- wth$rhmx
-#rain amount
-	rain <- wth$prec
-#wetness
-	W <- wth$lfwt
-
-	if (length(tmp) < duration) {
-		print("Incomplete weather data")
-		stop()
+	wth@w <- subset(wth@w, wth@w$date >= emergence)
+	if (dim(wth@w)[1] < duration) {
+		stop("Incomplete weather data")
 	}
-
+	wth@w <- wth@w[1:duration,]
+	
+# wetness
+	if (wetness == 1) {
+		W <- leafWet(wth, simple=TRUE)
+	}
+	
 	RRG <- 0.1
 	RRPhysiolSenesc <- 0.01
 	SenescType <- 1	
@@ -38,49 +33,12 @@ bactBlight <- function(wth, emergence='2000-05-15', onset=20, duration=120, rhli
 	latency_transit_time <- 5
 	
 	# Output vars
-	TotalSites <- vector(length=duration)
-	TotalSites[] <- 0
-	Sites <- vector(length=duration)
-	Sites[] <- 0
-	now_latent <- vector(length=duration)
-	now_latent[] <- 0
-	now_infectious <- vector(length=duration)
-	now_infectious[] <- 0
-	Removed <- vector(length=duration)
-	Removed[] <- 0
-	Senesced <- vector(length=duration)
-	Senesced[] <- 0
-	Diseased <- vector(length=duration)
-	Diseased[] <- 0
-	Rinfection <- vector(length=duration)
-	Rinfection[] <- 0
-	Rtransfer <- vector(length=duration)
-	Rtransfer[] <- 0
-	RGrowth <- vector(length=duration)
-	RGrowth[] <- 0
-	RSenesced <- vector(length=duration)
-	RSenesced[] <- 0
-	
-	Incidence <- vector (length=duration)
-	Incidence[] <- 0
-
-	# Boxcar
-	infectious <- vector(length=duration)
-	infectious[] <- 0
-	latency <- vector(length=duration)
-	latency[] <- 0
-
-	#Parameters
-	RHCoef <- vector(length=duration)
-	RHCoef[] <- 0
+	TotalSites <- rep(0, times=duration)
+	COFR <- Rc <- RHCoef <- latency <- infectious <- Incidence <- RSenesced <- RGrowth <- Rtransfer <- Rinfection <- Diseased <- Senesced <- Removed <- now_infectious <- now_latent <- Sites <- TotalSites
 	
     AgeCoefRc <- cbind(0:12 * 10, c( 1, 1, 1, 0.9, 0.62, 0.43, 0.41, 0.42, 0.41, 0.41, 0.41, 0.41, 0.41))
  	TempCoefRc <- cbind(16 + (0:8 * 3), c(0, 0.29, 0.44, 0.90, 0.90, 1.0, 0.88, 0.01, 0))
 	RHCoefRc <- cbind(c(2,1:8 * 3), c(0, 0.67, 0.81, 0.84, 0.87, 0.91, 0.94, 0.97, 1.0))
-	Rc <- vector(length=duration)
-	Rc[] <- 0
-	COFR <- vector(length=duration)
-	COFR[] <- 0
 	
 	MatPer <- 20
 	
@@ -92,8 +50,7 @@ bactBlight <- function(wth, emergence='2000-05-15', onset=20, duration=120, rhli
 			Sites[day] <- 108.6875
 			RSenesced[day] <- RRPhysiolSenesc * Sites[day]
 			Senesced[day] <- RRPhysiolSenesc * initSites
-		}
-		else {
+		} else {
 			if (day > infectious_transit_time) {
 				removedToday <- infectious[infday+1]
 			} else {
@@ -121,14 +78,14 @@ bactBlight <- function(wth, emergence='2000-05-15', onset=20, duration=120, rhli
 			break 
 		}
 		if (wetness==0){
-			if (rhx[day] >= rhlim | rain[day] >= rainlim) {
+			if (wth@w$rhmax[day] >= rhlim | wth@w$prec[day] >= rainlim) {
 				RHCoef[day] <- 1
 			}
 		} else {
-		RHCoef[day]<- AFGen (RHCoefRc, W[day])
+			RHCoef[day]<- AFGen (RHCoefRc, W[day])
 		}		
 
-		Rc[day] <- BaseRc * AFGen(AgeCoefRc, day) * AFGen(TempCoefRc, tmp[day]) * RHCoef[day]
+		Rc[day] <- BaseRc * AFGen(AgeCoefRc, day) * AFGen(TempCoefRc, wth@w$tavg[day]) * RHCoef[day]
 		
 		Diseased[day] <- sum(infectious) + now_latent[day] + Removed[day]
 		Removed[day] <- sum(infectious) - now_infectious[day]
@@ -161,10 +118,15 @@ bactBlight <- function(wth, emergence='2000-05-15', onset=20, duration=120, rhli
 	}
 	
 	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased, Senesced, Rinfection, Rtransfer, RGrowth, RSenesced, Incidence)
-	res <- res[1:day,]
-	#res <- Diseased / AllSites 
-	res <- cbind(1:length(res[,1]), res)
-	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased", "senesced", "rateinf", "rtransfer", "rgrowth", "rsenesced", "incidence")
-	return(res)
+	res <- as.data.frame(res[1:day,])
+	
+	dates <- seq(emergence, emergence+duration, 1)
+	res <- cbind(dates[1:day], res)
+	colnames(res) <- c("date", "sites", "latent", "infectious", "removed", "diseased", "senesced", "rateinf", "rtransfer", "rgrowth", "rsenesced", "incidence")
+	
+	result <- new('SEIR')
+	result@d <- res
+	return(result)
+
 }
 

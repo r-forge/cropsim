@@ -9,21 +9,17 @@
 
 sheathBlight <- function(wth, emergence='2000-05-15', onset=30, duration=120, rhlim=90, rainlim=5, wetness=0) {
 	emergence <- as.Date(emergence)
-	wth <- subset(wth, wth$day >= emergence)
-
-#average temperature
-    tmp <- (wth$tmax + wth$tmin) / 2
-#maximum RH
-	rhx <- wth$rhmx
-#rain amount
-	rain <- wth$prec
-# wetness
-	W <- wth$lfwt	
-	
-	if (length(tmp) < duration) {
-		print("Incomplete weather data")
-		stop()
+	wth@w <- subset(wth@w, wth@w$date >= emergence)
+	if (dim(wth@w)[1] < duration) {
+		stop("Incomplete weather data")
 	}
+	wth@w <- wth@w[1:duration,]
+	
+# wetness
+	if (wetness == 1) {
+		W <- leafWet(wth, simple=TRUE)
+	}
+
 
 	# Constants
 	RRG <- 0.2
@@ -38,51 +34,14 @@ sheathBlight <- function(wth, emergence='2000-05-15', onset=30, duration=120, rh
 	latency_transit_time <- 3
 	Sites_transit_time <- 120
 	
-	# Output vars
-	TotalSites <- vector(length=duration)
-	TotalSites[] <- 0
-	Sites <- vector(length=duration)
-	Sites[] <- 0
-	now_latent <- vector(length=duration)
-	now_latent[] <- 0
-	now_infectious <- vector(length=duration)
-	now_infectious[] <- 0
-	Removed <- vector(length=duration)
-	Removed[] <- 0
-	Senesced <- vector(length=duration)
-	Senesced[] <- 0
-	Diseased <- vector(length=duration)
-	Diseased[] <- 0
-	Rinfection <- vector(length=duration)
-	Rinfection[] <- 0
-	Rtransfer <- vector(length=duration)
-	Rtransfer[] <- 0
-	RGrowth <- vector(length=duration)
-	RGrowth[] <- 0
-	RSenesced <- vector(length=duration)
-	RSenesced[] <- 0
-	
-	Incidence <- vector (length=duration)
-	Incidence[] <- 0
-
-	# Boxcar
-	infectious <- vector(length=duration)
-	infectious[] <- 0
-	latency <- vector(length=duration)
-	latency[] <- 0
+	# Variables
+	TotalSites <- rep(0, times=duration)
+	COFR <- Rc <- RHCoef <- latency <- infectious <- Incidence <- RSenesced <- RGrowth <- Rtransfer <- Rinfection <- Diseased <- Senesced <- Removed <- now_infectious <- now_latent <- Sites <- TotalSites
 
 	# Parameters
-	
-	RHCoef <- vector(length=duration)
-	RHCoef[] <- 0
-	
 	AgeCoefRc <- cbind(0:12 * 10, c(0.84, 0.84, 0.84, 0.84, 0.84, 0.84, 0.83, 0.88, 0.88, 1.0, 1.0, 1.0, 1.0))
 	RHCoefRc <- cbind(c(8,3:8 * 3), c(0, 0.24, 0.41, 0.68, 0.94, 0.97, 1.0))
 	TempCoefRc <- cbind(3:10 * 4, c(0, 0.42, 0.94, 0.94, 1.0, 0.85, 0.64, 0))
-	Rc <- vector(length=duration)
-	Rc[] <- 0
-	COFR <- vector(length=duration)
-	COFR[] <- 0
 
 	for (day in 1:duration) {
 
@@ -120,14 +79,14 @@ sheathBlight <- function(wth, emergence='2000-05-15', onset=30, duration=120, rh
 			break 
 		}
 		if (wetness==0){
-			if (rhx[day] >= rhlim | rain[day] >= rainlim) {
+			if (wth@w$rhmax[day] >= rhlim | wth@w$prec[day] >= rainlim) {
 				RHCoef[day] <- 1
 			}
 		} else {
 			RHCoef[day]<- AFGen (RHCoefRc, W[day])
 		}		
 		
-		Rc[day] <- BaseRc * AFGen(AgeCoefRc, day) * AFGen(TempCoefRc, tmp[day]) * RHCoef[day]
+		Rc[day] <- BaseRc * AFGen(AgeCoefRc, day) * AFGen(TempCoefRc, wth@w$tavg[day]) * RHCoef[day]
 		
 		Diseased[day] <- sum(infectious) + now_latent[day]
 		Removed[day] <- sum(infectious) - now_infectious[day]
@@ -160,10 +119,13 @@ sheathBlight <- function(wth, emergence='2000-05-15', onset=30, duration=120, rh
 	}
 	
 	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased, Senesced, Rinfection, Rtransfer, RGrowth, RSenesced, Incidence)
-	res <- res[1:day,]
-	#res <- Diseased / AllSites 
-	res <- cbind(1:length(res[,1]), res)
-	colnames(res) <- c("day", "sites", "latent", "infectious", "removed", "diseased", "senesced", "rateinf", "rtransfer", "rgrowth", "rsenesced", "incidence")
-	return(res)
+	res <- as.data.frame(res[1:day,])
+	dates <- seq(emergence, emergence+duration, 1)
+	res <- cbind(dates[1:day], res)
+	colnames(res) <- c("date", "sites", "latent", "infectious", "removed", "diseased", "senesced", "rateinf", "rtransfer", "rgrowth", "rsenesced", "incidence")
+	result <- new('SEIR')
+	result@d <- res
+	return(result)
+	
 }
 

@@ -1,5 +1,6 @@
 # Author: Serge Savary & Rene Pangga. 
-# R translation: Robert J. Hijmans, Rene Pangga, & Jorrel Aunario  r  hijmans@gmail.com (translated from STELLA LeafBlastMod v5T and  LeafBlastMod v5W  )
+# Translated from STELLA LeafBlastMod v5T and LeafBlastMod v5W by Robert J. Hijmans, Rene Pangga, & Jorrel Aunario  
+# r.hijmans@gmail.com 
 # International Rice Research Institute
 # Date :  10 June 2009
 # Version 0.2
@@ -11,12 +12,9 @@
 leafBlast <- function(wth, emergence='2000-05-15', onset=15, duration=120, rhlim=90, rainlim=5, wetness=0, rc=1.14, latrans=5, inftrans=20) {
 	emergence <- as.Date(emergence)
 	wth@w <- subset(wth@w, wth@w$date >= emergence)
-	if (dim(wth@w)[1] < duration) {
-		stop("Incomplete weather data")
-	}
+	if (dim(wth@w)[1] < duration) {	stop("Incomplete weather data") }
 	wth@w <- wth@w[1:duration,]
 	
-# wetness
 	if (wetness == 1) {
 		W <- leafWet(wth, simple=TRUE)
 	}
@@ -34,47 +32,12 @@ leafBlast <- function(wth, emergence='2000-05-15', onset=15, duration=120, rhlim
 	latency_transit_time <- latrans
 
 	# outputvars
-	TotalSites <- vector(length=duration)
-	TotalSites[] <- 0
-	Sites <- vector (length=duration)
-	Sites[] <- 0
-	now_latent <- vector(length=duration)
-	now_latent[] <- 0
-	now_infectious <- vector(length=duration)
-	now_infectious[] <- 0
-	Removed <- vector(length=duration)
-	Removed[] <- 0
-	Senesced <- vector(length=duration)
-	Senesced[] <- 0
-	Diseased <- vector(length=duration)
-	Diseased[] <- 0
-	Rinfection <- vector(length=duration)
-	Rinfection[] <- 0
-	Rtransfer <- vector(length=duration)
-	Rtransfer[] <- 0
-	RGrowth <- vector(length=duration)
-	RGrowth[] <- 0
-	RSenesced <- vector(length=duration)
-	RSenesced[] <- 0
-	Severity <- vector (length=duration)
-	Severity[] <- 0
+	TotalSites <- rep(0, times=duration)
+	COFR <- Rc <- RHCoef <- latency <- infectious <- Severity <- RSenesced <- RGrowth <- Rtransfer <- Rinfection <- Diseased <- Senesced <- Removed <- now_infectious <- now_latent <- Sites <- TotalSites
 
-	infectious <- vector(length=duration)
-	infectious[] <- 0
-	latency <- vector(length=duration)
-	latency[] <- 0
-
-	# Parameters
-	RHCoef <- vector(length=duration)
-	RHCoef[] <- 0
-	
 	AgeCoefRc <- cbind(0:24 * 5, c(1, 1, 1, 0.9, 0.8, 0.7, 0.64, 0.59, 0.53, 0.43, 0.32, 0.22, 0.16, 0.09, 0.03, 0.02, 0.02, 0.02, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01))
 	TempCoefRc <- cbind(2:9 * 5, c(0, 0.5, 1, 0.6, 0.2, 0.05, 0.01, 0))
 	RHCoefRc <- cbind (4 + (0:10) * 2, c(0, 0.02, 0.09, 0.19, 0.29, 0.43, 0.54, 0.63, 0.77, 0.88, 1.0))	
-	Rc <- vector(length=duration)
-	Rc[] <- 0
-	COFR <- vector(length=duration)
-	COFR[] <- 0
 	MatPer <- 20
 	
 	for (day in 1:duration) {

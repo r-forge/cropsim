@@ -1,5 +1,7 @@
-# Author: Serge Savary & Rene Pangga. 
-# R translation: Robert J. Hijmans , Rene Pangga &  Jorrel Aunario r.hijmans@gmail.com (translated from STELLA BSMod v6T and  BSMod v6W)
+# Author: Serge Savary & Rene Pangga
+# Translated from STELLA BSMod v6T and  BSMod v6W by Robert J. Hijmans, Rene Pangga & Jorrel Aunario
+# Contact: r.hijmans@gmail.com 
+
 # International Rice Research Institute
 # Date :  10 June 2009
 # Version 0.1
@@ -33,49 +35,14 @@ brownSpot <- function(wth, emergence='2000-05-15', onset=20, duration=120, rhlim
 	latency_transit_time <- 6
 
 	# Output vars
-	TotalSites <- vector(length=duration)
-	TotalSites[] <- 0
-	Sites <- vector(length=duration)
-	Sites[] <- 0
-	now_latent <- vector(length=duration)
-	now_latent[] <- 0
-	now_infectious <- vector(length=duration)
-	now_infectious[] <- 0
-	Removed <- vector(length=duration)
-	Removed[] <- 0
-	Senesced <- vector(length=duration)
-	Senesced[] <- 0
-	Diseased <- vector(length=duration)
-	Diseased[] <- 0
-	Rinfection <- vector(length=duration)
-	Rinfection[] <- 0
-	Rtransfer <- vector(length=duration)
-	Rtransfer[] <- 0
-	RGrowth <- vector(length=duration)
-	RGrowth[] <- 0
-	RSenesced <- vector(length=duration)
-	RSenesced[] <- 0
-	Severity <- vector (length=duration)
-	Severity[] <- 0
-
-	# Boxcar
-	infectious <- vector(length=duration)
-	infectious[] <- 0
-	latency <- vector(length=duration)
-	latency[] <- 0
-
+	
+	TotalSites <- rep(0, times=duration)
+	COFR <- Rc <- RHCoef <- latency <- infectious <- Severity <- RSenesced <- RGrowth <- Rtransfer <- Rinfection <- Diseased <- Senesced <- Removed <- now_infectious <- now_latent <- Sites <- TotalSites
+	
 	# Parameters
-	
-	RHCoef <- vector(length=duration)
-	RHCoef[] <- 0
-	
 	AgeCoefRc <- cbind(0:6 * 20, c(0.35, 0.35, 0.35, 0.47, 0.59, 0.71, 1.0))
 	TempCoefRc <- cbind(15+(0:5) * 5, c(0, 0.06, 1.0, 0.85, 0.16, 0))
 	RHCoefRc <- cbind(0:8 * 3, c(0, 0.12, 0.20, 0.38, 0.46, 0.60, 0.73, 0.87, 1.0))
-	Rc <- vector(length=duration)
-	Rc[] <- 0
-	COFR <- vector(length=duration)
-	COFR[] <- 0
 	MatPer <- 20
 
 	for (day in 1:duration) {
@@ -158,5 +125,6 @@ brownSpot <- function(wth, emergence='2000-05-15', onset=20, duration=120, rhlim
 	result <- new('SEIR')
 	result@d <- res
 	return(result)
+	
 }
 
