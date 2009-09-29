@@ -18,8 +18,9 @@
 # Those in the line 20 to 23 are related to cooling-degree-days for spikelet sterility.
 
 
-setClass('SIMRIWsimulation',
+setClass('SIMRIW',
 	representation (
+		cultivar = 'SIMRIWcultivar',
 		PYBROD = 'numeric', 
 		PYBRON = 'numeric',
 		PYPADY = 'numeric',
@@ -43,15 +44,16 @@ setClass('SIMRIWsimulation',
 	
 
 
-setMethod ('show' , 'SIMRIWsimulation', 
+setMethod ('show' , 'SIMRIW', 
 	function(object) {
 		cat('class   :' , class(object), '\n')
 		cat('\n')	
-		cat('PYBROD :' , object@PYBROD, '\n')
-		cat('PYBRON :' , object@PYBRON, '\n')
-		cat('PYPADY :' , object@PYPADY, '\n')
-		cat('PANDW  :' , object@PANDW, '\n')
-		cat('DWT    :' , object@DWT, '\n')
+		cat('Cultivar:' , object@cultivar@name, '\n')
+		cat('PYBROD  :' , object@PYBROD, '\n')
+		cat('PYBRON  :' , object@PYBRON, '\n')
+		cat('PYPADY  :' , object@PYPADY, '\n')
+		cat('PANDW   :' , object@PANDW, '\n')
+		cat('DWT     :' , object@DWT, '\n')
 		
 		cat('\n')
 		l <- dim(object@d)[1]
@@ -74,7 +76,7 @@ setMethod ('show' , 'SIMRIWsimulation',
 
 
 
-setMethod ('plot', signature(x='SIMRIWsimulation', y='missing'),
+setMethod ('plot', signature(x='SIMRIW', y='missing'),
 	function(x, ...) {
 		plot(x@d$date, x@d$DW,  ylab="Yield (g/m2)", ...)
 		points(x@d$date, x@d$GY, col='blue')
@@ -122,15 +124,18 @@ setMethod ('show' , 'SIMRIWcultivar',
 	}
 )	
 
-showCultivars <- function() {
+.showSIMRIWcultivars <- function() {
 	tab <-  read.table(system.file("simriw/cultivars.txt", package="cropsim"), sep=',', header=T)
-	return(colnames(tab)[-2:-1])
+	return(paste(colnames(tab)[-2:-1], collapse=', '))
 }
 
-cultivar <- function(cultivar) {
+SIMRIWcultivar <- function(cultivar) {
+	if (missing(cultivar)) {
+		.showSIMRIWcultivars()
+	}
 	tab <-  read.table(system.file("simriw/cultivars.txt", package="cropsim"), sep=',', header=T, row.names=1)
 	if (! (cultivar %in% colnames(tab)[-2:-1]) ) {
-		stop('Unknown cultivar. Choose from: ', showCultivars())
+		stop('Unknown cultivar. Choose from: ', .showSIMRIWcultivars())
 	} 
 	cv <- new('SIMRIWcultivar')
 	cv@name <- colnames(tab[cultivar])
@@ -208,7 +213,7 @@ simriw <- function(wth, cultivar, startday, transplant=FALSE, CO2=350) {
 	STLT=0
 
 # weather data	
-    AVT <- wth@w$temp
+    AVT <- wth@w$tavg
 	RAD <- wth@w$srad
 	TMX <- wth@w$tmax
     startday <- as.Date(startday)
@@ -348,7 +353,8 @@ simriw <- function(wth, cultivar, startday, transplant=FALSE, CO2=350) {
     PANDW <- PYBROD/CVBP/CVPP
     DWT <- DW/100.0
 	
-	r <- new('SIMRIWsimulation')
+	r <- new('SIMRIW')
+	r@cultivar <- cultivar
 	r@PYBROD <- PYBROD
 	r@PYBRON <- PYBRON
 	r@PYPADY <- PYPADY

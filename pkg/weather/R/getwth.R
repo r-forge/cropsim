@@ -63,7 +63,10 @@ getWthXY <- function(lon, lat, start="1993-1-1", end="2009-12-31") {
 	nicevars <- c("year", "doy", "srad", "tavg", "tmin", "tmax", "relh", "prec")
 	colnames(lns) <- nicevars
 	rhnx <- rhMinMax(lns[,'relh'], lns[,'tmin'], lns[,'tmax'], lns[,'tavg']) 
-	lns <- cbind(lns, rhnx)
+	
+	vapr <- lns[,'relh'] * saturatedVaporPressure(lns[,'tavg']) / 1000     # 100 for % and 10 to go from hPa to kPa
+
+	lns <- cbind(lns, rhnx, vapr)
 	
 	date <- dateFromDoy(lns[,'doy'], lns[,'year'])
 	lns <- cbind(as.data.frame(date), lns)

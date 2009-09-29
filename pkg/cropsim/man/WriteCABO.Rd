@@ -2,35 +2,39 @@
 \alias{writeCABOwth}
 
 \title{ Write weather data files }
+
 \description{
-  ~~ A concise (1-5 lines) description of what the function does. ~~
+  write CABO format weather file
 }
+
 \usage{
-writeCABOwth(wth, lon, lat, alt, path, rainfact=1, tempfact=0)
+writeCABOwth(wth, country='AAA', station=1, wind=2.5,  path=getwd(), print=TRUE, boundlat=TRUE, rainfact=1, tempfact=0)
 }
 
 \arguments{
-  \item{wth}{ }
-  \item{lon}{ Describe \code{x} here }    
-  \item{lat}{ Describe \code{x} here }  
-  \item{alt}{ Describe \code{x} here }  
+  \item{wth}{ an object of class 'weather'}
+  \item{country}{Character }    
+  \item{station}{Integer}    
+  \item{wind}{ value for daily wind speed}    
   \item{path}{ Describe \code{x} here }    
+  \item{print}{ print progress to screen}    
+  \item{boundlat}{ Bound latitide between -59 and 59 }    
   \item{rainfact}{ Describe \code{x} here }    
   \item{tempfact}{ Describe \code{x} here }    
 }
-\details{
-  ~~ If necessary, more details than the description above ~~
-}
-\value{
-  ...
-}
-\references{ ~put references to the literature/web site here ~ }
-\author{ ~~who you are~~ }
-\note{ ~~further notes~~ 
 
- 
+
+\value{
+Nothing. Used for its side effect of creating files.
 }
-\seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
+
+
+\author{Robert J. Hijmans}
+
+
 \examples{
+wth <- getWthFile(system.file("weather/daily_weather_28368.nasa", package = "cropsim"))
+writeCABOwth(wth)
 }
+
 \keyword{ spatial }

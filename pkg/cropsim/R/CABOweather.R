@@ -3,56 +3,52 @@
 # Version 0.1  January 2009
 
 
-writeCABOwth <- function(wth, lon, lat, alt, path=getwd(), rainfact=1, tempfact=0) {
+writeCABOwth <- function(wth, country='AAA', station=1, wind=2.5,  path=getwd(), print=TRUE, boundlat=TRUE, rainfact=1, tempfact=0) {
 	
-#	wth[is.na(wth)] <- -9999
-	wth$yr <- yearFromDate(wth$day)
-	syear <- min(wth$yr)
-	eyear <- max(wth$yr)
+	wth@w$srad <- wth@w$srad * 1000
+	wth@w$tmin <- wth@w$tmin + tempfact
+	wth@w$tmax <- wth@w$tmax + tempfact
+	wth@w$prec <- wth@w$prec * rainfact
 
-	for (year in syear:eyear) {
-		fname <- paste(path, '/AA1.', substr(year, 2, 4), sep="")
+	years <- unique(wth@w$year)
+	for (yr in years) {
+		fname <- paste(path, '/', country, station, '.', substr(yr, 2, 4), sep="")
+		if (print) {
+			cat(fname, '\n')
+			flush.console()
+		}
 		thefile <- file(fname, "w")
 		
 		cat("*-----------------------------------------------------------", "\n", file = thefile)
-#		cat("*  Cell number: ",cell, "\n", file = thefile)
-#		cat("*", "\n", file = thefile)
-		cat("*  Created by R-simmodels", "\n", file = thefile)
+		cat("*  Created by the R package 'weather'\n", file = thefile)
 		cat("*", "\n", file = thefile)
-		cat("*  Column    Daily Value", "\n", file = thefile)
-		cat("*     1      Station number", "\n", file = thefile)
-		cat("*     2      Year", "\n", file = thefile)
-		cat("*     3      Day", "\n", file = thefile)
-		cat("*     4      irradiance         KJ m-2 d-1", "\n", file = thefile)
-		cat("*     5      min temperature            oC", "\n", file = thefile)
-		cat("*     6      max temperature            oC", "\n", file = thefile)
-		cat("*     7      vapor pressure            kPa", "\n", file = thefile)
-		cat("*     8      mean wind speed         m s-1", "\n", file = thefile)
-		cat("*     9      precipitation          mm d-1", "\n", file = thefile)
-		cat("*", "\n", file = thefile)
-		cat("** WCCDESCRIPTION=gizmo", "\n", file = thefile)
-		cat("** WCCFORMAT=2", "\n", file = thefile)
-		cat("** WCCYEARNR=", year, "\n", file = thefile)
+		cat("*  Column    Daily Value\n", file = thefile)
+		cat("*     1      Station number\n", file = thefile)
+		cat("*     2      Year\n", file = thefile)
+		cat("*     3      Day\n", file = thefile)
+		cat("*     4      irradiance         KJ m-2 d-1\n", file = thefile)
+		cat("*     5      min temperature            oC\n", file = thefile)
+		cat("*     6      max temperature            oC\n", file = thefile)
+		cat("*     7      vapor pressure            kPa\n", file = thefile)
+		cat("*     8      mean wind speed         m s-1\n", file = thefile)
+		cat("*     9      precipitation          mm d-1\n", file = thefile)
+		cat("*\n", file = thefile)
+		cat("** WCCDESCRIPTION=gizmo\n", file = thefile)
+		cat("** WCCFORMAT=2\n", file = thefile)
+		cat("** WCCYEARNR=", yr, "\n", file = thefile)
 		cat("*-----------------------------------------------------------", "\n", file = thefile)
-		if ( lat > 60) { lat <- 59 }
-		if ( lat < -60 ) { lat <- -59 }
-		cat(lon, lat, alt, '  0.00  0.00', "\n", file = thefile)
+		if (boundlat) {
+			if ( wth@lat > 60) { wth@lat <- 59 }
+			if ( wth@lat < -60 ) { wth@lat <- -59 }
+		}
+		cat(wth@lon, wth@lat, wth@alt, '  0.00  0.00 \n', file = thefile)
 
-		yw <- subset(wth, wth$yr==year)
+		yw <- subset(wth@w, wth@w$year==yr)
+		yw[is.na(yw)] <- -9999
 		for (d in 1:length(yw[,1])) {
-			wind <- 2.5;
-			rad <- yw$srad[d] * 1000
-			tmin <- yw$tmin[d] + tempfact
-			tmax <- yw$tmax[d] + tempfact;
-			rh <- yw$relh[d]
-			tavg <- (tmin + tmax)/2;
-			SVP <- 6.5 * exp((tavg / 16.1)); #  [T in deg C; or another empirical function]
-			vapr <- rh * SVP / 1000 ; #   100 for % and 10 to go from hPa to kPa
-			prec <- yw$prec[d] * rainfact;
-#			cat(txtf, 1, y:6, inttostr(i):5, rad:10:0, tmin:8:1, tmax:8:1, vapr:8:1, wind:8:1, prec:8:1);
-			cat("1  ", sprintf("%6.0f", year), sprintf("%5.0f", d), sprintf("%10.0f", rad), sprintf("%8.1f", tmin), sprintf("%8.1f", tmax), sprintf("%8.1f", vapr), sprintf("%8.1f", wind), sprintf("%8.1f", prec), "\n", file=thefile)
+			cat("1  ", sprintf("%6.0f", yr), sprintf("%5.0f", d), sprintf("%10.0f", yw$srad[d]), sprintf("%8.1f", yw$tmin[d]), sprintf("%8.1f", yw$tmax[d]), sprintf("%8.1f", yw$vapr[d]), sprintf("%8.1f", wind), sprintf("%8.1f", yw$prec[d]), "\n", file=thefile)
 		}
 		close(thefile)
     }
-	return(TRUE)
+	return(invisible(TRUE))
 }		
