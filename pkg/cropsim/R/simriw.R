@@ -129,39 +129,39 @@ setMethod ('show' , 'SIMRIWcultivar',
 	return(paste(colnames(tab)[-2:-1], collapse=', '))
 }
 
-SIMRIWcultivar <- function(cultivar) {
-	if (missing(cultivar)) {
+simriwCultivar <- function(name) {
+	if (missing(name)) {
 		.showSIMRIWcultivars()
 	}
 	tab <-  read.table(system.file("simriw/cultivars.txt", package="cropsim"), sep=',', header=T, row.names=1)
-	if (! (cultivar %in% colnames(tab)[-2:-1]) ) {
+	if (! (name %in% colnames(tab)[-2:-1]) ) {
 		stop('Unknown cultivar. Choose from: ', .showSIMRIWcultivars())
 	} 
 	cv <- new('SIMRIWcultivar')
-	cv@name <- colnames(tab[cultivar])
-	cv@GV <- tab['GV', cultivar]
-	cv@ALF <- tab['ALF', cultivar]
-	cv@TH <- tab['TH', cultivar]
-	cv@BDL <- tab['BDL', cultivar]
-	cv@LC <- tab['LC', cultivar]
-	cv@DVIA <- tab['DVIA', cultivar]
-	cv@TCR <- tab['TCR', cultivar]
-	cv@GR <- tab['GR', cultivar]
-	cv@KCR <- tab['KCR', cultivar]
-	cv@EXTC <- tab['EXTC', cultivar]
-	cv@COVES <- tab['COVES', cultivar]
-	cv@HIMX <- tab['HIMX', cultivar]
-	cv@CTR <- tab['CTR', cultivar]
-	cv@A <- tab['A', cultivar]
-	cv@KF <- tab['KF', cultivar]
-	cv@ETA <- tab['ETA', cultivar]
-	cv@FAS <- tab['FAS', cultivar]
-	cv@TCF <- tab['TCF', cultivar]
-	cv@BETA <- tab['BETA', cultivar]
-	cv@THOT <- tab['THOT', cultivar]
-	cv@STO <- tab['STO', cultivar]
-	cv@BST <- tab['BST', cultivar]
-	cv@PST <- tab['PST', cultivar]
+	cv@name <- colnames(tab[name])
+	cv@GV <- tab['GV', name]
+	cv@ALF <- tab['ALF', name]
+	cv@TH <- tab['TH', name]
+	cv@BDL <- tab['BDL', name]
+	cv@LC <- tab['LC', name]
+	cv@DVIA <- tab['DVIA', name]
+	cv@TCR <- tab['TCR', name]
+	cv@GR <- tab['GR', name]
+	cv@KCR <- tab['KCR', name]
+	cv@EXTC <- tab['EXTC', name]
+	cv@COVES <- tab['COVES', name]
+	cv@HIMX <- tab['HIMX', name]
+	cv@CTR <- tab['CTR', name]
+	cv@A <- tab['A', name]
+	cv@KF <- tab['KF', name]
+	cv@ETA <- tab['ETA', name]
+	cv@FAS <- tab['FAS', name]
+	cv@TCF <- tab['TCF', name]
+	cv@BETA <- tab['BETA', name]
+	cv@THOT <- tab['THOT', name]
+	cv@STO <- tab['STO', name]
+	cv@BST <- tab['BST', name]
+	cv@PST <- tab['PST', name]
 	return(cv)	
 }
 

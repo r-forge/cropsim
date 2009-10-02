@@ -13,7 +13,7 @@
 
 # Source: http://www.ipm.ucdavis.edu/DISEASE/DATABASE/potatolateblight.html#hyre	
 
-.getwth <- function(wth, emergence='2000-05-15', duration=120) {
+.subsetwth <- function(wth, emergence='2000-05-15', duration=120) {
 	emergence <- as.Date(emergence)
 	wth@w <- subset(wth@w, wth@w$date >= emergence)
 	if (dim(wth@w)[1] < duration) {
@@ -35,9 +35,9 @@
 
 
 Hyre <- function(wth, emergence='2000-05-15', duration=120) {
-	w <- .getwth(wth, emergence, duration)@w
-	t5 <- movingFun(w$tavg, 5) / 5
-	p10 <- movingFun(w$prec, 10)
+	w <- .subsetwth(wth, emergence, duration)@w
+	t5 <- .movingFun(w$tavg, 5) / 5
+	p10 <- .movingFun(w$prec, 10)
 	blightFavorable <- t5 < 25.5 & w$tavg > 7.2 & p10 > 30
 	cbind(as.data.frame(w$date), blightFavorable)
 }
@@ -45,35 +45,73 @@ Hyre <- function(wth, emergence='2000-05-15', duration=120) {
 
 Wallin <- function(wth, emergence='2000-05-15', duration=120) {
 
-	wth <- .getwth(wth, emergence, duration)
+	wth <- .subsetwth(wth, emergence, duration)
 	leafwet <- leafWet(wth)
 	w <- wth@w
 	t1 <- w$tavg > 7.2 & w$tavg <= 11.6
 	t2 <- w$tavg > 11.6 & w$tavg <= 15.0
 	t3 <- w$tavg > 15.0 & w$tavg <= 26.6
-	sv <- vector(length=duration)
-	sv[ leafwet == 0 & t1 ] <- 15
-	sv[ leafwet == 0 & t2 ] <- 12
-	sv[ leafwet == 0 & t3 ] <- 9
-	sv[ leafwet == 1 & t1 ] <- 17
-	sv[ leafwet == 1 & t2 ] <- 14
-	sv[ leafwet == 1 & t3 ] <- 11
-	sv[ leafwet == 2 & t1 ] <- 20
-	sv[ leafwet == 2 & t2 ] <- 19
-	sv[ leafwet == 2 & t3 ] <- 14
-	sv[ leafwet == 3 & t1 ] <- 23
-	sv[ leafwet == 3 & t2 ] <- 20
-	sv[ leafwet == 3 & t3 ] <- 17
-	sv[ leafwet == 4 & t1 ] <- 25
-	sv[ leafwet == 4 & t2 ] <- 22
-	sv[ leafwet == 4 & t3 ] <- 19
-	cumSeverity <- .cumulate(sv)
+	lw16 <- 
+	severity <- vector(length=duration)
+	severity[ leafwet < 16 & t1 ]  <- 0
+	severity[ leafwet < 13 & t2 ]  <- 0
+	severity[ leafwet < 10 & t3 ]  <- 0
+	severity[ leafwet < 19 & t1 ]  <- 1
+	severity[ leafwet < 16 & t2 ]  <- 1
+	severity[ leafwet < 13 & t3 ]  <- 1
+	severity[ leafwet < 22 & t1 ]  <- 2
+	severity[ leafwet < 19 & t2 ]  <- 2
+	severity[ leafwet < 16 & t3 ]  <- 2
+	severity[ leafwet <= 24 & t1 ] <- 3
+	severity[ leafwet < 22 & t2 ]  <- 3
+	severity[ leafwet < 19 & t3 ]  <- 3
+	severity[ leafwet >= 22 & t2 ] <- 4
+	severity[ leafwet >= 19 & t3 ] <- 4
+	cumSeverity <- .cumulate(severity)
 	x <- which(cumSeverity > 19) + 10
 	x <- subset(x, x <= duration)
-	Action <- vector(length=length(sv))
-	Action[] <- FALSE
-	Action[x] <- TRUE
-	cbind(as.data.frame(w$date), cumSeverity, Action )
+	action <- vector(length=length(severity))
+	action[] <- FALSE
+	action[x] <- TRUE
+	cbind(as.data.frame(w$date), severity, cumSeverity, action )
 }
 
+
+blitecast <- function(wth, emergence='2000-05-15', duration=120) {
+	wth <- .subsetwth(wth, emergence, duration)
+	hyre <- Hyre(wth, emergence, duration)
+	wallin <- Wallin(wth, emergence, duration)	
+	first <- hyre$blightFavorable | wallin$action
+	spray <- first
+	spray[] <- FALSE
+	if (sum(first) > 0) {
+		first <- min(which(first))
+	} else {
+		return( cbind(as.data.frame(wth@w$date), spray) )
+	}
+	
+	rainfav7 <- .movingFun(wth@w$prec > 3, 7)
+	severity7 <- .movingFun(wallin$severity, 7)
+
+	second <- first
+	second[] <- -1
+
+	second[ rainfav7 < 5 & severity7 == 4 ] <- 0
+	second[ rainfav7 < 5 & (severity7 == 5 | severity7 == 6) ] <- 1
+	second[ rainfav7 < 5 & severity7 > 5 ] <- 2
+	second[ rainfav7 > 4 & severity7 == 3 ] <- 0
+	second[ rainfav7 > 4 & severity7 == 4 ] <- 1
+	second[ rainfav7 > 4 & severity7 > 4 ] <- 2
+
+	spray[first] <- TRUE
+	sprayed <- 0
+	for (i in first:length(spray)) {
+		if ((second[i] == 1 & sprayed == 7) |  (second[i] == 2 & sprayed == 5)) 	{
+			spray[i] <- TRUE
+			sprayed <- 0
+		}
+		sprayed <- sprayed + 1
+	}
+	return( cbind(as.data.frame(wth@w$date), spray) )
+}	
 

@@ -25,7 +25,7 @@ For more details see: \url{http://www.ipm.ucdavis.edu/DISEASE/DATABASE/potatolat
 }
 
 \value{
-A data frame with the date and a logical value indicating whether the day is blight favorable or not
+A data frame with the date, the severity and cumulative severity for that day, and a logical variable 'action' indicating whether the crop should be sprayed that day.
 }
 
 
@@ -39,7 +39,7 @@ Wallin, J. R., and P. E. Waggoner. 1950. The influence of climate on the develop
 
 \author{Robert J. Hijmans}
 
-\seealso{ \code{\link[cropsim]{Hyre}} }
+\seealso{ \code{\link[cropsim]{Hyre}}, \code{\link[cropsim]{blitecast}} }
 
 
 \examples{

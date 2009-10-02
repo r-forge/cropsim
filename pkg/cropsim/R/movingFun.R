@@ -27,8 +27,7 @@
 
 
 
-
-movingFun = function(x, n, fun=function(x){sum(x, na.rm=TRUE)}) 
+.movingFun = function(x, n, fun=function(x){sum(x, na.rm=TRUE)}) 
 { 
 
 # Based on the rollFun function implemented by Diethelm Wuertz in the 
@@ -40,6 +39,9 @@ movingFun = function(x, n, fun=function(x){sum(x, na.rm=TRUE)})
 # modified and simplified by Robert Hijmans
 # for the cropsim package
 # September 2009
+
+# what is returned is a moving fun (e.g. sum or mean) computed for t=t-n to t=t
+# i.e. this is unlike a typical moving average which is for t-floor(0.5n) to t+floor(0.5n)
 
 
     # Description:  #   Compute rolling function value
