@@ -5,7 +5,7 @@
 
 daylength <- function(lat, doy) {
 	if (class(doy) == 'Date' | class(doy) == 'character') { 
-		doy <- .doyFromDate(doy) 
+		doy <- doyFromDate(doy) 
 	}
 	lat[lat > 90 | lat < -90] <- NA 
 
@@ -28,7 +28,7 @@ daylength <- function(lat, doy) {
 
 daylength2 <- function(lat, doy) {
 	if (class(doy) == 'Date' | class(doy) == 'character') { 
-		doy <- .doyFromDate(doy) 
+		doy <- doyFromDate(doy) 
 	}
 	lat[lat > 90 | lat < -90] <- NA 
 	doy[doy==366] <- 365
