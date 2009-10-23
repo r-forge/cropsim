@@ -4,7 +4,9 @@
 
 
 daylength <- function(lat, doy) {
-	if (class(doy) == 'Date') { doy <- doyFromDate(doy) }
+	if (class(doy) == 'Date' | class(doy) == 'character') { 
+		doy <- .doyFromDate(doy) 
+	}
 	if (lat > 90) { stop("lat should be <= 90") 
 	} else if (lat < -90) { stop("lat should be >= -90") }	
 
@@ -25,7 +27,9 @@ daylength <- function(lat, doy) {
 
 
 daylength2 <- function(lat, doy) {
-	if (class(doy) == 'Date') { doy <- doyFromDate(doy) }
+	if (class(doy) == 'Date' | class(doy) == 'character') { 
+		doy <- .doyFromDate(doy) 
+	}
 	if (lat > 90) { stop("lat should be <= 90")
 	} else if (lat < -90) { stop("lat should be >= -90")}	
 	doy[doy==366] <- 365
