@@ -1,9 +1,15 @@
-raudpc <- function(x) {
+
+audpc <- function(x) {
 	if (length(x$severity) > 0) {
-		sum(x$severity)/length(x[,1])
+		return(sum(x$severity))
 	} else 	if (length(x$incidence) > 0) {
-		sum(x$incidence)/length(x[,1])
+		return(sum(x$incidence))
 	} else {
 		stop('cannot find incidence or severity')
 	}
+}
+
+
+raudpc <- function(x) {
+	audpc(x) / length(x[,1])
 }
