@@ -1,0 +1,130 @@
+# Author: Serge Savary & Rene Pangga. 
+# Translated from STELLA TungroMod v5T by Robert J. Hijmans, Rene Pangga & Jorrel Aunario
+# r.hijmans@gmail.com
+
+# International Rice Research Institute
+# Date :  10 June 2009
+# Version 0.1
+# Licence GPL v3
+#switch :  wetness (1) uses RHCoefRc=1 vs wetness (0)  uses RH + rain threshold corresponding to  STELLA  TungroModv5T 
+
+
+oldtungro <- function(wth, emergence='2000-05-15', onset=25,  duration=120, rhlim=0, rainlim=0, wetness=0) {
+	emergence <- as.Date(emergence)
+	wth@w <- subset(wth@w, wth@w$date >= emergence)
+	if (dim(wth@w)[1] < duration) {	stop("Incomplete weather data") }
+	wth@w <- wth@w[1:duration,]
+	
+	if (wetness == 1) {
+		W <- leafWet(wth, simple=TRUE)
+	}
+
+	RRG <- 0.1
+	RRPhysiolSenesc <- 0.01
+	SenescType <- 1	
+	AGGR <- 1
+	BaseRc <- 0.18
+	Sitemax <- 100
+	initInfection <- 1
+	initSites <- 100
+	infectious_transit_time <- 120
+	latency_transit_time <- 6
+	
+	# outputvars
+	TotalSites <- rep(0, times=duration)
+	COFR <- Rc <- RHCoef <- latency <- infectious <- Incidence <- RSenesced <- RGrowth <- Rtransfer <- Rinfection <- Diseased <- Senesced <- Removed <- now_infectious <- now_latent <- Sites <- TotalSites
+	
+    AgeCoefRc <- cbind (0:8 * 15, c(1.0, 1.0, 0.98, 0.73, 0.51, 0.34, 0, 0, 0))
+	TempCoefRc <- cbind (c(9,10 + (0:9 * 3.1111),40), c(0,0.13, 0.65, 0.75, 0.83, 0.89, 0.93, 0.97, 1.0, 0.96, 0.93,0))
+	RHCoefRc <- 1
+	MatPer <- 20
+	
+	for (day in 1:duration) {
+			
+	# State calculations
+		if (day==1) {
+		# start crop growth 
+			Sites[day] <- 100
+			#RSenesced[day] <- RRPhysiolSenesc * Sites[day]
+			#Senesced[day] <- RRPhysiolSenesc * initSites
+		}
+		else {
+			if (day > infectious_transit_time) {
+				removedToday <- infectious[infday+1]
+			} else {
+				removedToday <- 0
+			}
+			
+			Sites[day] <- Sites[day-1] + RGrowth[day-1] - Rinfection[day-1]
+			#RSenesced[day] <- removedToday * SenescType + RRPhysiolSenesc * Sites[day]
+			#Senesced[day] <- Senesced[day-1] + RSenesced[day-1]
+			
+	 		latency[day] <- Rinfection[day-1]
+			latday <- day - latency_transit_time + 1
+			latday <- max(1, latday)
+			now_latent[day] <- sum(latency[latday:day])
+		
+			infectious[day] <- Rtransfer[day-1]
+			infday <- day - infectious_transit_time + 1
+			infday <- max(1, infday)
+			now_infectious[day] <- sum(infectious[infday:day])
+			
+		}
+		
+		if (Sites[day] < 0 ) { 
+			Sites[day] <- 0
+			break 
+		}
+		
+		if (wetness==0){
+			if ( wth@w$rhmax[day] >= rhlim | wth@w$prec[day] >= rainlim ) {
+				RHCoef[day] <- 1
+			}
+		} else {
+			RHCoef[day]<- RHCoefRc
+		}		
+		
+		Rc[day] <- BaseRc * AFGen(AgeCoefRc, day) * AFGen(TempCoefRc, wth@w$tavg[day]) * RHCoef[day]
+		
+		Diseased[day] <- sum(infectious) + now_latent[day] + Removed[day]
+		Removed[day] <- sum(infectious) - now_infectious[day]
+		
+		COFR[day] <- 1-(Diseased[day]/(Sites[day]+Diseased[day]))
+		
+		if (day==onset) {
+			Rinfection[day] <- initInfection
+		} else if (day > onset) {
+			Rinfection[day] <- now_infectious[day] * Rc[day] * (COFR[day]^AGGR)
+		} else {
+			Rinfection[day] <- 0
+		}
+		
+		# Boxcar transger to other staet 
+		if (day >= latency_transit_time ) {	
+			Rtransfer[day] <- latency[latday]
+		} else { 
+			Rtransfer[day] <- 0	
+		}
+		
+		TotalSites[day] <- Diseased[day] + Sites[day]
+		RGrowth[day] <- RRG * Sites[day] * (1-(TotalSites[day]/Sitemax))
+
+
+# consider natural senescence...		
+#		MatScen <- -1*(day*Sitemax/MatPer) + (Sitemax * duration/MatPer)
+		Incidence[day] <- (Diseased[day]-Removed[day])/(TotalSites[day] - Removed[day])*100		
+
+	}
+	
+	res <- cbind(Sites, now_latent, now_infectious, Removed, Diseased, Senesced, Rinfection, Rtransfer, RGrowth, RSenesced, Incidence)
+	res <- as.data.frame(res[1:day,])
+	
+	dates <- seq(emergence, emergence+duration, 1)
+	res <- cbind(dates[1:day], res)
+	colnames(res) <- c("date", "sites", "latent", "infectious", "removed", "diseased", "senesced", "rateinf", "rtransfer", "rgrowth", "rsenesced", "incidence")
+	
+	result <- new('SEIR')
+	result@d <- res
+	return(result)
+}
+
