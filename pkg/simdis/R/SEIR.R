@@ -7,8 +7,6 @@
 # Licence GPL v3
 
 
-# wetness = 1 uses leaf wetness duration corresponding to  STELLA LeafBlastMod v5W vs. 
-# wetness = 0 uses RH + rain threshold corresponding to  STELLA LeafBlastMod v5T 
 
 brownSpot <- function(wth, emergence='2000-05-15', ...) {
 	AgeCoefRc <- cbind(0:6 * 20, c(0.35, 0.35, 0.35, 0.47, 0.59, 0.71, 1.0))
