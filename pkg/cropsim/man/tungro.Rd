@@ -8,17 +8,13 @@
 }
 
 \usage{
-tungro(wth, emergence='2000-05-15', onset=25, duration=120, rhlim=0, rainlim=0, wetness=0) 
+tungro(wth, emergence='2000-05-15', ...) 
 }
 
 \arguments{
   \item{wth}{daily weather data frame containing relative humidity (relh), minimum temeperature (tmin), and maximum temperature (tmax)}
   \item{emergence}{expected date of plant emergence}
-  \item{onset}{expected number of days until the onset of disease after emergence date}
-  \item{duration}{simulation duration}  
-  \item{rhlim}{threshold to decide whethere leaves are wet or not}
-  \item{rainlim}{threshold to decide whether leaves are wet or not}
-  \item{wetness}{simulate RHmax or rain threshold (0) or wetness (1)} 
+  \item{...}{additional arguments. See \link[cropsim]{SEIR} }
 }
 
 
@@ -36,7 +32,7 @@ Ling, K.C., Palomar, M.K., 1966. Studies on rice plants infected with the tungro
 Ling, K.C., and Tiongco, E.R., Effect of temperature on the transmission of rice tungro virus by Nephotettix virescens. Philippine Phytopathology 11:46-57.
 }
 
-\author{ S. Savary, R. Hijmans, I. Pangga, J.K. Aunario }
+\author{ Serge Savary, Robert J. Hijmans, Ireneo Pangga, Jorrel K. Aunario }
 
 
 \examples{

@@ -36,8 +36,8 @@
 
 Hyre <- function(wth, emergence='2000-05-15', duration=120) {
 	w <- .subsetwth(wth, emergence, duration)@w
-	t5 <- .movingFun(w$tavg, 5) / 5
-	p10 <- .movingFun(w$prec, 10)
+	t5 <- moving(w$tavg, n=5, type='to') / 5
+	p10 <- moving(w$prec, n=10, type='to')
 	blightFavorable <- t5 < 25.5 & w$tavg > 7.2 & p10 > 30
 	cbind(as.data.frame(w$date), blightFavorable)
 }
@@ -90,8 +90,8 @@ blitecast <- function(wth, emergence='2000-05-15', duration=120) {
 		return( cbind(as.data.frame(wth@w$date), spray) )
 	}
 	
-	rainfav7 <- .movingFun(wth@w$prec > 3, 7)
-	severity7 <- .movingFun(wallin$severity, 7)
+	rainfav7 <- moving(wth@w$prec > 3, n=7, type='to')
+	severity7 <- moving(wallin$severity, n=7, type='to')
 
 	second <- first
 	second[] <- -1
@@ -105,7 +105,7 @@ blitecast <- function(wth, emergence='2000-05-15', duration=120) {
 
 	spray[first] <- TRUE
 	sprayed <- 0
-	for (i in first:length(spray)) {
+	for (i in first:length(second)) {
 		if ((second[i] == 1 & sprayed == 7) |  (second[i] == 2 & sprayed == 5)) 	{
 			spray[i] <- TRUE
 			sprayed <- 0

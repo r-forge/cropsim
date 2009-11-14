@@ -7,5 +7,5 @@ Depends: methods, weather
 Author: Robert J. Hijmans, Serge Savary, Rene Pangga, Jorrell Aunario
 Maintainer: Robert J. Hijmans <r.hijmans@gmail.com>
 Description: nothing much so far
-License: GPL3
+License: GPL (>=3)
 LazyLoad: yes

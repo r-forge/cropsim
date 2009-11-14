@@ -9,20 +9,13 @@
 }
 
 \usage{
-leafBlast(wth, emergence='2000-05-15', onset=15, duration=120, rhlim=90, rainlim=5, wetness=0, rc=1.14, latrans=5, inftrans=20) 
+leafBlast(wth, emergence='2000-05-15', ...) 
 }
 
 \arguments{
   \item{wth}{daily weather data frame containing relative humidity (relh), minimum temeperature (tmin), and maximum temperature (tmax)}
   \item{emergence}{expected date of plant emergence}
-  \item{onset}{expected number of days until the onset of disease after emergence date}
-  \item{duration}{simulation duration}
-  \item{rhlim}{threshold to decide whether leaves are wet or not}
-  \item{rainlim}{threshold to decide whether leaves are wet or not}
-  \item{wetness}{simulate RHmax or rain threshold (0) or leaf wetness duration (1)}
-  \item{rc}{ corrected basic infection rate }
-  \item{latrans}{ latent period }
-  \item{inftrans}{ infectious period }
+  \item{...}{additional arguments. See \link[cropsim]{SEIR} }
 }
 
 \value{
@@ -43,9 +36,9 @@ El Refaei, M.I., 1977. Epidemiology of rice blast disease in the tropics with sp
 Luo Wei-Hong, 1996. Simulation  and measurement of leaf wetness formation in paddy rice crops. PhD Thesis, Wageningen Agricultural University, 87 p.
 }
 
-\author{ S. Savary, R. Hijmans, I. Pangga, J.K. Aunario }
+\author{Serge Savary, Robert J. Hijmans, Ireneo Pangga, Jorrel K. Aunario }
 
-\seealso{ \code{\link[cropsim]{brownspot}}, \link[cropsim]{sheatblight}  }
+\seealso{ \code{\link[cropsim]{brownSpot}}, \link[cropsim]{sheatBlight}  }
 
 \examples{
 wth <- getWthFile(system.file("weather/daily_weather_28368.nasa", package = "cropsim"))

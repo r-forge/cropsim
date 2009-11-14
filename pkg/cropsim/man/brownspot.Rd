@@ -8,17 +8,13 @@ A dynamic mechanistic simulation of rice brown spot disease. The model is driven
 }
 
 \usage{
-brownSpot(wth, emergence='2000-05-15', onset=20, duration=120, rhlim=90, rainlim=5, wetness=0) 
+brownSpot(wth, emergence='2000-05-15', ...) 
 }
 
 \arguments{
   \item{wth}{daily weather data frame containing relative humidity (relh), minimum temeperature (tmin), and maximum temperature (tmax)}
   \item{emergence}{expected date of plant emergence}
-  \item{onset}{expected number of days until the onset of disease after emergence date}
-  \item{duration}{simulation duration}  
-  \item{rhlim}{threshold to decide whether leaves are wet or not}
-  \item{rainlim}{threshold to decide whether leaves are wet or not due to rain}
-  \item{wetness}{switch to simulate leaf wetness duration (1) or use RH max or rain threshold (0)}
+  \item{...}{additional arguments. See under }
 }
 
 \value{

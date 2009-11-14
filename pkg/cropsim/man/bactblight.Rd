@@ -9,17 +9,13 @@
 }
 
 \usage{
-bactBlight(wth, emergence='2000-05-15', onset=20, duration=120, rhlim=90, rainlim=5, wetness=0) 
+bactBlight(wth, emergence='2000-05-15', ...) 
  
 }
 \arguments{
   \item{wth}{An object of class 'weather', containing daily weather data}
   \item{emergence}{expected date of plant emergence}
-  \item{onset}{expected number of days until the onset of disease after emergence date}
-  \item{duration}{simulation duration}  
-  \item{rhlim}{threshold to decide whether leaves are wet or not}
-  \item{rainlim}{threshold to decide whether leaves are wet or not}
-  \item{wetness}{simulate RHmax or rain threshold (0) or leaf wetness duration (1)}
+  \item{...}{additional arguments. See \link[cropsim]{SEIR} }
 }
 
 
@@ -42,7 +38,7 @@ Medalla, E. 1992. Characterization of resistance of IR cultivars to tow races of
 }
 
 
-\author{S. Savary, R. Hijmans, I. Pangga, J.K. Aunario }
+\author{Serge Savary, Robert J. Hijmans, Ireneo Pangga, Jorrel K. Aunario }
 
 
 \examples{

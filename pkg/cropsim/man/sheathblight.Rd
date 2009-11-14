@@ -9,17 +9,13 @@
 }
 
 \usage{
-sheathBlight(wth, emergence='2000-05-15', onset=30,  duration=120, rhlim=90, rainlim=5, wetness=0) 
+sheathBlight(wth, emergence='2000-05-15', ...) 
 }
 
 \arguments{
   \item{wth}{daily weather data frame containing relative humidity (relh), minimum temeperature (tmin), and maximum temperature (tmax)}
   \item{emergence}{expected date of plant emergence}
-  \item{onset}{expected number of days until the onset of disease after emergence date}
-  \item{duration}{simulation duration}  
-  \item{rhlim}{threshold to decide whethere leaves are wet or not}
-  \item{rainlim}{threshold to decide whether leaves are wet or not}
-  \item{wetness}{simulate RHmax or rain threshold (0) or leaf wetness duration (1)} 
+  \item{...}{additional arguments. See \link[cropsim]{SEIR} }
 }
 
 
@@ -44,7 +40,7 @@ Tu, C.C., Chang, Y.C., Wang, C.W., 1979. Studies on the ecology of Rhizoctonia s
 Gross, M.K., Santini, J.B., Tikhonova, I. and Latin, R. 1998. The influence of temperature and leaf wetness duration on infection of perennial ryegrass by Rhizoctonia solani. Plant Disease 82:1012-1016.
 }
 
-\author{ S. Savary, R. Hijmans, I. Pangga, J.K. Aunario }
+\author{ Serge Savary, Robert J. Hijmans, Ireneo Pangga, Jorrel K. Aunario }
 
 
 \seealso{ \code{\link[cropsim]{brownspot}}, \link[cropsim]{leafblast}  }

@@ -11,7 +11,7 @@
 \usage{
 SEIR(wth, emergence, onset=15, duration=120, rhlim=90, rainlim=5, wetness=0, initSites,
 			initInfection=1, ageRc, tmpRc, rhRc, baseRc, latrans, inftrans, siteMax, AGGR, 
-			RRPhysiolSenesc, RRG, MatPer=20, SenescType=1)
+			RRPhysiolSenesc, RRG, SenescType=1)
 }
 
 \arguments{
@@ -34,7 +34,6 @@ SEIR(wth, emergence, onset=15, duration=120, rhlim=90, rainlim=5, wetness=0, ini
   \item{AGGR}{}
   \item{RRPhysiolSenesc}{}
   \item{RRG}{}
-  \item{MatPer}{}
   \item{SenescType}{}  
 }
 

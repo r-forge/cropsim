@@ -20,13 +20,13 @@ setMethod ('plot', signature(x='SEIR', y='missing'),
 )
 		
 
-.splot1 <- function(x, ...) {
-	plot(x$date, x$sites, ylim=c(0, 100),  ylab="% of sites", ...)
+.splot1 <- function(x, ylim=c(0,500), ...) {
+	plot(x$date, x$sites, ylim=ylim, ylab="sites",...)
 	points(x$date, x$diseased, col="gray")
 	points(x$date, x$removed, col="blue")
 	points(x$date, x$latent, col="red")
 	points(x$date, x$infectious,  col="green")
-	legend(0, 60, c("sites", "diseased", "removed", "latent", "infectious"), col=c("black", "gray", "blue", "red", "green"), pch=21)
+	legend(x$date[2], ylim[2]-10, c("diseased", "removed", "latent", "infectious"), col=c("gray", "blue", "red", "green"), pch=21)
 }	
 
 
