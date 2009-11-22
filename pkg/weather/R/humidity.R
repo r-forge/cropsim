@@ -21,7 +21,11 @@ rhMinMax <- function(rhavg, tmin, tmax, tavg=(tmin+tmax)/2) {
 
 
 saturatedVaporPressure <- function(temp) {
-	return(6.1 + 0.27*temp + 0.024*temp*temp)
+	i <- which(temp >= 0)
+	temp[i] <- 6.1 + 0.27*temp[i] + 0.024*temp[i]*temp[i]
+	i <- !i
+	temp[i] <- exp(0.0628979  * temp[i] +  1.7845445)
+	return(temp)
 }
 
 
@@ -32,15 +36,27 @@ atmp <- function(alt) {
   101.325 * (1 - 2.25577 * 10^-5 * alt) ^ 5.25588   # kPa 
 }
 
-abshum <- function(rh, t) {
+rel2abshum <- function(rh, t) {
 	es <- saturatedVaporPressure(t)
 	ea <- rh * es / 100
-	M = 18.02 # g/mol
-	R = 8.314472 # Pa·m³/(mol·K)
+	M <- 18.02 # g/mol
+	R <- 8.314472 # Pa·m³/(mol·K)
 	T <- t + 273.15  # C to K
 	hum <- ea*M/(T*R)
 	return(hum)
 }
+
+abs2relhum <- function(hum, t) {
+	M <- 18.02 # g/mol
+	R <- 8.314472 # Pa·m³/(mol·K)
+	T <- t + 273.15  # C to K
+	ea <- hum / (M/(T*R))
+	es <- saturatedVaporPressure(t)
+	rh <- 100 * ea / es
+	rh  <- pmin(rh, 100)
+	return(rh)
+}
+
 
 spechum <- function(rh, t, alt) {
 	es <- saturatedVaporPressure(t)

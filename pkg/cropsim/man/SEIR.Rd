@@ -46,7 +46,7 @@ SEIR(wth, emergence, onset=15, duration=120, rhlim=90, rainlim=5, wetness=0, ini
 
 \details{
 SEIR is called by the following specific disease models: 
-\code{\link[cropsim]{leafBlast}},  \code{\link[cropsim]{bactBlight}}, \code{\link[cropsim]{brownSpot}}, \link[cropsim]{sheatBlight},  \code{\link[cropsim]{tungro}}  
+\code{\link[cropsim]{leafBlast}},  \code{\link[cropsim]{bactBlight}}, \code{\link[cropsim]{brownSpot}}, \link[cropsim]{sheathBlight},  \code{\link[cropsim]{tungro}}  
 }
 
 

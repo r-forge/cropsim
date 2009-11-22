@@ -3,45 +3,6 @@
 # Version 0.1
 
 
-setClass('ECOCROP',
-	representation (
-		crop = 'ECOCROPcrop',
-		suitability = 'vector',
-		maxper = 'integer'
-	),
-	prototype (	
-		suitability = rep(NA, 12),
-		maxper <- 0
-	),	
-	validity = function(object)
-	{
-		return(TRUE)
-	}
-)
-	
-
-setMethod ('show' , 'ECOCROP', 
-	function(object) {
-		cat('class   :' , class(object), '\n')
-		cat('\n')	
-		cat('Crop:' , object@crop@name, '\n')
-		cat('Suitability:' , object@suitability, '\n')
-		cat('Best period:' , object@maxper, '\n')
-		cat('\n')
-	}
-)	
-
-
-
-setMethod ('plot', signature(x='ECOCROP', y='missing'),
-	function(x, ...) {
-		plot(1:length(x@suitability), x@suitability, xlab='periods', ylab='suitability')
-		lines(1:length(x@suitability), x@suitability, col='green', lwd=2)
-	}
-)
-
-
-
 setClass('ECOCROPcrop',
 	representation (
 		name  = 'character',
@@ -149,6 +110,46 @@ ecocropCrop <- function(name) {
 
 
 
+setClass('ECOCROP',
+	representation (
+		crop = 'ECOCROPcrop',
+		suitability = 'vector',
+		maxper = 'integer'
+	),
+	prototype (	
+		crop = new('ECOCROPcrop'),
+		suitability = rep(NA, 12),
+		maxper <- as.integer(NA)
+	),	
+	validity = function(object)
+	{
+		return(TRUE)
+	}
+)
+	
+
+setMethod ('show' , 'ECOCROP', 
+	function(object) {
+		cat('class   :'   , class(object), '\n')
+		cat('Crop:'       , object@crop@name, '\n')
+		cat('Suitability:', object@suitability, '\n')
+		cat('Best period:', object@maxper, '\n')
+	}
+)
+
+
+
+setMethod ('plot', signature(x='ECOCROP', y='missing'),
+	function(x, ...) {
+		plot(1:length(x@suitability), x@suitability, xlab='periods', ylab='suitability')
+		lines(1:length(x@suitability), x@suitability, col='green', lwd=2)
+	}
+)
+
+
+
+
+
 .getY <- function(a, x) {
 	inter <- function(x1, y1, x2, y2, x) {
 		y1 + (y2-y1) * (x-x1) / (x2-x1) 
@@ -169,6 +170,9 @@ ecocropCrop <- function(name) {
 
 
 ecocrop <- function(clm, crop, rain=TRUE) {
+	if (rain) { nasum <- sum(is.na(c(clm$tmin, clm$tmp, clm$pre)))
+	} else { nasum <- sum(is.na(c(clm$tmin, clm$tmp))) }
+	if (nasum > 0) { return( new('ECOCROP')) }
 	duration <- round((crop@GMIN + crop@GMAX) / 60) 
 	tmp <- c(crop@TMIN, crop@TOPMN, crop@TOPMX, crop@TMAX)
 	temp <- .getY(tmp, clm$temp)

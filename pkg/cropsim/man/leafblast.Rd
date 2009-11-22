@@ -38,7 +38,7 @@ Luo Wei-Hong, 1996. Simulation  and measurement of leaf wetness formation in pad
 
 \author{Serge Savary, Robert J. Hijmans, Ireneo Pangga, Jorrel K. Aunario }
 
-\seealso{ \code{\link[cropsim]{brownSpot}}, \link[cropsim]{sheatBlight}  }
+\seealso{ \code{\link[cropsim]{brownSpot}}, \link[cropsim]{sheathBlight}  }
 
 \examples{
 wth <- getWthFile(system.file("weather/daily_weather_28368.nasa", package = "cropsim"))

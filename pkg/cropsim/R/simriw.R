@@ -17,6 +17,44 @@
 # Those in the line 14 to 19 (A to BETA) are related to leaf  area growth.
 # Those in the line 20 to 23 are related to cooling-degree-days for spikelet sterility.
 
+	
+
+setClass('SIMRIWcultivar',
+	representation (
+		name  = 'character',
+		GV    = 'numeric', #unit=days; related to crop phenology up to heading
+		ALF   = 'numeric', #no unit; related to crop phenology up to heading
+		TH    = 'numeric', #unit=C; related to crop phenology up to heading
+		BDL   = 'numeric', #no unit; related to crop phenology up to heading
+		LC    = 'numeric', #unit=hours; related to crop phenology up to heading
+		DVIA  = 'numeric', #no unit; related to crop phenology up to heading
+		TCR   = 'numeric', #unit=C
+		GR    = 'numeric', #unit=days; for crop phenology during ripening phase
+		KCR   = 'numeric', #no unit; for crop phenology during ripening phase
+		EXTC  = 'numeric', #no unit; related to dry matter production
+		COVES = 'numeric', #unit=G/MJ; related to dry matter production
+		HIMX  = 'numeric', #no unit; maximum harvest index
+		CTR   = 'numeric', #unit=C; critical temp. for autumn coolness.
+		A     = 'numeric', #unit=/day; related to leaf  area growth
+		KF    = 'numeric', #no unit; related to leaf  area growth
+		ETA   = 'numeric', #no unit; related to leaf  area growth
+		FAS   = 'numeric', #no unit; related to leaf  area growth
+		TCF   = 'numeric', #unit=C; related to leaf  area growth
+		BETA  = 'numeric', #no unit; related to leaf  area growth
+		THOT  = 'numeric', #unit=C; related to cooling-degree-days for spikelet sterility
+		STO   = 'numeric', #unit=%; related to cooling-degree-days for spikelet sterility
+		BST   = 'numeric', #no unit; related to cooling-degree-days for spikelet sterility
+		PST   = 'numeric'  #no unit; related to cooling-degree-days for spikelet sterility
+ )
+)
+
+
+setMethod ('show' , 'SIMRIWcultivar', 
+	function(object) {
+	   str(object)
+	}
+)	
+
 
 setClass('SIMRIW',
 	representation (
@@ -86,43 +124,11 @@ setMethod ('plot', signature(x='SIMRIW', y='missing'),
 )
 
 
-	
-
-setClass('SIMRIWcultivar',
-	representation (
-		name  = 'character',
-		GV    = 'numeric', #unit=days; related to crop phenology up to heading
-		ALF   = 'numeric', #no unit; related to crop phenology up to heading
-		TH    = 'numeric', #unit=C; related to crop phenology up to heading
-		BDL   = 'numeric', #no unit; related to crop phenology up to heading
-		LC    = 'numeric', #unit=hours; related to crop phenology up to heading
-		DVIA  = 'numeric', #no unit; related to crop phenology up to heading
-		TCR   = 'numeric', #unit=C
-		GR    = 'numeric', #unit=days; for crop phenology during ripening phase
-		KCR   = 'numeric', #no unit; for crop phenology during ripening phase
-		EXTC  = 'numeric', #no unit; related to dry matter production
-		COVES = 'numeric', #unit=G/MJ; related to dry matter production
-		HIMX  = 'numeric', #no unit; maximum harvest index
-		CTR   = 'numeric', #unit=C; critical temp. for autumn coolness.
-		A     = 'numeric', #unit=/day; related to leaf  area growth
-		KF    = 'numeric', #no unit; related to leaf  area growth
-		ETA   = 'numeric', #no unit; related to leaf  area growth
-		FAS   = 'numeric', #no unit; related to leaf  area growth
-		TCF   = 'numeric', #unit=C; related to leaf  area growth
-		BETA  = 'numeric', #no unit; related to leaf  area growth
-		THOT  = 'numeric', #unit=C; related to cooling-degree-days for spikelet sterility
-		STO   = 'numeric', #unit=%; related to cooling-degree-days for spikelet sterility
-		BST   = 'numeric', #no unit; related to cooling-degree-days for spikelet sterility
-		PST   = 'numeric'  #no unit; related to cooling-degree-days for spikelet sterility
- )
-)
 
 
-setMethod ('show' , 'SIMRIWcultivar', 
-	function(object) {
-	   str(object)
-	}
-)	
+
+
+
 
 .showSIMRIWcultivars <- function() {
 	tab <-  read.table(system.file("simriw/cultivars.txt", package="cropsim"), sep=',', header=T)
