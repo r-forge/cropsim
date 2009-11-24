@@ -114,12 +114,14 @@ setClass('ECOCROP',
 	representation (
 		crop = 'ECOCROPcrop',
 		suitability = 'vector',
-		maxper = 'integer'
+		maxper = 'vector',
+		maxsuit = 'numeric'
 	),
 	prototype (	
 		crop = new('ECOCROPcrop'),
 		suitability = rep(NA, 12),
-		maxper <- as.integer(NA)
+		maxper = c(NA),
+		maxsuit = as.numeric(NA)
 	),	
 	validity = function(object)
 	{
@@ -130,8 +132,8 @@ setClass('ECOCROP',
 
 setMethod ('show' , 'ECOCROP', 
 	function(object) {
-		cat('class   :'   , class(object), '\n')
-		cat('Crop:'       , object@crop@name, '\n')
+		cat('class      :', class(object), '\n')
+		cat('Crop       :', object@crop@name, '\n')
 		cat('Suitability:', object@suitability, '\n')
 		cat('Best period:', object@maxper, '\n')
 	}
@@ -173,6 +175,11 @@ ecocrop <- function(clm, crop, rain=TRUE) {
 	if (rain) { nasum <- sum(is.na(c(clm$tmin, clm$tmp, clm$pre)))
 	} else { nasum <- sum(is.na(c(clm$tmin, clm$tmp))) }
 	if (nasum > 0) { return( new('ECOCROP')) }
+	
+	if (class(crop) == 'character') {
+		crop <- ecocropCrop(crop)
+	}
+	
 	duration <- round((crop@GMIN + crop@GMAX) / 60) 
 	tmp <- c(crop@TMIN, crop@TOPMN, crop@TOPMX, crop@TMAX)
 	temp <- .getY(tmp, clm$temp)
@@ -191,7 +198,12 @@ ecocrop <- function(clm, crop, rain=TRUE) {
 	obj <- new('ECOCROP')
 	obj@crop <- crop
 	obj@suitability <- moving(minv, n=duration, fun=min, type='from', circular=TRUE) 
-	obj@maxper <- which.max(obj@suitability)
+	obj@maxsuit <- max(obj@suitability)
+	if (obj@maxsuit > 0) {
+		obj@maxper <- which(obj@suitability==max(obj@suitability))
+	} else {
+		obj@maxper <- 0
+	}
 	return(obj)
 }
 
