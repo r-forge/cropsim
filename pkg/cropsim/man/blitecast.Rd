@@ -45,7 +45,7 @@ MacKenzie, D. R. 1984. Blitecast in retrospect. A look at what we learned. FAO P
 
 \examples{
 wth <- getWthFile(system.file("weather/daily_weather_28368.nasa", package = "cropsim"))
-res <- blitecast(wth)
+#res <- blitecast(wth)
 
 }
 
