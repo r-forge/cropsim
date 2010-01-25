@@ -23,7 +23,8 @@ rhMinMax <- function(rhavg, tmin, tmax, tavg=(tmin+tmax)/2) {
 saturatedVaporPressure <- function(temp) {
 	i <- which(temp >= 0)
 	temp[i] <- 6.1 + 0.27*temp[i] + 0.024*temp[i]*temp[i]
-	temp[-i] <- exp(0.0628979  * temp[-i] +  1.7845445)
+	i <- which(temp < 0)
+	temp[i] <- exp(0.0628979  * temp[i] +  1.7845445)
 	return(temp)
 }
 
