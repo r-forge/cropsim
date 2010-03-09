@@ -228,7 +228,7 @@ simriw <- function(wth, cultivar, startday, transplant=FALSE, CO2=350) {
 	DL <- daylength(wth@lat, wth@w$doy)
 	
 	startindex <- which(wth@w[,'date'] == startday)
-	endindex <- which(wth@w[,'date'] == endday)
+	#endindex <- which(wth@w[,'date'] == endday)
 	
 	day <- startindex-1
 	growing <- TRUE
@@ -242,6 +242,11 @@ simriw <- function(wth, cultivar, startday, transplant=FALSE, CO2=350) {
 	while (growing) {
 		day <- day + 1
 		simday <- simday + 1
+		if (day >= nrow(wth@w)) {
+			warning('reached end of weather records')
+			growing = FALSE
+		}
+		
 		res[simday,'date'] <- wth@w$date[day]
 		res[simday,'TMP'] <- AVT[day]
 		res[simday,'RAD'] <- RAD[day]
