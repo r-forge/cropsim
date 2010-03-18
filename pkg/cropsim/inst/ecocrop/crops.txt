@@ -1,4 +1,4 @@
-"NAME";"FAMNAME";"SCIENTNAME";"CODE";"GMIN";"GMAX";"KTMP";"TMIN";"TOPMN";"TOPMX";"TMAX";"RMIN";"ROPMN";"ROPMX";"RMAX";"LIG";"LIGR";"PP";"PPMIN";"PPMAX";"TEXT";"TEXTR";"DEP";"DEPR";"DRA";"DRAR";"PHMIN";"PHOPMN";"PHOPMX";"PHMAX";"SAL";"SALR";"FER";"FERR";"LIMITS"
+ï»¿"NAME";"FAMNAME";"SCIENTNAME";"CODE";"GMIN";"GMAX";"KTMP";"TMIN";"TOPMN";"TOPMX";"TMAX";"RMIN";"ROPMN";"ROPMX";"RMAX";"LIG";"LIGR";"PP";"PPMIN";"PPMAX";"TEXT";"TEXTR";"DEP";"DEPR";"DRA";"DRAR";"PHMIN";"PHOPMN";"PHOPMX";"PHMAX";"SAL";"SALR";"FER";"FERR";"LIMITS"
 "Spinach beet";"Chenopodiaceae";"Beta vulgaris L. v flavesc.";45;160;240;-3;4;15;25;35;500;600;800;1000;"1 4";"1 4";"L";14.00;14.00;"M H";"W";"M";"S";"W";"W";"5.5";"6.0";"7.0";"7.5";"L";"M";"H";"M";
 "Carrot";"Umbelliferae";"Daucus carota L.";62;40;150;-1;3;15;24;30;400;600;1200;4000;"2 3";"1 3";"L";14.00;14.00;"M O";"W";"M";"M";"W";"W";"4.2";"5.8";"6.8";"8.7";"L";"L";"M";"M";
 "English walnut *";"Juglandaceae";"Juglans regia L.";78;150;180;0;7;15;30;40;400;800;1700;2200;"1";"1 3";"L";14.00;14.00;"M";"W";"D";"D";"W";"W";"4.5";"5.5";"6.5";"8.3";"L";"L";"H";"M";
@@ -109,7 +109,7 @@
 "Rigid ryegrass *";"Gramineae";"Lolium rigidum Gaud.";700;70;180;-3;5;10;25;30;250;400;500;900;"1 2";"1 3";"L";14.00;14.00;"M H";"W";"M";"S";"W";"W E";"6.0";"6.5";"7.0";"8.0";"l";"l";"m";"l";
 "Chamomile *";"Asteraceae";"Anthemis nobilis (L.) All.";724;180;270;-10;3;15;26;30;400;600;1000;1400;"1";"1 2";"L";14.00;14.00;"M O";"W";"S";"S";"W";"W";"5.5";"6.0";"7.0";"8.0";"l";"l";"M";"L";
 "Chervil *";"Umbelliferae";"Anthriscus cerefolium L.";725;60;95;0;4;7;21;25;450;600;1100;1300;"3 4";"3 5";"L";14.00;14.00;"W";"W";"M";"S";"W";"W";"5.5";"6.0";"7.0";"8.2";"l";"l";"m";"m";
-"Sweet marjoram *";"Labiatae";"Majorana hortensis (Mönch)";726;90;180;-2;10;20;26;30;600;800;1000;2300;"1";"1 2";"L";14.00;14.00;"M";"M";"S";"S";"W";"W";"4.9";"5.5";"7.0";"8.7";"l";"l";"H";"M";
+"Sweet marjoram *";"Labiatae";"Majorana hortensis (MÃ¶nch)";726;90;180;-2;10;20;26;30;600;800;1000;2300;"1";"1 2";"L";14.00;14.00;"M";"M";"S";"S";"W";"W";"4.9";"5.5";"7.0";"8.7";"l";"l";"H";"M";
 "Corn mint *";"Labiatae";"Mentha arvensis v piperasc.";727;120;365;-8;3;10;25;30;500;800;1100;4300;"1 2";"1 4";"L";14.00;14.00;"M";"W";"M";"S";"W";"I W";"4.5";"5.5";"6.4";"8.3";"l";"l";"H";"M";
 "Spearmint *";"Labiatae";"Mentha spicata L. v. crispa";728;40;270;-8;4;15;25;36;600;900;1200;2200;"1 2";"1 4";"L";14.00;14.00;"M";"W";"M";"S";"W";"I W";"4.5";"5.5";"6.5";"8.3";"l";"l";"H";"M";
 "Tarragon *";"Asteraceae";"Artemisia dracunculus L.";735;120;210;-15;4;12;22;26;250;500;1000;1400;"1";"1 3";"L";14.00;14.00;"L M";"L M";"S";"S";"W";"W";"4.9";"5.5";"7.0";"7.5";"l";"l";"H";"M";
@@ -1274,7 +1274,7 @@
 "Kirpa *";"Combretaceae";"Lumnitzera racemosa Willd.";1099;365;365;0;15;22;28;32;100;800;2000;4000;"1";"1 2";"S";12.00;12.00;"H";"H";"M";"S";"I W";"I W";"6.0";"6.5";"7.0";"7.5";"L";"H";"H";"M";
 "Lumnitzera";"Combretaceae";"Lumnitzera littorea (Jack)";1100;240;365;0;10;22;28;32;800;1000;2500;4000;"1";"1 2";"S";12.00;12.00;"H";"H";"M";"S";"I W";"I W";"6.5";"6.8";"7.2";"7.5";"L";"H";"H";"M";
 "Blinding tree *";"Euphorbiaceae";"Exoecaria agallocha L.";1101;300;365;0;15;20;30;37;800;1000;2000;4100;"1";"1 2";"S";12.00;12.00;"M H";"W";"M";"M";"I";"I W";"6.0";"6.5";"7.0";"8.0";"L";"H";"H";"M";"T"
-"Pinle on *";"Meliaceae";"Xylocarpus granatum König";1102;330;365;0;10;22;30;40;1400;2000;3000;5000;"1 2";"1 3";"S";12.00;12.00;"M H";"W";"D";"M";"I";"I";"6.5";"6.8";"7.2";"7.5";"M";"H";"H";"M";
+"Pinle on *";"Meliaceae";"Xylocarpus granatum KÃ¶nig";1102;330;365;0;10;22;30;40;1400;2000;3000;5000;"1 2";"1 3";"S";12.00;12.00;"M H";"W";"D";"M";"I";"I";"6.5";"6.8";"7.2";"7.5";"M";"H";"H";"M";
 "Pussur *";"Meliaceae";"Xylocarpus mekongensis Pie.";1103;300;365;0;7;18;35;39;1600;2000;4000;5000;"1 2";"1 3";"S";12.00;12.00;"H";"M H";"D";"M";"I W";"I W";"5.5";"6.5";"7.0";"7.5";"M";"H";"H";"M";
 "Kulsi *";"Myrsinadeae";"Aegiceras corniculatum Bla.";1104;240;300;0;7;18;26;35;800;1000;2000;4000;"1";"1 2";"S";12.00;12.00;"H";"M H";"D";"M";"I";"I";"6.5";"6.8";"7.2";"7.5";"M";"H";"H";"M";
 "Letek *";"Palmaceae";"Calamus erinaceus (Becc.) D";1105;365;365;0;20;24;32;37;2000;2500;4000;5000;"2 4";"1 5";"S";12.00;12.00;"M H";"W";"M";"M";"I";"I W";"6.5";"6.8";"7.2";"7.5";"L";"H";"H";"M";
