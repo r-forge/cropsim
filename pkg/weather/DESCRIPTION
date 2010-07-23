@@ -8,5 +8,5 @@ Suggests: RODBC
 Author: Robert J. Hijmans
 Maintainer: Robert J. Hijmans <r.hijmans@gmail.com>
 Description: nothing much so far
-License: GPL (>=3)
+License: GPL-3
 LazyLoad: yes

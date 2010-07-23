@@ -58,7 +58,7 @@ spatSim <- function(raster, model, starts, verbose=FALSE, ...)  {
 			wth$prec[is.na(wth$prec)] <- 0
 			
 			for (d in 1:length(starts)) {
-				result[cnt, d] <- model(wth, emergence=starts[d], ...)
+				result[cnt, d] <- model(wth, emergence=starts[d])
 			}
 		}
 		else {
@@ -74,51 +74,52 @@ spatSim <- function(raster, model, starts, verbose=FALSE, ...)  {
 	return(rStack)
 }
 
-spatSimFlex <- function(raster, pdateraster, model, years, period=14, periodpt=7, skipzero=TRUE, verbose=FALSE, ...){
-	raster <- nudgeExtent(raster)
-	res(raster) <- 1
+spatSimFlex <- function(ras, pdateraster, model, years, period=14, periodpt=7, skipzero=TRUE, verbose=FALSE, ...){
+    
+	ras <- nudgeExtent(ras)
+	res(ras) <- 1
 	
 	nruns <- length(start)
 	onedegworld <- raster()
 	pcells <- cellsFromExtent(onedegworld, pdateraster)
-	cells <- cellsFromExtent(onedegworld, raster)
-	if (ncell(raster) != length(cells)) { stop("not good") }
+	cwpd <- which(pdateraster[]>0)
+	
+    cells <- cellsFromExtent(onedegworld, ras)[pcells[cwpd]]
+	#if (ncell(raster) != length(cells)) { stop("not good") }
 	
 	result <- matrix(NA, nrow=length(cells), ncol=length(years))
 	
 	land <- getLandCells()
 	cnt <- 0
-	for (cell in cells) {
+	for (cell in cwpd) {
 		cnt <- cnt + 1			
 		if (verbose) {
 			# for debugging or progress tracking
 			cat("\r", rep.int(" ", getOption("width")), sep="")
-			cat("\r", "cell: " , cell)
+			cat("\r", "cell: " , pcells[cell])
 			flush.console()
 		}
 		
-		chk <- which(pcells==cell)
-		if (length(chk)==0) next        
-		if (pdateraster[chk]==0 & skipzero) next
+		if (pdateraster[cell]==0 & skipzero) next
 		
-		if ((cell-1) %in% land) {
+		if ((pcells[cell]-1) %in% land) {
 #			if (wtness==0) {
-			wth <- DBgetWthCell('nasaclim', 'daily', cell-1)			
+            xy <- xyFromCell(onedegworld,cell)
+			wth <- getWthXY(xy[1], xy[2])			
 #			}
 #			else{
 #				xy <- xyFromCell(onedegworld, cell)
 #				wth <- DBgetWthLWCell('nasaclim', 'daily', cell-1, xy[2])
 #			}
-			wth$year <- yearFromDate(wth$day)
-			wth$prec[is.na(wth$prec)] <- 0
-			
+			wth@w$prec[is.na(wth@w$prec)] <- 0
+			wth@w$rhmax[is.na(wth@w$rhmax)] <- 0
 			for (d in 1:length(years)) {
-				if (pdateraster[chk]>0){
-					pdate <- dateFromDoy((pdateraster[chk]-1)*period+periodpt,years[d])
+				if (pdateraster[cell]>0){
+					pdate <- dateFromDoy((pdateraster[cell]-1)*period+periodpt,years[d])
 				} else {
 					pdate <- paste(years[d], "5-15", sep="-") 
 				} 
-				result[cnt, d] <- model(wth, emergence=pdate, ...)
+				result[cnt, d] <- model(wth, emergence=pdate)
 			}
 		}
 		else {
@@ -128,7 +129,7 @@ spatSimFlex <- function(raster, pdateraster, model, years, period=14, periodpt=7
 
 	rStack <- new('RasterStack')
 	for (d in 1:length(years)) {
-		r <- setValues(raster, result[,d])
+		r <- setValues(ras, result[,d])
 		rStack <- addLayer(rStack, r)    
 	}
 	return(rStack)
