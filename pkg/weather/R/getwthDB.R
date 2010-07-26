@@ -3,12 +3,18 @@
 # Version 0.1  January 2009
 
 DBgetWthXY <- function(database, table, lon, lat, rst=raster()) {
-	cell <- cellFromXY(rst, c(lon, lat))
-	return(DBgetWthCell(database, table, cell))
+	cell <- cellFromXY(rst, c(lon, lat))-1
+	wc <- DBgetWthCell(database, table, cell)
+	wth <- new('weather')
+	wth@lon <- lon
+    wth@lat <- lat
+	wth@alt <- 0
+	wth@w <- wc
+    return(wth)
 }
 
 DBgetWthCell <- function(database, table, cell, verbose=FALSE) {
-	require(RODBC)
+	require(RODBC)	
 	cnt <-0
 	repeat {
 		cnt<-cnt+1
@@ -30,11 +36,14 @@ DBgetWthCell <- function(database, table, cell, verbose=FALSE) {
 	query <- paste("SELECT * FROM", table, "WHERE cell =", cell)
 	w <- sqlQuery(db, query)
 	odbcClose(db)
-	colnames(w) <- c("cell", "day", "srad", "tmax", "tmin", "prec", "tdew", "temp", "relh")
-	rhnx <- rhMinMax(w$relh, w$tmin, w$tmax, w$temp) 
-	w$rhmn <- rhnx[,1]
-	w$rhmx <- rhnx[,2]
-	return(w[,-1])     
+	colnames(w) <- c("id", "cell", "date", "srad", "tmax", "tmin", "prec", "wind", "tdew", "tavg", "relh")
+	rhnx <- rhMinMax(w$relh, w$tmin, w$tmax, w$tavg)
+    w$rhmin <- rhnx[,1]
+	w$rhmax <- rhnx[,2]
+	w$vapr <- w$relh * saturatedVaporPressure(w$tavg) / 1000  
+	w$year <- yearFromDate(w$date)
+	w$doy <- doyFromDate(w$date)
+	return(w[,-(1:2)])     
 }
 
 DBgetWthCellNoDSN <- function(table, cell, user, pwd, driver="MySQL ODBC 5.1 Driver", server="geo.irri.org", database="nasa") {

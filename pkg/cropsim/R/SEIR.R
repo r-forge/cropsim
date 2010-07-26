@@ -14,7 +14,7 @@ brownSpot <- function(wth, emergence='2000-05-15', ...) {
 	RHCoefRc <- cbind(0:8 * 3, c(0, 0.12, 0.20, 0.38, 0.46, 0.60, 0.73, 0.87, 1.0))
 	return(SEIR(wth=wth, emergence=emergence,  
 		ageRc=AgeCoefRc, tmpRc=TempCoefRc, rhRc=RHCoefRc, baseRc=0.61, latrans=6, inftrans=19, 
-		initSites=600, AGGR=1, siteMax=100000, RRPhysiolSenesc=0.01, RRG=0.1, ...))
+		initSites=600, day1sites=653.64, AGGR=1, siteMax=100000, RRPhysiolSenesc=0.01, RRG=0.1, ...))
 }
 
 leafBlast <- function(wth, emergence='2000-05-15', ...) {
@@ -23,7 +23,7 @@ leafBlast <- function(wth, emergence='2000-05-15', ...) {
 	RHCoefRc <- cbind (4 + (0:10) * 2, c(0, 0.02, 0.09, 0.19, 0.29, 0.43, 0.54, 0.63, 0.77, 0.88, 1.0))	
 	return(SEIR(wth=wth, emergence=emergence,  
 		ageRc=AgeCoefRc, tmpRc=TempCoefRc, rhRc=RHCoefRc, baseRc=1.14, latrans=5, inftrans=20,
-		initSites=600, AGGR=1, siteMax=30000, RRPhysiolSenesc=0.01, RRG=0.1, ...))
+		initSites=600, day1sites=652.8, AGGR=1, siteMax=30000, RRPhysiolSenesc=0.01, RRG=0.1, ...))
 }
 
 bactBlight <- function(wth, emergence='2000-05-15', ...) {
@@ -32,7 +32,7 @@ bactBlight <- function(wth, emergence='2000-05-15', ...) {
 	RHCoefRc <- cbind(c(2,1:8 * 3), c(0, 0.67, 0.81, 0.84, 0.87, 0.91, 0.94, 0.97, 1.0))
 	return(SEIR(wth=wth, emergence=emergence,  
 		ageRc=AgeCoefRc, tmpRc=TempCoefRc, rhRc=RHCoefRc, baseRc=0.87, latrans=5, inftrans=30, 
-		siteMax=3200, AGGR=4, initSites=100, RRPhysiolSenesc=0.01, RRG=0.1, ...))
+		siteMax=3200, AGGR=4, initSites=100, day1sites=108.6875, RRPhysiolSenesc=0.01, RRG=0.1, ...))
 }	
 
 
@@ -42,7 +42,7 @@ sheathBlight <- function(wth, emergence='2000-05-15', ...) {
 	TempCoefRc <- cbind(3:10 * 4, c(0, 0.42, 0.94, 0.94, 1.0, 0.85, 0.64, 0))
 	return(SEIR(wth=wth, emergence=emergence,  
 		ageRc=AgeCoefRc, tmpRc=TempCoefRc, rhRc=RHCoefRc, baseRc=0.46, latrans=3, inftrans=120, 
-		siteMax=800, AGGR=2.8, initSites=25, RRPhysiolSenesc=0.005, RRG=0.2, ...))
+		siteMax=800, AGGR=2.8, initSites=25, day1sites=29.71875, RRPhysiolSenesc=0.005, RRG=0.2, ...))
 }
 
 
@@ -57,7 +57,7 @@ tungro <- function(wth, emergence='2000-05-15', ...) {
 
 
 
-SEIR <- function(wth, emergence, onset=15, duration=120, rhlim=90, rainlim=5, wetness=0, initSites,
+SEIR <- function(wth, emergence, onset=15, duration=120, rhlim=90, rainlim=5, wetness=0, initSites, day1sites
 					initInfection=1, ageRc, tmpRc, rhRc, baseRc, latrans, inftrans, siteMax, AGGR, 
 					RRPhysiolSenesc, RRG, SenescType=1)	
 {
@@ -81,7 +81,7 @@ SEIR <- function(wth, emergence, onset=15, duration=120, rhlim=90, rainlim=5, we
 	# State calculations
 		if (day==1) {
 		# start crop growth 
-			Sites[day] <- initSites
+			Sites[day] <- day1sites
 			RSenesced[day] <- RRPhysiolSenesc * Sites[day]
 			Senesced[day] <- RRPhysiolSenesc * initSites
 			COFR[day] <- 1

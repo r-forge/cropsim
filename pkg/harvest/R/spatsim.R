@@ -74,8 +74,9 @@ spatSim <- function(raster, model, starts, verbose=FALSE, ...)  {
 	return(rStack)
 }
 
-spatSimFlex <- function(ras, pdateraster, model, years, period=14, periodpt=7, skipzero=TRUE, verbose=FALSE, ...){
-    
+spatSimFlex <- function(ras, pdateraster, model, years, mcount=4, period=14, periodpt=7, skipzero=TRUE, verbose=FALSE, out="C:\temp",...){
+    if (!file.exists(out)) dir.create(out, recursive=TRUE)
+    library(RemoteSensing)    
 	ras <- nudgeExtent(ras)
 	res(ras) <- 1
 	
@@ -84,53 +85,66 @@ spatSimFlex <- function(ras, pdateraster, model, years, period=14, periodpt=7, s
 	pcells <- cellsFromExtent(onedegworld, pdateraster)
 	cwpd <- which(pdateraster[]>0)
 	
-    cells <- cellsFromExtent(onedegworld, ras)[pcells[cwpd]]
+    cells <- cellsFromExtent(onedegworld, ras)
+    inc <- cells %in% pcells[cwpd]
+    cells <- cells[inc] 
 	#if (ncell(raster) != length(cells)) { stop("not good") }
 	
-	result <- matrix(NA, nrow=length(cells), ncol=length(years))
+	result <- matrix(NA, nrow=length(cells), ncol=length(years)*mcount)
 	
 	land <- getLandCells()
 	cnt <- 0
-	for (cell in cwpd) {
+	for (cell in cells) {
 		cnt <- cnt + 1			
 		if (verbose) {
 			# for debugging or progress tracking
 			cat("\r", rep.int(" ", getOption("width")), sep="")
-			cat("\r", "cell: " , pcells[cell])
+			cat("\r", "cell: " , cell)
 			flush.console()
 		}
 		
-		if (pdateraster[cell]==0 & skipzero) next
+		if (pdateraster[pcells==cell]==0 & skipzero) next
 		
-		if ((pcells[cell]-1) %in% land) {
+		if ((cell-1) %in% land) {
 #			if (wtness==0) {
             xy <- xyFromCell(onedegworld,cell)
-			wth <- getWthXY(xy[1], xy[2])			
+			wth <- DBgetWthXY('geoclimate', "nasa_1d", xy[1], xy[2])			
 #			}
 #			else{
 #				xy <- xyFromCell(onedegworld, cell)
 #				wth <- DBgetWthLWCell('nasaclim', 'daily', cell-1, xy[2])
 #			}
 			wth@w$prec[is.na(wth@w$prec)] <- 0
-			wth@w$rhmax[is.na(wth@w$rhmax)] <- 0
+			wth@w$rhmin[is.na(wth@w$rhmin)] <- 0
+			wth@w$tavg[is.na(wth@w$tavg)] <- (wth@w$tmin[is.na(wth@w$tavg)]+wth@w$tmax[is.na(wth@w$tavg)])/2
+			wth@w$rhmax[is.na(wth@w$rhmax)] <- wth@w$rhmin[is.na(wth@w$rhmax)]
+			cellresults <- numeric(0)
 			for (d in 1:length(years)) {
-				if (pdateraster[cell]>0){
-					pdate <- dateFromDoy((pdateraster[cell]-1)*period+periodpt,years[d])
+				if (pdateraster[pcells==cell]>0){
+					pdate <- dateFromDoy((pdateraster[pcells==cell]-1)*period+periodpt,years[d])
 				} else {
 					pdate <- paste(years[d], "5-15", sep="-") 
 				} 
-				result[cnt, d] <- model(wth, emergence=pdate)
+				 cellresults <- c(cellresults,model(wth, emergence=pdate))
 			}
+            result[cnt, ] <- cellresults
 		}
 		else {
-			result[cnt] <- NA
+			result[cnt,] <- NA
 		}
 	}
-
-	rStack <- new('RasterStack')
-	for (d in 1:length(years)) {
-		r <- setValues(ras, result[,d])
-		rStack <- addLayer(rStack, r)    
+    models <- c("leafblast", "brownspot", "bactblight", "sheathblight")
+    cnames <- character(0)	
+    for (y in years){
+        cnames <- c(cnames,paste(models, y,sep=""))
+    }
+    colnames(result) <- cnames
+	for (i in 1:ncol(result)) {
+	    r <- raster(ras)
+		r[inc] <- result[,i]
+        r <- raster2SGDF(r)
+        writeGDAL(r, paste(out, paste(colnames(result)[i],".tif", sep = ""), sep = "/"), options = c("COMPRESS=LZW", 
+            "TFW=YES"))		
+        rm(r)		    
 	}
-	return(rStack)
 }
