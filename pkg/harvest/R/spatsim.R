@@ -156,5 +156,5 @@ spatSimFlex <- function(BaseRaster, model, outcolnames, years, pdateraster, crop
 		writeRaster(r, paste(out, paste(colnames(result)[i],".tif", sep = ""), sep = "/"),...)
         rm(r)		    
 	}
-    return(brick(paste(out, paste(colnames(result),".tif", sep = ""), sep = "/")))
+    return(stack(paste(out, paste(colnames(result),".tif", sep = ""), sep = "/")))
 }
