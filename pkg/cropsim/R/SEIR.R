@@ -63,9 +63,9 @@ SEIR <- function(wth, emergence, onset=15, duration=120, rhlim=90, rainlim=5, we
 {
 
 	emergence <- as.Date(emergence)
-	wthsub <- subset(wth@w, wth@w$date >= emergence-1)
-	if (dim(wthsub)[1] < duration) {	stop("Incomplete weather data") }
-	wthsub <- wthsub[1:(duration+1),]
+	wth@w <- subset(wth@w, wth@w$date >= emergence-1)
+	if (dim(wth@w)[1] < duration) {	stop("Incomplete weather data") }
+	wth@w <- wth@w[1:(duration+1),]
 	
 	if (wetness == 1) {
 		W <- leafWet(wth, simple=TRUE)
@@ -108,14 +108,14 @@ SEIR <- function(wth, emergence, onset=15, duration=120, rhlim=90, rainlim=5, we
 		}
 		
 		if (wetness==0){
-			if (wthsub$rhmax[day+1] >= rhlim | wthsub$prec[day+1] >= rainlim) {
+			if (wth@w$rhmax[day+1] >= rhlim | wth@w$prec[day+1] >= rainlim) {
 				RHCoef[day+1] <- 1
 			}
 		} else {
 			RHCoef[day+1]<- AFGen (rhRc, W[day+1])
 		}		
 
-		Rc[day+1] <- baseRc * AFGen(ageRc, day) * AFGen(tmpRc, wthsub$tavg[day+1]) * RHCoef[day+1]
+		Rc[day+1] <- baseRc * AFGen(ageRc, day) * AFGen(tmpRc, wth@w$tavg[day+1]) * RHCoef[day+1]
 		Diseased[day+1] <- sum(infectious) + now_latent[day+1] + Removed[day+1]
 		Removed[day+1] <- sum(infectious) - now_infectious[day+1]
 
@@ -142,10 +142,10 @@ SEIR <- function(wth, emergence, onset=15, duration=120, rhlim=90, rainlim=5, we
 	}
 
 	res <- cbind(0:duration, Sites, now_latent, now_infectious, Removed, Senesced, Rinfection, Rtransfer, RGrowth, RSenesced, Diseased, Severity)
-	res <- as.data.frame(res[1:day,])
+	res <- as.data.frame(res[1:day+1,])
 	
-	dates <- seq(emergence, emergence+duration, 1)
-	res <- cbind(dates[1:day], res)
+	dates <- seq(emergence-1, emergence+duration, 1)
+	res <- cbind(dates[1:day+1], res)
 	colnames(res) <- c("date", "simday", "sites", "latent", "infectious", "removed", "senesced", "rateinf", "rtransfer", "rgrowth", "rsenesced", "diseased", "severity")
 	
 	result <- new('SEIR')

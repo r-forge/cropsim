@@ -74,19 +74,25 @@ spatSim <- function(raster, model, starts, verbose=FALSE, ...)  {
 	return(rStack)
 }
 
-spatSimFlex <- function(ras, pdateraster, model, years, mcount=4, period=14, periodpt=7, skipzero=TRUE, verbose=FALSE, out="C:\temp",...){
+spatSimFlex <- function(BaseRaster, model, outcolnames, years, pdateraster, croppingraster=NULL, nosinglecrop=FALSE, mcount=4, period=14, periodpt=7, skipzero=TRUE, verbose=FALSE, out="C:\temp",...){
     if (!file.exists(out)) dir.create(out, recursive=TRUE)
-    library(RemoteSensing)    
-	ras <- nudgeExtent(ras)
-	res(ras) <- 1
+	BaseRaster <- nudgeExtent(BaseRaster)
+	res(BaseRaster) <- 1
 	
-	nruns <- length(start)
+	#nruns <- length(start)
 	onedegworld <- raster()
 	pcells <- cellsFromExtent(onedegworld, pdateraster)
-	cwpd <- which(pdateraster[]>0)
+	cwpd <- pcells[which(pdateraster[]>0)]
 	
-    cells <- cellsFromExtent(onedegworld, ras)
-    inc <- cells %in% pcells[cwpd]
+	if (!is.null(croppingraster)& class(croppingraster)=="RasterLayer"){
+        ccells <- cellsFromExtent(onedegworld,croppingraster)
+        checkcropping <- TRUE
+    } else {
+        checkcropping <- FALSE
+    }
+	
+    cells <- cellsFromExtent(onedegworld, BaseRaster)
+    inc <- which(cells %in% cwpd)
     cells <- cells[inc] 
 	#if (ncell(raster) != length(cells)) { stop("not good") }
 	
@@ -103,8 +109,8 @@ spatSimFlex <- function(ras, pdateraster, model, years, mcount=4, period=14, per
 			flush.console()
 		}
 		
-		if (pdateraster[pcells==cell]==0 & skipzero) next
-		
+		#if (pdateraster[pcells==cell]==0 & skipzero) next
+				
 		if ((cell-1) %in% land) {
 #			if (wtness==0) {
             xy <- xyFromCell(onedegworld,cell)
@@ -119,13 +125,18 @@ spatSimFlex <- function(ras, pdateraster, model, years, mcount=4, period=14, per
 			wth@w$tavg[is.na(wth@w$tavg)] <- (wth@w$tmin[is.na(wth@w$tavg)]+wth@w$tmax[is.na(wth@w$tavg)])/2
 			wth@w$rhmax[is.na(wth@w$rhmax)] <- wth@w$rhmin[is.na(wth@w$rhmax)]
 			cellresults <- numeric(0)
+			
+		    if (checkcropping){
+                if(nosinglecrop & croppingraster[ccells==cell]>1) PCISrice <- 1 else PCISrice <- 0     
+            }
+
 			for (d in 1:length(years)) {
 				if (pdateraster[pcells==cell]>0){
 					pdate <- dateFromDoy((pdateraster[pcells==cell]-1)*period+periodpt,years[d])
 				} else {
 					pdate <- paste(years[d], "5-15", sep="-") 
-				} 
-				 cellresults <- c(cellresults,model(wth, emergence=pdate))
+				}                             
+				if (checkcropping) cellresults <- c(cellresults,model(wth, emergence=pdate, PCISrice=PCISrice)) else cellresults <- c(cellresults,model(wth, emergence=pdate))
 			}
             result[cnt, ] <- cellresults
 		}
@@ -133,18 +144,17 @@ spatSimFlex <- function(ras, pdateraster, model, years, mcount=4, period=14, per
 			result[cnt,] <- NA
 		}
 	}
-    models <- c("leafblast", "brownspot", "bactblight", "sheathblight")
+    #models <- c("leafblast", "brownspot", "bactblight", "sheathblight")
     cnames <- character(0)	
     for (y in years){
-        cnames <- c(cnames,paste(models, y,sep=""))
+        cnames <- c(cnames,paste(outcolnames, y,sep=""))
     }
     colnames(result) <- cnames
 	for (i in 1:ncol(result)) {
-	    r <- raster(ras)
+	    r <- raster(BaseRaster)
 		r[inc] <- result[,i]
-        r <- raster2SGDF(r)
-        writeGDAL(r, paste(out, paste(colnames(result)[i],".tif", sep = ""), sep = "/"), options = c("COMPRESS=LZW", 
-            "TFW=YES"))		
+		writeRaster(r, paste(out, paste(colnames(result)[i],".tif", sep = ""), sep = "/"),...)
         rm(r)		    
 	}
+    return(brick(paste(out, paste(colnames(result),".tif", sep = ""), sep = "/")))
 }
