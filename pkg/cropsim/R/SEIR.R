@@ -142,10 +142,10 @@ SEIR <- function(wth, emergence, onset=15, duration=120, rhlim=90, rainlim=5, we
 	}
 
 	res <- cbind(0:duration, Sites, now_latent, now_infectious, Removed, Senesced, Rinfection, Rtransfer, RGrowth, RSenesced, Diseased, Severity)
-	res <- as.data.frame(res[1:day+1,])
+	res <- as.data.frame(res[1:(day+1),])
 	
 	dates <- seq(emergence-1, emergence+duration, 1)
-	res <- cbind(dates[1:day+1], res)
+	res <- cbind(dates[1:(day+1)], res)
 	colnames(res) <- c("date", "simday", "sites", "latent", "infectious", "removed", "senesced", "rateinf", "rtransfer", "rgrowth", "rsenesced", "diseased", "severity")
 	
 	result <- new('SEIR')
