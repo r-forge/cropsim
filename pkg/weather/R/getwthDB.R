@@ -2,9 +2,9 @@
 # License GPL3
 # Version 0.1  January 2009
 
-DBgetWthXY <- function(database, table, lon, lat, rst=raster()) {
+DBgetWthXY <- function(database, table, lon, lat, alt=2, rst=raster(), ...) {
 	cell <- cellFromXY(rst, c(lon, lat))-1
-	wc <- DBgetWthCell(database, table, cell)
+	wc <- DBgetWthCell(database, table, cell, ...)
 	wth <- new('weather')
 	wth@lon <- lon
     wth@lat <- lat
@@ -13,7 +13,7 @@ DBgetWthXY <- function(database, table, lon, lat, rst=raster()) {
     return(wth)
 }
 
-DBgetWthCell <- function(database, table, cell, verbose=FALSE) {
+DBgetWthCell <- function(database, table, cell, verbose=FALSE, year="all") {
 	require(RODBC)	
 	cnt <-0
 	repeat {
@@ -33,17 +33,23 @@ DBgetWthCell <- function(database, table, cell, verbose=FALSE) {
         }
 		
 	}
-	query <- paste("SELECT * FROM", table, "WHERE cell =", cell)
+	
+	if (year=='all'){
+        query <- paste("SELECT * FROM", table, "WHERE cell =", cell)    
+    } else {
+        query <- paste("SELECT * FROM", table, "WHERE cell =", cell, "AND YEAR(wdate) IN (",paste(year, collapse=","),")")
+    }
 	w <- sqlQuery(db, query)
 	odbcClose(db)
 	colnames(w) <- c("id", "cell", "date", "srad", "tmax", "tmin", "prec", "wind", "tdew", "tavg", "relh")
+	year <- yearFromDate(w$date)
+	doy <- doyFromDate(w$date)
+    w <- cbind(w$date,year,doy,w[,-(1:3)])
 	rhnx <- rhMinMax(w$relh, w$tmin, w$tmax, w$tavg)
     w$rhmin <- rhnx[,1]
 	w$rhmax <- rhnx[,2]
 	w$vapr <- w$relh * saturatedVaporPressure(w$tavg) / 1000  
-	w$year <- yearFromDate(w$date)
-	w$doy <- doyFromDate(w$date)
-	return(w[,-(1:2)])     
+	return(w)     
 }
 
 DBgetWthCellNoDSN <- function(table, cell, user, pwd, driver="MySQL ODBC 5.1 Driver", server="geo.irri.org", database="nasa") {
