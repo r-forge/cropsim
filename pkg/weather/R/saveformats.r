@@ -3,7 +3,30 @@
 # Version 0.0.1
 # Licence GPL v3
 
-write.fse <- function(wth, year, stname="", stn="", author="", src="", target=".", na.val=-99, y2ksafe=TRUE, kJ=TRUE, ...){    
+.dd2DMS <- function(dd, lat=T){
+    if (dd!=-99){
+        aDD <- abs(dd)
+        deg <- trunc(aDD)
+        dec <- aDD - deg
+        mn <- round(dec*60)
+        DMS <- paste(deg, mn)
+        if (lat & dd>0){
+            DMS <- paste(DMS, "N")
+        } else if (lat & dd<0){
+            DMS <- paste(DMS, "S")
+        } else if (!lat & dd>0){
+            DMS <- paste(DMS, "E")
+        } else {
+            DMS <- paste(DMS, "W")
+        }
+    } else {
+        DMS <- "-99."
+    }
+    return(DMS)
+}
+
+
+write.fse <- function(wth, year, country, stn, author="", src="", target=".", na.val=-99, y2ksafe=TRUE, kJ=TRUE, ...){    
     if (length(year)>1){
         stop("Multiple years not yet supported")
     }
@@ -11,7 +34,7 @@ write.fse <- function(wth, year, stname="", stn="", author="", src="", target=".
         stop("Usupported weather data format.")
     }
     border <- "*-----------------------------------------------------------"
-    cols <- rbind(  "*  Column    Daily Value",
+    cols <- rbind("*  Column    Daily Value",
                 "*     1      Station number",
                 "*     2      Year",
                 "*     3      Day",
@@ -26,22 +49,26 @@ write.fse <- function(wth, year, stname="", stn="", author="", src="", target=".
     srcname <- paste("*  Source      :", src)
 
 
-    hdri1 <- paste("*  Station Name:", stname)
-    hdri2 <- paste("*  Longitude:  ", dd2DMS(wth@lon, F), "   Latitude:", dd2DMS(wth@lat), "   Altitude:  ", wth@alt,"m")
+    hdri1 <- paste("*  Station Name:", country)
+    hdri2 <- paste("*  Longitude:  ", .dd2DMS(wth@lon, F), "   Latitude:", .dd2DMS(wth@lat), "   Altitude:  ", wth@alt,"m")
     hdri3 <- paste(sprintf("%.2f",wth@lon),sprintf("%.2f",wth@lat),format(wth@alt, width=5), "0.00", "0.00")
-    hdr <- rbind(border,hdri1,auth,srcname, hdri2,cols,border,hdri3)
-    
     if (year>=2000 & y2ksafe) {
-        year <- year-(20*(trunc((year-2000)/20)+1))        
+        addcomment <-  rbind("*",paste("*  Original year:",year), "*  Created by R weather package")
+        year <- year-(20*(trunc((year-2000)/20)+1))
+                
     }    
-    fname <- paste(target, paste(tolower(paste(stname,substr(year,1,1), sep="")),substr(year,2,4),sep="."),sep= "/")
+    
+    
+    hdr <- rbind(border,hdri1,auth,srcname, hdri2,cols,addcomment, border,hdri3)
+    
+    fname <- paste(target, paste(tolower(paste(country, stn, sep="")),substr(year,2,4),sep="."),sep= "/")
     tmpdat <- wth@w[grep(year,wth@w$year),]
     tmpdat$srad <- tmpdat$srad*1000
     tmpdat[is.na(tmpdat)] <- na.val
     dattxt <- hdr
     for(i in 1:nrow(tmpdat)){
-        dattxt <- rbind(dattxt, paste(c(stn, year, format(i,width=3), format(sprintf("%.1f",tmpdat[i, c("srad", "tmin", "tmax", "vapr", "wind", "prec")]), width=5, justify="right")), collapse=" "))
+        dattxt <- rbind(dattxt, paste(c(stn, year, format(i,width=3), format(tmpdat$srad[i], width=5, justify="right"), format(sprintf("%.1f",tmpdat[i, c("tmin", "tmax", "vapr", "wind", "prec")]), width=5, justify="right")), collapse=" "))
     }
-    writeLines(datxt, fname)
+    writeLines(dattxt, fname)
     return(dattxt)    
 }
