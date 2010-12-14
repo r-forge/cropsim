@@ -26,7 +26,7 @@
 }
 
 
-write.fse <- function(wth, year, country, stn, author="", src="", target=".", na.val=-99, y2ksafe=TRUE, kJ=TRUE, ...){    
+write.fse <- function(wth, year, country, stn, author="", src="", target=".", na.val=-99, y2ksafe=1, sradkJ=TRUE, ...){    
     if (length(year)>1){
         stop("Multiple years not yet supported")
     }
@@ -52,7 +52,7 @@ write.fse <- function(wth, year, country, stn, author="", src="", target=".", na
     hdri1 <- paste("*  Station Name:", country)
     hdri2 <- paste("*  Longitude:  ", .dd2DMS(wth@lon, F), "   Latitude:", .dd2DMS(wth@lat), "   Altitude:  ", wth@alt,"m")
     hdri3 <- paste(sprintf("%.2f",wth@lon),sprintf("%.2f",wth@lat),format(wth@alt, width=5), "0.00", "0.00")
-    if (year>=2000 & y2ksafe) {
+    if ((year>=2000 & y2ksafe==1)|(y2ksafe==2)) {
         addcomment <-  rbind("*",paste("*  Original year:",year), "*  Created by R weather package")
         year <- year-(20*(trunc((year-2000)/20)+1))
                 
@@ -63,7 +63,7 @@ write.fse <- function(wth, year, country, stn, author="", src="", target=".", na
     
     fname <- paste(target, paste(tolower(paste(country, stn, sep="")),substr(year,2,4),sep="."),sep= "/")
     tmpdat <- wth@w[grep(year,wth@w$year),]
-    tmpdat$srad <- tmpdat$srad*1000
+    if (sradkJ) tmpdat$srad <- tmpdat$srad*1000
     tmpdat[is.na(tmpdat)] <- na.val
     dattxt <- hdr
     for(i in 1:nrow(tmpdat)){
