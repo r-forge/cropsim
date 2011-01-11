@@ -3,7 +3,7 @@
 # Version 0.1  
 # License GPL3
 
-getLandCells <- function(odbcname='NASAclim'){
+getLandCells <- function(tablename, odbcname='geoclimate'){
     cnt <- 0
     repeat {
 		cnt<-cnt+1
@@ -19,9 +19,9 @@ getLandCells <- function(odbcname='NASAclim'){
 		cat("Retrying to connect. \n")
 		flush.console()
 	}
-	lc <- sqlQuery(con, "SELECT cell_id AS cell FROM masks WHERE resolution = 1 AND arable = TRUE")
+    maskset <- sqlQuery(con, paste("SELECT maskset_id FROM datasets WHERE table_name ='", tablename, "'",sep=""))$maskset_id
+	lc <- sqlQuery(con, paste("SELECT cell FROM maskcells WHERE maskset_id =", maskset, " AND land = TRUE",sep=""))$cell
 	odbcClose(con)
-	lc <- lc$cell
 	return(lc)	
 }
 
@@ -74,14 +74,14 @@ spatSim <- function(raster, model, starts, verbose=FALSE, ...)  {
 	return(rStack)
 }
 
-spatSimFlex <- function(BaseRaster, model, outcolnames, years, pdateraster, croppingraster=NULL, nosinglecrop=FALSE, mcount=4, period=14, periodpt=7, skipzero=TRUE, verbose=FALSE, out="C:\temp",...){
+spatSimFlex <- function(region, model, outcolnames, years, pdateraster, wthdb="nasa_1d", croppingraster=NULL, nosinglecrop=FALSE, mcount=4, period=14, periodpt=7, skipzero=TRUE, verbose=FALSE, out="C:\temp",...){
     if (!file.exists(out)) dir.create(out, recursive=TRUE)
 	BaseRaster <- nudgeExtent(BaseRaster)
 	res(BaseRaster) <- 1
-	
+	cells <- cellsFromExtent(onedegworld, BaseRaster)
+    
 	#nruns <- length(start)
-	onedegworld <- raster()
-	pcells <- cellsFromExtent(onedegworld, pdateraster)
+	pcells <- cellsFromExtent(raster(), pdateraster)
 	cwpd <- pcells[which(pdateraster[]>0)]
 	
 	if (!is.null(croppingraster)& class(croppingraster)=="RasterLayer"){
@@ -91,14 +91,13 @@ spatSimFlex <- function(BaseRaster, model, outcolnames, years, pdateraster, crop
         checkcropping <- FALSE
     }
 	
-    cells <- cellsFromExtent(onedegworld, BaseRaster)
     inc <- which(cells %in% cwpd)
     cells <- cells[inc] 
 	#if (ncell(raster) != length(cells)) { stop("not good") }
 	
 	result <- matrix(NA, nrow=length(cells), ncol=length(years)*mcount)
 	
-	land <- getLandCells()
+	land <- getLandCells(tablename=wthdb)
 	cnt <- 0
 	for (cell in cells) {
 		cnt <- cnt + 1			
@@ -114,7 +113,7 @@ spatSimFlex <- function(BaseRaster, model, outcolnames, years, pdateraster, crop
 		if ((cell-1) %in% land) {
 #			if (wtness==0) {
             xy <- xyFromCell(onedegworld,cell)
-			wth <- DBgetWthXY('geoclimate', "nasa_1d", xy[1], xy[2])			
+			wth <- DBgetWthXY('geoclimate', wthdb, xy[1], xy[2])			
 #			}
 #			else{
 #				xy <- xyFromCell(onedegworld, cell)
