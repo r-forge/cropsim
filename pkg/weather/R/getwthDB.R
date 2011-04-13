@@ -26,8 +26,9 @@ DBgetWthCell <- function(database, tablename, cell, verbose=FALSE, year="all") {
 	odbcClose(db)
 	year <- yearFromDate(w$wdate)
 	doy <- doyFromDate(w$wdate)
+	vars <- colnames(w)[4:ncol(w)]
     w <- cbind(w$wdate,year,doy,w[,-(1:3)])
-    colnames(w) <- c("date", "year", "doy", "srad", "tmax", "tmin", "prec", "wind", "tdew", "tavg", "relh")
+    colnames(w) <- c("date", "year", "doy", vars)
 	
 	if (nrow(w)>0){
        	rhnx <- rhMinMax(w$relh, w$tmin, w$tmax, w$tavg)
