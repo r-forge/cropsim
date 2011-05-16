@@ -27,16 +27,15 @@ DBgetWthCell <- function(database, tablename, cell, verbose=FALSE, year="all") {
 	year <- yearFromDate(w$wdate)
 	doy <- doyFromDate(w$wdate)
 	vars <- colnames(w)[4:ncol(w)]
-	vars[vars=="t2m"] <- "tavg"
-    w <- cbind(w$wdate,year,doy,w[,-(1:3)])
+	w <- cbind(w$wdate,year,doy,w[,-(1:3)])
     
     colnames(w) <- c("date", "year", "doy", vars)
 	
 	if (nrow(w)>0){
-       	rhnx <- rhMinMax(w$relh, w$tmin, w$tmax, w$tavg)
+       	rhnx <- rhMinMax(w$rh2m, w$tmin, w$tmax, w$t2m)
         w$rhmin <- rhnx[,1]
     	w$rhmax <- rhnx[,2]
-        w$vapr <- w$relh * saturatedVaporPressure(w$tavg) / 1000          
+        w$vapr <- w$rh2m * saturatedVaporPressure(w$t2m) / 1000          
     } 
 	return(w)     
 }
