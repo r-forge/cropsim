@@ -27,7 +27,9 @@ DBgetWthCell <- function(database, tablename, cell, verbose=FALSE, year="all") {
 	year <- yearFromDate(w$wdate)
 	doy <- doyFromDate(w$wdate)
 	vars <- colnames(w)[4:ncol(w)]
+	vars[vars=="t2m"] <- "tavg"
     w <- cbind(w$wdate,year,doy,w[,-(1:3)])
+    
     colnames(w) <- c("date", "year", "doy", vars)
 	
 	if (nrow(w)>0){
