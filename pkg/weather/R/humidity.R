@@ -24,8 +24,13 @@ saturatedVaporPressure <- function(temp) {
 	i <- which(temp >= 0)
 	temp[i] <- 6.1 + 0.27*temp[i] + 0.024*temp[i]*temp[i]
 	i <- which(temp < 0)
-	temp[i] <- exp(0.0628979  * temp[i] +  1.7845445)
+	temp[i] <- exp(0.0628979  * temp[i] +  1.7845445)                                  
 	return(temp)
+}
+
+vaporPressureDeficit <- function(rh, tavg){
+    svp <- saturatedVaporPressure(tavg)
+    return((1-(rh/100))*svp)
 }
 
 

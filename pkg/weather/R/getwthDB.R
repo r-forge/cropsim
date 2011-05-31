@@ -14,6 +14,7 @@ DBgetWthXY <- function(database, tablename, lon, lat, alt=2, rst=raster(), ...) 
 }
 
 DBgetWthCell <- function(database, tablename, cell, verbose=FALSE, year="all") {
+    if(!require(RODBC)) stop("Required package RODBC not found. Please install RODBC.")
 	# use rodbcExt to be able to retry connections automatically
     db <- odbcConnect(database)
 	
@@ -32,10 +33,16 @@ DBgetWthCell <- function(database, tablename, cell, verbose=FALSE, year="all") {
     colnames(w) <- c("date", "year", "doy", vars)
 	
 	if (nrow(w)>0){
-       	rhnx <- rhMinMax(w$rh2m, w$tmin, w$tmax, w$t2m)
+	    tavg <- which(colnames(w) %in% c("t2m","tavg"))
+	    if(length(tavg)==0){
+            w$tavg <- (w$tmin+w$tmax)/2
+            tavg <- which(colnames(w)=="tavg")
+        }
+       	rhnx <- rhMinMax(w$rh2m, w$tmin, w$tmax, w[,tavg])
         w$rhmin <- rhnx[,1]
     	w$rhmax <- rhnx[,2]
-        w$vapr <- w$rh2m * saturatedVaporPressure(w$t2m) / 1000          
+        w$vapr <- w$rh2m * saturatedVaporPressure(w[,tavg]) / 1000
+        w$vpd <- vaporPressureDeficit(w$rh2m, w[,tavg])          
     } 
 	return(w)     
 }
