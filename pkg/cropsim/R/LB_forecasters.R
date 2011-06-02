@@ -36,8 +36,8 @@
 
 Hyre <- function(wth, emergence='2000-05-15', duration=120) {
 	w <- .subsetwth(wth, emergence, duration)@w
-	t5 <- raster::moving(w$tavg, n=5, type='to') / 5
-	p10 <- raster::moving(w$prec, n=10, type='to')
+	t5 <- raster::movingFun(w$tavg, n=5, type='to', na.rm=TRUE) / 5
+	p10 <- raster::movingFun(w$prec, n=10, type='to', na.rm=TRUE)
 	blightFavorable <- t5 < 25.5 & w$tavg > 7.2 & p10 > 30
 	cbind(as.data.frame(w$date), blightFavorable)
 }
@@ -90,8 +90,8 @@ blitecast <- function(wth, emergence='2000-05-15', duration=120) {
 		return( cbind(as.data.frame(wth@w$date), spray) )
 	}
 	
-	rainfav7 <- raster::moving(wth@w$prec > 3, n=7, type='to')
-	severity7 <- raster::moving(wallin$severity, n=7, type='to')
+	rainfav7 <- raster::movingFun(wth@w$prec > 3, n=7, type='to', na.rm=TRUE)
+	severity7 <- raster::movingFun(wallin$severity, n=7, type='to', na.rm=TRUE)
 
 	second <- first
 	second[] <- -1
