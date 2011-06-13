@@ -26,7 +26,7 @@ SVP <- function(temp) {
 }
 
 vaporPressureDeficit <- function(rh, tavg){
-    svp <- saturatedVaporPressure(tavg)
+    svp <- SVP(tavg)
     return((1-(rh/100))*svp)
 }
 

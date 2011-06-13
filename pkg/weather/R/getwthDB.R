@@ -41,7 +41,7 @@ DBgetWthCell <- function(database, tablename, cell, verbose=FALSE, year="all") {
        	rhnx <- rhMinMax(w$rh2m, w$tmin, w$tmax, w[,tavg])
         w$rhmin <- rhnx[,1]
     	w$rhmax <- rhnx[,2]
-        w$vapr <- w$rh2m * saturatedVaporPressure(w[,tavg]) / 1000
+        w$vapr <- w$rh2m * SVP(w[,tavg]) / 1000
         w$vpd <- vaporPressureDeficit(w$rh2m, w[,tavg])          
     } 
 	return(w)     
