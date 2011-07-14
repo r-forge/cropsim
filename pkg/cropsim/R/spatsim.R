@@ -1,5 +1,6 @@
-# Author: 	Robert J. Hijmans, r.hijmans@gmail.com; Jorrel Khalil S. Aunario
-#Date: 6 February 2009
+# Author: Robert J. Hijmans, r.hijmans@gmail.com; Jorrel Khalil S. Aunario; and 
+# Adam H. Sparks, adamhsparks@gmail.com
+# Date: 14 July 2011
 # Version 0.1  
 # License GPL3
 
@@ -75,10 +76,11 @@ spatSim <- function(raster, model, starts, verbose=FALSE, ...)  {
 }
 
 spatSimFlex <- function(region, model, outcolnames, years, pdateraster, wthdb="nasa_1d", croppingraster=NULL, nosinglecrop=FALSE, mcount=4, period=14, periodpt=7, skipzero=TRUE, verbose=FALSE, out="C:\temp",...){
+    onedegworld <- raster()
     if (!file.exists(out)) dir.create(out, recursive=TRUE)
-	BaseRaster <- nudgeExtent(BaseRaster)
-	res(BaseRaster) <- 1
-	cells <- cellsFromExtent(onedegworld, BaseRaster)
+	  BaseRaster <- nudgeExtent(BaseRaster)
+	  res(BaseRaster) <- 1
+	  cells <- cellsFromExtent(onedegworld, BaseRaster)
     
 	#nruns <- length(start)
 	pcells <- cellsFromExtent(raster(), pdateraster)
