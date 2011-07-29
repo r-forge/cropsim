@@ -3,7 +3,7 @@
 # Version 0.1  January 2009
 
 DBgetWthXY <- function(database, tablename, lon, lat, alt=2, rst=raster(), ...) {
-	cell <- cellFromXY(rst, c(lon, lat))-1
+	cell <- cellFromXY(rst, c(lon, lat))
 	wc <- DBgetWthCell(database, tablename, cell, ...)
 	wth <- new('weather')
 	wth@lon <- lon
