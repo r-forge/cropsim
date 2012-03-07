@@ -7,12 +7,14 @@
 
 setClass('weather', 
 	representation (
+        stn ='character',
 		lon ='numeric',
 		lat ='numeric',		
 		alt ='numeric',
 		w = 'data.frame'
 	),
 	prototype (	
+        stn = "Station name",
 		lon = 0,
 		lat = 0,
 		alt = 0,
@@ -25,14 +27,13 @@ setClass('weather',
 	}
 )
 
-
-
 setMethod ('show' , 'weather', 
 	function(object) {
 		cat('class   :' , class(object), '\n')
+		cat('Station ID:' , object@stn, '\n')
 		cat('\n')	
 		cat('Location' , '\n')
-		cat('longitude:' , object@lon, '\n')
+        cat('longitude:' , object@lon, '\n')
 		cat('latitude :' , object@lat, '\n')
 		cat('altitude :' , object@alt, '\n')
 		cat('\n')
