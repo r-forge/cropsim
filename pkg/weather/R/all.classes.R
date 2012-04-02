@@ -16,7 +16,7 @@ setClass('weather',
 	),
 	prototype (	
         stn = "Station name",
-        rmk = Sys.time(),
+        rmk = paste(Sys.time()),
 		lon = 0,
 		lat = 0,
 		alt = 0,
