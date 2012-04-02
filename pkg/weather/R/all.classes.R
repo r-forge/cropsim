@@ -8,6 +8,7 @@
 setClass('weather', 
 	representation (
         stn ='character',
+        rmk ='character',
 		lon ='numeric',
 		lat ='numeric',		
 		alt ='numeric',
@@ -15,6 +16,7 @@ setClass('weather',
 	),
 	prototype (	
         stn = "Station name",
+        rmk = Sys.time(),
 		lon = 0,
 		lat = 0,
 		alt = 0,
@@ -31,6 +33,7 @@ setMethod ('show' , 'weather',
 	function(object) {
 		cat('class   :' , class(object), '\n')
 		cat('Station ID:' , object@stn, '\n')
+        cat('Remarks:' , object@rmk, '\n')
 		cat('\n')	
 		cat('Location' , '\n')
         cat('longitude:' , object@lon, '\n')

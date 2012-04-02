@@ -1,7 +1,7 @@
 Package: weather
 Type: Package
 Title: Weather data manipulation
-Version: 0.2.1
+Version: 0.2.2
 Date: 20-November-2009
 Depends: methods, raster
 Suggests: RODBC
