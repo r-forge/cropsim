@@ -7,10 +7,10 @@ DBgetWthXY <- function(database, tablename, lon, lat, alt=2, rst=raster(), ...) 
 	wc <- DBgetWthCell(database, tablename, cell, ...)
 	wth <- new('weather')
 	wth@lon <- lon
-    wth@lat <- lat
+  wth@lat <- lat
 	wth@alt <- 0
 	wth@w <- wc
-    return(wth)
+  return(wth)
 }
 
 DBgetWthCell <- function(database, tablename, cell, verbose=FALSE, year="all") {
@@ -30,7 +30,7 @@ DBgetWthCell <- function(database, tablename, cell, verbose=FALSE, year="all") {
 	vars <- colnames(w)[4:ncol(w)]
 	w <- cbind(w$wdate,year,doy,w[,-(1:3)])
     
-    colnames(w) <- c("date", "year", "doy", vars)
+  colnames(w) <- c("date", "year", "doy", vars)
 	
 	if (nrow(w)>0){
 	    tavg <- which(colnames(w) %in% c("t2m","tavg"))
@@ -40,7 +40,7 @@ DBgetWthCell <- function(database, tablename, cell, verbose=FALSE, year="all") {
         }
        	rhnx <- rhMinMax(w$rh2m, w$tmin, w$tmax, w[,tavg])
         w$rhmin <- rhnx[,1]
-    	w$rhmax <- rhnx[,2]
+    	  w$rhmax <- rhnx[,2]
         w$vapr <- w$rh2m * SVP(w[,tavg]) / 1000
         w$vpd <- vaporPressureDeficit(w$rh2m, w[,tavg])          
     } 

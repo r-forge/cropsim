@@ -1,10 +1,10 @@
 # Author: Robert J. Hijmans, r.hijmans@gmail.com; Jorrel Khalil S. Aunario; and 
 # Adam H. Sparks, adamhsparks@gmail.com
-# Date: 15 July 2011
-# Version 0.1  
+# Date: 18 May 2012
+# Version 0.2
 # License GPL3
 
-getLandCells <- function(tablename, odbcname = 'geoclimate'){
+getLandCells <- function(tablename, odbcname){ # tablename is database table name, usually nasa_1d, odbcname is usually geoclimate
     cnt <- 0
     repeat {
 		cnt<-cnt+1
@@ -51,11 +51,11 @@ spatSim <- function(raster, model, starts, verbose = FALSE, ...)  {
 		}
 		if ((cell-1) %in% land) {
 #			if (wtness == 0) {
-			wth <- DBgetWthCell('nasa_1d', 'daily', cell-1)			
+			wth <- DBgetWthCell(tablename, 'daily', cell-1)			
 #			}
 #			else{
 #				xy <- xyFromCell(onedegworld, cell)
-#				wth <- DBgetWthLWCell('nasaclim', 'daily', cell-1, xy[2])
+#				wth <- DBgetWthLWCell(tablename, 'daily', cell-1, xy[2])
 #			}
 			wth$year <- yearFromDate(wth$day)
 			wth$prec[is.na(wth$prec)] <- 0
@@ -78,10 +78,10 @@ spatSim <- function(raster, model, starts, verbose = FALSE, ...)  {
 }
 
 spatSimFlex <- function(region, model, outcolnames, years, pdateraster, 
-                        wthdb = "nasa_1d", croppingraster = NULL, 
+                        tablename, croppingraster = NULL, 
                         nosinglecrop = FALSE, mcount = 4, period = 14, 
                         periodpt = 7, skipzero = TRUE, verbose = FALSE, 
-                        out = "~/tmp", ...){
+                        out, ...){
     onedegworld <- raster()
     if (!file.exists(out)) dir.create(out, recursive = TRUE)
 	  res(BaseRaster) <- 1
@@ -104,7 +104,7 @@ spatSimFlex <- function(region, model, outcolnames, years, pdateraster,
 	
 	result <- matrix(NA, nrow = length(cells), ncol = length(years)*mcount)
 	
-	land <- getLandCells(tablename = wthdb)
+	land <- getLandCells(tablename)
 	cnt <- 0
 	for (cell in cells) {
 		cnt <- cnt + 1			
@@ -120,11 +120,11 @@ spatSimFlex <- function(region, model, outcolnames, years, pdateraster,
 		if ((cell-1) %in% land) {
 #			if (wtness == 0) {
             xy <- xyFromCell(onedegworld, cell)
-			wth <- DBgetWthXY('geoclimate', wthdb, xy[1], xy[2])			
+			wth <- DBgetWthXY(con, tablename, xy[1], xy[2])			
 #			}
 #			else{
 #				xy <- xyFromCell(onedegworld, cell)
-#				wth <- DBgetWthLWCell('nasaclim', 'daily', cell-1, xy[2])
+#				wth <- DBgetWthLWCell(tablename, 'daily', cell-1, xy[2])
 #			}
 			wth@w$prec[is.na(wth@w$prec)] <- 0
 			wth@w$rhmin[is.na(wth@w$rhmin)] <- 0

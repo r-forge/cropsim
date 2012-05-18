@@ -7,13 +7,13 @@ rhMinMax <- function(rhavg, tmin, tmax, tavg=(tmin+tmax)/2) {
 	tmin <- pmax(tmin, -5)
 	tmax <- pmax(tmax, -5)
 	tavg <- pmax(tavg, -5)
-    es <- SVP(tavg)
+  es <- SVP(tavg)
 	vp <- rhavg / 100 * es
-    es <- SVP(tmax)
-    rhmin <- 100*vp/es;
+  es <- SVP(tmax)
+  rhmin <- 100*vp/es;
 	rhmin <- pmax(0, pmin(100, rhmin))
-    es <- SVP(tmin)
-    rhmax <- 100*vp/es;
+  es <- SVP(tmin)
+  rhmax <- 100*vp/es;
 	rhmax <- pmax(0, pmin(100, rhmax))
 	return(cbind(rhmin, rhmax))
 }	
@@ -46,7 +46,7 @@ rel2abshum <- function(rh, t) {
 	es <- SVP(t)
 	ea <- rh * es / 100
 	M <- 18.02 # g/mol
-	R <- 8.314472 # Pa·m³/(mol·K)
+	R <- 8.314472 # Pa?m?/(mol?K)
 	T <- t + 273.15  # C to K
 	hum <- ea*M/(T*R)
 	return(hum)
@@ -54,7 +54,7 @@ rel2abshum <- function(rh, t) {
 
 abs2relhum <- function(hum, t) {
 	M <- 18.02 # g/mol
-	R <- 8.314472 # Pa·m³/(mol·K)
+	R <- 8.314472 # Pa?m?/(mol?K)
 	T <- t + 273.15  # C to K
 	ea <- hum / (M/(T*R))
 	es <- SVP(t)
