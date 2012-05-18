@@ -10,7 +10,7 @@
 \usage{
 spatSim(raster, model, starts, verbose=FALSE, ...)
 spatSimFlex(raster, pdateraster, model, years, period=14, periodpt=7, skipzero=TRUE, verbose=FALSE, ...)
-getLandCells(odbcname="NASAclim")
+getLandCells(odbcname="geoclimate")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

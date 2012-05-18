@@ -1,15 +1,15 @@
 # Author: Robert J. Hijmans, r.hijmans@gmail.com; Jorrel Khalil S. Aunario; and 
 # Adam H. Sparks, adamhsparks@gmail.com
-# Date: 14 July 2011
+# Date: 15 July 2011
 # Version 0.1  
 # License GPL3
 
-getLandCells <- function(tablename, odbcname='geoclimate'){
+getLandCells <- function(tablename, odbcname = 'geoclimate'){
     cnt <- 0
     repeat {
 		cnt<-cnt+1
 		con <- odbcConnect(odbcname)	
-		if (con!=-1){
+		if (con != -1){
 			break
 		}
 		else if (cnt > 4) {
@@ -20,14 +20,16 @@ getLandCells <- function(tablename, odbcname='geoclimate'){
 		cat("Retrying to connect. \n")
 		flush.console()
 	}
-    maskset <- sqlQuery(con, paste("SELECT maskset_id FROM datasets WHERE table_name ='", tablename, "'",sep=""))$maskset_id
-	lc <- sqlQuery(con, paste("SELECT cell FROM maskcells WHERE maskset_id =", maskset, " AND land = TRUE",sep=""))$cell
+  maskset <- sqlQuery(con, paste(
+                          "SELECT maskset_id FROM datasets WHERE table_name ='", 
+                          tablename, "'", sep = ""))$maskset_id
+	lc <- sqlQuery(con, paste("SELECT cell FROM maskcells WHERE maskset_id =", 
+                            maskset, " AND land = TRUE", sep = ""))$cell
 	odbcClose(con)
 	return(lc)	
 }
 
-spatSim <- function(raster, model, starts, verbose=FALSE, ...)  {
-	raster <- nudgeExtent(raster)
+spatSim <- function(raster, model, starts, verbose = FALSE, ...)  {
 	res(raster) <- 1
 
 	nruns <- length(start)
@@ -35,7 +37,7 @@ spatSim <- function(raster, model, starts, verbose=FALSE, ...)  {
 	cells <- cellsFromExtent(onedegworld, raster)
 	if (ncell(raster) != length(cells)) { stop("not good") }
 	
-	result <- matrix(NA, nrow=length(cells), ncol=length(starts))
+	result <- matrix(NA, nrow = length(cells), ncol = length(starts))
 	
 	land <- getLandCells()
 	cnt <- 0
@@ -44,12 +46,12 @@ spatSim <- function(raster, model, starts, verbose=FALSE, ...)  {
 		if (verbose) {
 			# for debugging or progress tracking
 			cat("\r", rep.int(" ", getOption("width")), sep="")
-			cat("\r", "cell: " , cell)
+			cat("\r", "cell: ", cell)
 			flush.console() 
 		}
 		if ((cell-1) %in% land) {
-#			if (wtness==0) {
-			wth <- DBgetWthCell('nasaclim', 'daily', cell-1)			
+#			if (wtness == 0) {
+			wth <- DBgetWthCell('nasa_1d', 'daily', cell-1)			
 #			}
 #			else{
 #				xy <- xyFromCell(onedegworld, cell)
@@ -59,7 +61,7 @@ spatSim <- function(raster, model, starts, verbose=FALSE, ...)  {
 			wth$prec[is.na(wth$prec)] <- 0
 			
 			for (d in 1:length(starts)) {
-				result[cnt, d] <- model(wth, emergence=starts[d])
+				result[cnt, d] <- model(wth, emergence = starts[d])
 			}
 		}
 		else {
@@ -75,10 +77,13 @@ spatSim <- function(raster, model, starts, verbose=FALSE, ...)  {
 	return(rStack)
 }
 
-spatSimFlex <- function(region, model, outcolnames, years, pdateraster, wthdb="nasa_1d", croppingraster=NULL, nosinglecrop=FALSE, mcount=4, period=14, periodpt=7, skipzero=TRUE, verbose=FALSE, out="C:\temp",...){
+spatSimFlex <- function(region, model, outcolnames, years, pdateraster, 
+                        wthdb = "nasa_1d", croppingraster = NULL, 
+                        nosinglecrop = FALSE, mcount = 4, period = 14, 
+                        periodpt = 7, skipzero = TRUE, verbose = FALSE, 
+                        out = "~/tmp", ...){
     onedegworld <- raster()
-    if (!file.exists(out)) dir.create(out, recursive=TRUE)
-	  BaseRaster <- nudgeExtent(BaseRaster)
+    if (!file.exists(out)) dir.create(out, recursive = TRUE)
 	  res(BaseRaster) <- 1
 	  cells <- cellsFromExtent(onedegworld, BaseRaster)
     
@@ -86,8 +91,8 @@ spatSimFlex <- function(region, model, outcolnames, years, pdateraster, wthdb="n
 	pcells <- cellsFromExtent(raster(), pdateraster)
 	cwpd <- pcells[which(pdateraster[]>0)]
 	
-	if (!is.null(croppingraster)& class(croppingraster)=="RasterLayer"){
-        ccells <- cellsFromExtent(onedegworld,croppingraster)
+	if (!is.null(croppingraster)& class(croppingraster) == "RasterLayer"){
+        ccells <- cellsFromExtent(onedegworld, croppingraster)
         checkcropping <- TRUE
     } else {
         checkcropping <- FALSE
@@ -97,24 +102,24 @@ spatSimFlex <- function(region, model, outcolnames, years, pdateraster, wthdb="n
     cells <- cells[inc] 
 	#if (ncell(raster) != length(cells)) { stop("not good") }
 	
-	result <- matrix(NA, nrow=length(cells), ncol=length(years)*mcount)
+	result <- matrix(NA, nrow = length(cells), ncol = length(years)*mcount)
 	
-	land <- getLandCells(tablename=wthdb)
+	land <- getLandCells(tablename = wthdb)
 	cnt <- 0
 	for (cell in cells) {
 		cnt <- cnt + 1			
 		if (verbose) {
 			# for debugging or progress tracking
-			cat("\r", rep.int(" ", getOption("width")), sep="")
+			cat("\r", rep.int(" ", getOption("width")), sep = "")
 			cat("\r", "cell: " , cell)
 			flush.console()
 		}
 		
-		#if (pdateraster[pcells==cell]==0 & skipzero) next
+		#if (pdateraster[pcells == cell] == 0 & skipzero) next
 				
 		if ((cell-1) %in% land) {
-#			if (wtness==0) {
-            xy <- xyFromCell(onedegworld,cell)
+#			if (wtness == 0) {
+            xy <- xyFromCell(onedegworld, cell)
 			wth <- DBgetWthXY('geoclimate', wthdb, xy[1], xy[2])			
 #			}
 #			else{
@@ -123,23 +128,28 @@ spatSimFlex <- function(region, model, outcolnames, years, pdateraster, wthdb="n
 #			}
 			wth@w$prec[is.na(wth@w$prec)] <- 0
 			wth@w$rhmin[is.na(wth@w$rhmin)] <- 0
-			wth@w$tavg[is.na(wth@w$tavg)] <- (wth@w$tmin[is.na(wth@w$tavg)]+wth@w$tmax[is.na(wth@w$tavg)])/2
+			wth@w$tavg[is.na(wth@w$tavg)] <- (wth@w$tmin[is.na(wth@w$tavg)] + 
+      wth@w$tmax[is.na(wth@w$tavg)])/2
 			wth@w$rhmax[is.na(wth@w$rhmax)] <- wth@w$rhmin[is.na(wth@w$rhmax)]
 			cellresults <- numeric(0)
 			
-		    if (checkcropping){
-                if(nosinglecrop & croppingraster[ccells==cell]>1) PCISrice <- 1 else PCISrice <- 0     
-            }
+		  if (checkcropping){
+              if(nosinglecrop & croppingraster[ccells == cell]>1) PCISrice <- 1 
+              else PCISrice <- 0     
+      }
 
 			for (d in 1:length(years)) {
-				if (pdateraster[pcells==cell]>0){
-					pdate <- dateFromDoy((pdateraster[pcells==cell]-1)*period+periodpt,years[d])
-				} else {
+				if (pdateraster[pcells == cell]>0){
+					pdate <- dateFromDoy(
+            (pdateraster[pcells == cell]-1)*period+periodpt,years[d])
+			} else {
 					pdate <- paste(years[d], "5-15", sep="-") 
-				}                             
-				if (checkcropping) cellresults <- c(cellresults,model(wth, emergence=pdate, PCISrice=PCISrice)) else cellresults <- c(cellresults,model(wth, emergence=pdate))
+			}                             
+			if (checkcropping) cellresults <- c(cellresults, model(wth, 
+                                          emergence=pdate, PCISrice = PCISrice)) 
+        else cellresults <- c(cellresults,model(wth, emergence=pdate))
 			}
-            result[cnt, ] <- cellresults
+      result[cnt, ] <- cellresults
 		}
 		else {
 			result[cnt,] <- NA
@@ -148,14 +158,16 @@ spatSimFlex <- function(region, model, outcolnames, years, pdateraster, wthdb="n
     #models <- c("leafblast", "brownspot", "bactblight", "sheathblight")
     cnames <- character(0)	
     for (y in years){
-        cnames <- c(cnames,paste(outcolnames, y,sep=""))
+        cnames <- c(cnames,paste(outcolnames, y, sep = ""))
     }
     colnames(result) <- cnames
 	for (i in 1:ncol(result)) {
 	    r <- raster(BaseRaster)
 		r[inc] <- result[,i]
-		writeRaster(r, paste(out, paste(colnames(result)[i],".tif", sep = ""), sep = "/"),...)
+		writeRaster(r, paste(out, paste(colnames(result)[i],".tif", sep = ""), 
+                  sep = "/"), ...)
         rm(r)		    
 	}
-    return(stack(paste(out, paste(colnames(result),".tif", sep = ""), sep = "/")))
+    return(stack
+           (paste(out, paste(colnames(result),".tif", sep = ""), sep = "/")))
 }
