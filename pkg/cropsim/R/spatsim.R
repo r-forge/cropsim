@@ -171,3 +171,78 @@ spatSimFlex <- function(region, model, outcolnames, years, pdateraster,
     return(stack
            (paste(out, paste(colnames(result),".tif", sep = ""), sep = "/")))
 }
+
+simulate.Region <- function(model, plantingdate, wthdsn, wthdataset="nasa_1d", years=1998,region=extent(115,128,4,21), ncroppings = NULL, nosinglecrop = FALSE, outpath=NA, verbose = TRUE, ...){
+    
+    if (!is.na(outpath) & !file.exists(outpath)) dir.create(outpath, recursive = TRUE)
+    
+    # get weather dataset info
+    con <- odbcConnect(wthdsn)
+    wthset <- sqlQuery(con, paste("SELECT * FROM datasets WHERE table_name=", shQuote(wthdataset), sep="")) 
+    maskset <- sqlQuery(con, paste("SELECT * FROM masksets WHERE maskset_id=", wthset$maskset_id, sep=""))
+    
+    baseraster <- raster()
+    baseraster <- crop(baseraster, extent(maskset$xmin, maskset$xmax, maskset$ymin, maskset$ymax))       
+    res(baseraster) <- c(maskset$xres, maskset$yres)
+    
+    if (class(plantingdate)=="RasterLayer") {
+        plantingdate <- crop(plantingdate, region)
+        cells <- cellsFromExtent(baseraster, plantingdate)
+    }
+	
+	if (!is.null(ncroppings) & class(ncroppings)=="RasterLayer"){
+        ncroppings <- crop(ncroppings, region)
+    }
+	
+
+    results <- vector()
+	for (i in 1:length(cells)) {
+        cell <- cells[i]
+        
+        if (is.na(plantingdate[i]) | plantingdate[i]<1) next
+        
+        if (!is.null(ncroppings)) {
+          if (nosinglecrop & ncroppings[i]<1) next  
+        } 
+		
+		if (verbose) {
+			# for debugging or progress tracking
+			cat("\r", rep.int(" ", getOption("width")), sep = "")
+			cat("\r", "cell: " , cell)
+			flush.console()
+		}
+		
+        wth <- DBgetWthCell(con, wthdataset, cell)			
+		
+       	if (nrow(wth@w)>0){
+            tavgcol <- which(colnames(wth@w) %in% c("t2m","tavg"))
+    	    if(length(tavgcol)==0) wth@w$tavg <- (wth@w$tmin+wth@w$tmax)/2 else colnames(wth@w)[tavgcol] <- "tavg"
+           	rhnx <- rhMinMax(wth@w$rh2m, wth@w$tmin, wth@w$tmax, wth@w$tavg)
+            wth@w$rhmin <- rhnx[,1]
+        	wth@w$rhmax <- rhnx[,2]
+			wth@w$prec[is.na(wth@w$prec)] <- 0
+			wth@w$rhmin[is.na(wth@w$rhmin)] <- 0
+			wth@w$tavg[is.na(wth@w$tavg)] <- (wth@w$tmin[is.na(wth@w$tavg)] + wth@w$tmax[is.na(wth@w$tavg)])/2
+			wth@w$rhmax[is.na(wth@w$rhmax)] <- wth@w$rhmin[is.na(wth@w$rhmax)]
+        } 
+
+		for (d in 1:length(years)) {
+            pdate <- dateFromDoy(plantingdate[i],years[d])
+			results <- rbind(results, c(i, years[d], model(wth, emergence=pdate)))
+		}    
+	}
+    con <- odbcClose(con)
+    regpre <- paste(xmin(region), xmax(region), ymin(region), ymax(region), sep="_")
+    for (y in years){
+        thisyear <- results[results[,2]==y,]
+        for (cc in 3:ncol(results)){
+            r <- raster(plantingdate)
+            r[thisyear[,1]] <- thisyear[,cc]
+		    writeRaster(r, paste(outpath, paste(y, "_", regpre, "_", colnames(results)[cc],".tif", sep = ""),sep = "/"),format="GTiff", options=c("COMPRESS=LZW", "TFW=YES"), overwrite=T)
+            rm(r)
+            gc(verbose=FALSE)    
+        }
+    }
+    
+    return(dir(outpath, pattern=paste(regpre,".*.tif", sep=""), full.names=TRUE))
+}
