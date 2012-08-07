@@ -12,6 +12,7 @@ setClass('weather',
 		lon ='numeric',
 		lat ='numeric',		
 		alt ='numeric',
+		vars = 'data.frame',
 		w = 'data.frame'
 	),
 	prototype (	
@@ -20,6 +21,7 @@ setClass('weather',
 		lon = 0,
 		lat = 0,
 		alt = 0,
+		vars = data.frame(varcode=character(0),varname=character(0),unit=character(0),stringsAsFactors=FALSE),
 		w = data.frame()
 	),	
 	validity = function(object)
@@ -44,6 +46,7 @@ setMethod ('show' , 'weather',
 		if (l == 0) {
 			cat('no weather data\n')
 		} else {
+			print(object@vars)
 			cat(l ,'rows: \n')
 			if (l < 25) {
 				print(object@w)
