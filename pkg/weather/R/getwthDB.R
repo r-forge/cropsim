@@ -35,8 +35,8 @@ DBgetWthCell <- function(con, tablename, cell, verbose=FALSE, year="all") {
 	#odbcClose(db)
 	year <- yearFromDate(w$wdate)
 	doy <- doyFromDate(w$wdate)
-	vars <- colnames(w)[4:ncol(w)]
-	w <- cbind(w$wdate,year,doy,w[,-(1:3)])
+	vars <- colnames(w)[-which(colnames(w) %in% c("cell","wdate"))]
+	w <- cbind(w$wdate,year,doy,w[,vars])
     
     colnames(w) <- c("date", "year", "doy", vars)
 	
