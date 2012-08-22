@@ -176,43 +176,51 @@ simulate.Region <- function(model, plantingdate, wthdsn, wthdataset="nasa_1d", y
     
     if (!is.na(outpath) & !file.exists(outpath)) dir.create(outpath, recursive = TRUE)
     
+    if (class(plantingdate)!="RasterLayer") {
+        stop("plantingdate should be RasterLayer")
+    }
+	
     # get weather dataset info
     con <- odbcConnect(wthdsn)
     wthset <- sqlQuery(con, paste("SELECT * FROM datasets WHERE table_name=", shQuote(wthdataset), sep="")) 
     maskset <- sqlQuery(con, paste("SELECT * FROM masksets WHERE maskset_id=", wthset$maskset_id, sep=""))
+    wthraster <- raster(extent(maskset$xmin, maskset$xmax, maskset$ymin, maskset$ymax), ncol=maskset$ncol, nrow=maskset$nrow)
     
-    baseraster <- raster()
-    baseraster <- crop(baseraster, extent(maskset$xmin, maskset$xmax, maskset$ymin, maskset$ymax))       
-    res(baseraster) <- c(maskset$xres, maskset$yres)
+    # check region boundaries
+    nxmin <- ifelse(wthset$xmin[1]>xmin(region),wthset$xmin[1],xmin(region))
+    nxmax <- ifelse(wthset$xmax[1]<xmax(region),wthset$xmax[1],xmax(region))
+    nymin <- ifelse(wthset$ymin[1]>ymin(region),wthset$ymin[1],ymin(region))
+    nymax <- ifelse(wthset$ymax[1]<ymax(region),wthset$ymax[1],ymax(region))
+    region <- extent(nxmin, nxmax, nymin, nymax)    
     
-    if (class(plantingdate)=="RasterLayer") {
-        plantingdate <- crop(plantingdate, region)
-        cells <- cellsFromExtent(baseraster, plantingdate)
-    }
-	
+    aoiraster <- raster(region)
+    res(aoiraster) <- c(min(xres(wthraster), xres(plantingdate)),min(yres(wthraster), yres(plantingdate)))
+    xy <- xyFromCell(aoiraster,1:ncell(aoiraster))
+    
+    wthcells <- cellFromXY(wthraster, xy)
+    pdcells <- cellFromXY(plantingdate, xy) 
+    
 	if (!is.null(ncroppings) & class(ncroppings)=="RasterLayer"){
-        ncroppings <- crop(ncroppings, region)
+        nccells <- cellFromXY(ncroppings, xy)
     }
 	
-
     results <- vector()
-	for (i in 1:length(cells)) {
-        cell <- cells[i]
-        
-        if (is.na(plantingdate[i]) | plantingdate[i]<1) next
+	for (i in 1:ncell(aoiraster)) {
+        #cell <- cells[i]
+        if (is.na(plantingdate[pdcells[i]]) | plantingdate[pdcells[i]]<1) next
         
         if (!is.null(ncroppings)) {
-          if (nosinglecrop & ncroppings[i]<1) next  
+          if (nosinglecrop & ncroppings[nccells[i]]<1) next  
         } 
 		
 		if (verbose) {
 			# for debugging or progress tracking
 			cat("\r", rep.int(" ", getOption("width")), sep = "")
-			cat("\r", "cell: " , cell)
+			cat("\r", "cell: " , i)
 			flush.console()
 		}
 		
-        wth <- DBgetWthCell(con, wthdataset, cell)			
+        wth <- DBgetWthCell(con, wthdataset, wthcells[i])			
 		
        	if (nrow(wth@w)>0){
             tavgcol <- which(colnames(wth@w) %in% c("t2m","tavg"))
@@ -224,10 +232,18 @@ simulate.Region <- function(model, plantingdate, wthdsn, wthdataset="nasa_1d", y
 			wth@w$rhmin[is.na(wth@w$rhmin)] <- 0
 			wth@w$tavg[is.na(wth@w$tavg)] <- (wth@w$tmin[is.na(wth@w$tavg)] + wth@w$tmax[is.na(wth@w$tavg)])/2
 			wth@w$rhmax[is.na(wth@w$rhmax)] <- wth@w$rhmin[is.na(wth@w$rhmax)]
-        } 
+        } else {
+            if (verbose) {
+    			# for debugging or progress tracking
+    			cat("\r", rep.int(" ", getOption("width")), sep = "")
+    			cat("cell: " , i, " - No Data.\n")
+    			flush.console()
+    		}
+    		next
+        }
 
 		for (d in 1:length(years)) {
-            pdate <- dateFromDoy(plantingdate[i],years[d])
+            pdate <- dateFromDoy(plantingdate[pdcells[i]],years[d])
 			results <- rbind(results, c(i, years[d], model(wth, emergence=pdate)))
 		}    
 	}
@@ -236,7 +252,7 @@ simulate.Region <- function(model, plantingdate, wthdsn, wthdataset="nasa_1d", y
     for (y in years){
         thisyear <- results[results[,2]==y,]
         for (cc in 3:ncol(results)){
-            r <- raster(plantingdate)
+            r <- raster(aoiraster)
             r[thisyear[,1]] <- thisyear[,cc]
 		    writeRaster(r, paste(outpath, paste(y, "_", regpre, "_", colnames(results)[cc],".tif", sep = ""),sep = "/"),format="GTiff", options=c("COMPRESS=LZW", "TFW=YES"), overwrite=T)
             rm(r)
