@@ -7,15 +7,21 @@
 
 setClass('weather', 
 	representation (
+        stn ='character',
+        rmk ='character',
 		lon ='numeric',
 		lat ='numeric',		
 		alt ='numeric',
+		vars = 'data.frame',
 		w = 'data.frame'
 	),
 	prototype (	
+        stn = "Station name",
+        rmk = paste(Sys.time()),
 		lon = 0,
 		lat = 0,
 		alt = 0,
+		vars = data.frame(varcode=character(0),varname=character(0),unit=character(0),stringsAsFactors=FALSE),
 		w = data.frame()
 	),	
 	validity = function(object)
@@ -25,14 +31,14 @@ setClass('weather',
 	}
 )
 
-
-
 setMethod ('show' , 'weather', 
 	function(object) {
 		cat('class   :' , class(object), '\n')
+		cat('Station ID:' , object@stn, '\n')
+        cat('Remarks:' , object@rmk, '\n')
 		cat('\n')	
 		cat('Location' , '\n')
-		cat('longitude:' , object@lon, '\n')
+        cat('longitude:' , object@lon, '\n')
 		cat('latitude :' , object@lat, '\n')
 		cat('altitude :' , object@alt, '\n')
 		cat('\n')
@@ -40,6 +46,7 @@ setMethod ('show' , 'weather',
 		if (l == 0) {
 			cat('no weather data\n')
 		} else {
+			print(object@vars)
 			cat(l ,'rows: \n')
 			if (l < 25) {
 				print(object@w)
