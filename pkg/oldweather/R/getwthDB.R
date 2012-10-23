@@ -2,14 +2,13 @@
 # License GPL3
 # Version 0.1  January 2009
 
+# TODO use setMethod (cell or point)
 DBgetWthXY <- function(con, tablename, lon, lat, alt=2, rst=raster(), ...) {
 	cell <- cellFromXY(rst, c(lon, lat))
 	wc <- DBgetWthCell(con, tablename, cell, ...)
-	wth <- new('weather')
-	wth@lon <- lon
-  wth@lat <- lat
-	wth@alt <- 0
-	wth@w <- wc
+	wc@lon <- lon
+	wc@lat <- lat
+	wc@alt <- 0	
   return(wth)
 }
 
