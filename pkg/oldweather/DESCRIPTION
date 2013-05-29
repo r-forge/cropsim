@@ -1,4 +1,4 @@
-Package: weather
+Package: oldweather
 Type: Package
 Title: Weather data manipulation
 Version: 0.2
