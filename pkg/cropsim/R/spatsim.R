@@ -172,32 +172,18 @@ spatSimFlex <- function(region, model, outcolnames, years, pdateraster,
            (paste(out, paste(colnames(result),".tif", sep = ""), sep = "/")))
 }
 
-simulate.Region <- function(model, plantingdate, wthdsn, wthdataset="nasa_1d", years=1998,region=extent(115,128,4,21), ncroppings = NULL, nosinglecrop = FALSE, outpath=NA, verbose = TRUE, ...){
+simulate.Region <- function(model, plantingdate, wthsource, years=1998,region=extent(115,128,4,21), ncroppings = NULL, nosinglecrop = FALSE, outpath=NA, verbose = TRUE, ...){
     
-    if (!is.na(outpath) & !file.exists(outpath)) dir.create(outpath, recursive = TRUE)
+	if (!is.na(outpath) & !file.exists(outpath)) dir.create(outpath, recursive = TRUE)
     
     if (class(plantingdate)!="RasterLayer") {
         stop("plantingdate should be RasterLayer")
     }
 	
-    # get weather dataset info
-    con <- odbcConnect(wthdsn)
-    wthset <- sqlQuery(con, paste("SELECT * FROM datasets WHERE table_name=", shQuote(wthdataset), sep="")) 
-    maskset <- sqlQuery(con, paste("SELECT * FROM masksets WHERE maskset_id=", wthset$maskset_id, sep=""))
-    wthraster <- raster(extent(maskset$xmin, maskset$xmax, maskset$ymin, maskset$ymax), ncol=maskset$ncol, nrow=maskset$nrow)
-    
-    # check region boundaries
-    nxmin <- ifelse(wthset$xmin[1]>xmin(region),wthset$xmin[1],xmin(region))
-    nxmax <- ifelse(wthset$xmax[1]<xmax(region),wthset$xmax[1],xmax(region))
-    nymin <- ifelse(wthset$ymin[1]>ymin(region),wthset$ymin[1],ymin(region))
-    nymax <- ifelse(wthset$ymax[1]<ymax(region),wthset$ymax[1],ymax(region))
-    region <- extent(nxmin, nxmax, nymin, nymax)    
-    
     aoiraster <- raster(region)
-    res(aoiraster) <- c(min(xres(wthraster), xres(plantingdate)),min(yres(wthraster), yres(plantingdate)))
+    res(aoiraster) <- res(plantingdate)
     xy <- xyFromCell(aoiraster,1:ncell(aoiraster))
     
-    wthcells <- cellFromXY(wthraster, xy)
     pdcells <- cellFromXY(plantingdate, xy) 
     
 	if (!is.null(ncroppings) & class(ncroppings)=="RasterLayer"){
@@ -220,7 +206,8 @@ simulate.Region <- function(model, plantingdate, wthdsn, wthdataset="nasa_1d", y
 			flush.console()
 		}
 		
-        wth <- DBgetWthCell(con, wthdataset, wthcells[i])			
+		#wth <- DBgetWthCell(con, wthdataset, wthcells[i])
+		wth <- wthsource(as.matrix(t(xy[i,])))			
 		
        	if (nrow(wth@w)>0){
             tavgcol <- which(colnames(wth@w) %in% c("t2m","tavg"))
@@ -235,8 +222,8 @@ simulate.Region <- function(model, plantingdate, wthdsn, wthdataset="nasa_1d", y
         } else {
             if (verbose) {
     			# for debugging or progress tracking
-    			cat("\r", rep.int(" ", getOption("width")), sep = "")
-    			cat("cell: " , i, " - No Data.\n")
+    			message(rep("", getOption("width")), "\r", appendLF=TRUE)
+    			message("cell: " , i, " - No Data.\n")
     			flush.console()
     		}
     		next
@@ -247,8 +234,8 @@ simulate.Region <- function(model, plantingdate, wthdsn, wthdataset="nasa_1d", y
 			results <- rbind(results, c(i, years[d], model(wth, emergence=pdate)))
 		}    
 	}
-    con <- odbcClose(con)
-    regpre <- paste(xmin(region), xmax(region), ymin(region), ymax(region), sep="_")
+    
+	regpre <- paste(xmin(region), xmax(region), ymin(region), ymax(region), sep="_")
     for (y in years){
         thisyear <- results[results[,2]==y,]
         for (cc in 3:ncol(results)){
