@@ -180,9 +180,8 @@ simulate.Region <- function(model, plantingdate, wthsource, years=1998,region=ex
         stop("plantingdate should be RasterLayer")
     }
 	
-    aoiraster <- raster(region)
-    res(aoiraster) <- res(plantingdate)
-    xy <- xyFromCell(aoiraster,1:ncell(aoiraster))
+    aoiraster <- crop(plantingdate, region)    
+	xy <- xyFromCell(aoiraster,1:ncell(aoiraster)) # recent change
     
     pdcells <- cellFromXY(plantingdate, xy) 
     
