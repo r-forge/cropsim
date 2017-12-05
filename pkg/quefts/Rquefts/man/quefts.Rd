@@ -4,6 +4,7 @@
 \alias{quefts}
 \alias{quefts_crop}
 \alias{quefts_soil}
+\alias{quefts_fert}
 \alias{soil<-}
 \alias{crop<-}
 \alias{fert<-}
@@ -20,6 +21,7 @@ Calculate nutrient requirements and nutrient limited yields according to the QUE
 \usage{
 quefts(soil, crop, fertilizer)
 quefts_soil()
+quefts_fert()
 quefts_crop(name="")
 crop(x) <- value
 soil(x) <- value
@@ -32,6 +34,7 @@ fert(x) <- value
  \item{fertilizer}{list with named fertilizer parameters (N, P and K). . An example is returned by \code{quefts_fert()}} 
  \item{name}{character. crop name} 
  
+ \item{x}{QueftsModel object}
  \item{value}{a list with soil, crop, or fertlizer parameters as above}
  
 }
