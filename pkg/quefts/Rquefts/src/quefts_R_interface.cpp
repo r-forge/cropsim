@@ -16,7 +16,7 @@ using namespace std;
 
 //Rcpp::compileAttributes('e:/bitbucket/models/quefts/Rquefts')
 
-// [[Rcpp::export]]
+// [[Rcpp::export(name = ".quefts")]]
 NumericVector quefts(List soil, List crop, List fertilizer) {
   
   // parameters
