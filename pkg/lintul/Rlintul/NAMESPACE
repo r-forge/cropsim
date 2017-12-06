@@ -1,3 +1,0 @@
-useDynLib(Rlintul)
-import(methods, Rcpp)
-exportPattern("^[^\\.]")

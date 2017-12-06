@@ -1,3 +1,0 @@
-loadModule("LINTUL", TRUE)
-
-
