@@ -1,0 +1,14 @@
+double photoperiod(int doy, double latitude);
+double ESimple(double temp);
+double ES(double temp);
+double pottemp(double temp, double relh, double airpress);
+std::vector<double> potrad_dl(int doy, double latitude, double S);
+std::vector<double> sun_NR(int doy, double lat, double S);
+double Penman_E0(double temp, double relh, double airpress, double Rs, double Rext, double u, double alpha, double Z);
+double Em(double temp, double relh, double airpress, double Rs);
+double Ept(double temp, double relh, double airpress, double Rn, double G);
+double Epm(double temp, double relh, double airpress, double Rn, double G, double ra, double rs);
+double EThornthwaiteWilmott(double temp, int doy, double latitude);
+double EThornthwaiteWilmottCamargo(double tmin, double tmax, int doy, double latitude, bool Pereira);
+std::vector<double> dailyToHourlyTemperature(double tmin, double tmax, int doy, double latitude);
+std::vector<double> dailyToHourlyRelhum(double relh, double tmin, double tmax, int doy, double latitude);
