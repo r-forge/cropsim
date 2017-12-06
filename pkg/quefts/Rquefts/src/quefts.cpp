@@ -181,30 +181,30 @@ void QueftsModel::run() {
 	// which plant organs to consider
     int organs;
 	double Yo;
-    if (crop.store_att > 200)  {
-        Yo = crop.store_att;
+    if (store_att > 200)  {
+        Yo = store_att;
         organs = 3;
 		Nzero = crop.Yzero * (1 - crop.Nfix) * (crop.NmaxVeg + 2 * crop.NminVeg) / 3;
 		Pzero = crop.Yzero * (crop.PmaxVeg + 2 * crop.PminVeg) / 3;
 		Kzero = crop.Yzero * (crop.KmaxVeg + 2 * crop.KminVeg) / 3;
 		
-    } else if (crop.stem_att <= 200)  {
-        Yo = std::max(5.0, crop.leaf_att);
+    } else if (stem_att <= 200)  {
+        Yo = std::max(5.0, leaf_att);
         organs = 1;
     } else {
-        Yo = crop.stem_att;
+        Yo = stem_att;
         organs = 2;
     } 
 
 // nutrient supply of soil during growing season 
-	double relgrowseason = approx(soil.UptakeAdjust, crop.SeasonLength);
+	double relgrowseason = approx(soil.UptakeAdjust, SeasonLength);
     N_supply = soil.N_base_supply * relgrowseason + N_fertilizer * soil.N_recovery;
     P_supply = soil.P_base_supply * relgrowseason + P_fertilizer * soil.P_recovery;
     K_supply = soil.K_base_supply * relgrowseason + K_fertilizer * soil.K_recovery;
   
-	std::vector<double> Nreq = requirements(crop.NminVeg, crop.NmaxVeg, crop.NminStore, crop.NmaxStore, N_supply, soil.N_recovery, crop.leaf_att, crop.stem_att, crop.store_att, crop.Nfix);
-	std::vector<double> Preq = requirements(crop.PminVeg, crop.PmaxVeg, crop.PminStore, crop.PmaxStore, P_supply, soil.P_recovery, crop.leaf_att, crop.stem_att, crop.store_att, 0.);
-	std::vector<double> Kreq = requirements(crop.KminVeg, crop.KmaxVeg, crop.KminStore, crop.KmaxStore, K_supply, soil.K_recovery, crop.leaf_att, crop.stem_att, crop.store_att, 0.);
+	std::vector<double> Nreq = requirements(crop.NminVeg, crop.NmaxVeg, crop.NminStore, crop.NmaxStore, N_supply, soil.N_recovery, leaf_att, stem_att, store_att, crop.Nfix);
+	std::vector<double> Preq = requirements(crop.PminVeg, crop.PmaxVeg, crop.PminStore, crop.PmaxStore, P_supply, soil.P_recovery, leaf_att, stem_att, store_att, 0.);
+	std::vector<double> Kreq = requirements(crop.KminVeg, crop.KmaxVeg, crop.KminStore, crop.KmaxStore, K_supply, soil.K_recovery, leaf_att, stem_att, store_att, 0.);
 	N_gap = Nreq[2];
 	P_gap = Preq[2];
 	K_gap = Kreq[2];
@@ -261,25 +261,25 @@ void QueftsModel::run() {
 //  nutrient-limited yield
     if (organs == 3)  {
         store_lim = yield;
-        leaf_lim = crop.leaf_att / (crop.leaf_att + crop.stem_att) * 
-				((crop.stem_att + crop.leaf_att - crop.Yzero) * yield / crop.store_att + crop.Yzero);
+        leaf_lim = leaf_att / (leaf_att + stem_att) * 
+				((stem_att + leaf_att - crop.Yzero) * yield / store_att + crop.Yzero);
         if (yield <= 0) {
-			leaf_lim = crop.leaf_att / (crop.leaf_att + crop.stem_att) * 
+			leaf_lim = leaf_att / (leaf_att + stem_att) * 
 					std::min({
 						crop.Yzero,	
 						UN / (0.333 * (crop.NminVeg + 2 * crop.NminVeg) * (1. - crop.Nfix)),
 						UP / (0.333 * (crop.PminVeg + 2 * crop.PminVeg)), 
 						UK / (0.333 * (crop.KminVeg + 2 * crop.KminVeg))});
 		}
-		stem_lim = (crop.stem_att / crop.leaf_att) * leaf_lim;
+		stem_lim = (stem_att / leaf_att) * leaf_lim;
 	} else if (organs != 2) {
 		leaf_lim = yield;
-		stem_lim = (crop.stem_att / crop.leaf_att) * leaf_lim;
-		store_lim = (crop.store_att / crop.leaf_att) * leaf_lim;
+		stem_lim = (stem_att / leaf_att) * leaf_lim;
+		store_lim = (store_att / leaf_att) * leaf_lim;
 	} else {
 		stem_lim = yield;
-		leaf_lim = (crop.leaf_att / crop.stem_att) * stem_lim;
-		store_lim = (crop.store_att / crop.stem_att) * stem_lim;
+		leaf_lim = (leaf_att / stem_att) * stem_lim;
+		store_lim = (store_att / stem_att) * stem_lim;
 	}  
 	
 }

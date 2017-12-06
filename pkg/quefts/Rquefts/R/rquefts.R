@@ -4,7 +4,8 @@
 "soil<-" <- function(x, value) {
 	parameters <- c("K_base_supply", "K_recovery", "N_base_supply", "N_recovery", "P_base_supply", "P_recovery", "UptakeAdjust")
 	nms <- names(value)
-	if (!all(parameters %in% nms)) stop("parameters missing")
+	if (!all(parameters %in% nms)) stop(paste("parameters missing:", paste(parameters[!(parameters %in% nms)], collapse=", ")))
+
 	value <- value[parameters]
 	nms <- names(value)
 	
@@ -13,10 +14,10 @@
 }
 
 "crop<-" <- function(x, value) {
-	parameters <- c("KmaxStore", "KmaxVeg", "KminStore", "KminVeg", "leaf_att", "Nfix", "NmaxStore", "NmaxVeg", "NminStore", "NminVeg", "PmaxStore", "PmaxVeg", "PminStore", "PminVeg", "SeasonLength", "stem_att", "store_att", "Yzero")
+	parameters <- c("KmaxStore", "KmaxVeg", "KminStore", "KminVeg", "Nfix", "NmaxStore", "NmaxVeg", "NminStore", "NminVeg", "PmaxStore", "PmaxVeg", "PminStore", "PminVeg", "Yzero")
 	nms <- names(value)
 	
-	if (!all(parameters %in% nms)) stop("parameters missing")
+	if (!all(parameters %in% nms)) stop(paste("parameters missing:", paste(parameters[!(parameters %in% nms)], collapse=", ")))
 	value <- value[parameters]
 	nms <- names(value)
 	lapply(1:length(value), function(i) eval(parse(text = paste0("x$crop$", nms[i], " <- ", value[i]))))
@@ -26,6 +27,16 @@
 
 "fert<-" <- function(x, value) {
 	parameters <- c("N", "P", "K")
+	value <- value[parameters]
+	nms <- names(value)
+	lapply(1:length(value), function(i) eval(parse(text = paste0("x$", nms[i], " <- ", value[i]))))
+	return(x)
+}
+
+"biom<-" <- function(x, value) {
+	parameters <- c("leaf_att", "stem_att", "store_att", "SeasonLength")
+	nms <- names(value)
+	if (!all(parameters %in% nms)) stop(paste("parameters missing:", paste(parameters[!(parameters %in% nms)], collapse=", ")))
 	value <- value[parameters]
 	nms <- names(value)
 	lapply(1:length(value), function(i) eval(parse(text = paste0("x$", nms[i], " <- ", value[i]))))
@@ -66,6 +77,12 @@ quefts_fert <- function() {
 	list(N=60, P=10, K=60)
 }
 
+
+quefts_biom <- function() {
+	list(leaf_att=2500, stem_att=2500, store_att=5000, SeasonLength=120);
+}
+
+
 quefts_soil <- function() {
 	list(N_base_supply=60, P_base_supply=10, K_base_supply=60,
 	     N_recovery=0.5, P_recovery=0.1, K_recovery=0.5,
@@ -82,11 +99,9 @@ quefts_crop <- function(name='') {
 			NminStore=0.0095, NminVeg=0.004,  NmaxStore=0.022,  NmaxVeg=0.0125, 
 			PminStore=0.0017, PminVeg=0.0004, PmaxStore=0.0075, PmaxVeg=0.003, 
 			KminStore=0.002,  KminVeg=0.005,  KmaxStore=0.006,  KmaxVeg=0.02, 
-			Yzero=400, Nfix=0, 
-			leaf_att=3000, stem_att=4000, store_att=7000, SeasonLength = 120
-		)
+			Yzero=400, Nfix=0)	
 	} else {
-		f <- system.file("quefts_crop_pars.csv", package="Rquefts")
+		f <- system.file("extdata/quefts_crop_pars.csv", package="Rquefts")
 		x <- utils::read.csv(f, stringsAsFactors=FALSE)
 		if (name %in% x$crop) {
 			d <- as.list(x[x$crop == name, ])
@@ -105,14 +120,16 @@ setMethod ('show' , 'Rcpp_QueftsModel',
 )	
 
 
-quefts <- function(crop, soil, fert) {
+quefts <- function(soil, crop, fert, biom) {
 	q <- QueftsModel$new()
-	if (missing(crop)) { crop <- quefts_crop() }
 	if (missing(soil)) { crop <- quefts_soil() }
+	if (missing(crop)) { crop <- quefts_crop() }
 	if (missing(fert)) { fert <- quefts_fert() }
+	if (missing(biom)) { biom <- quefts_biom() }	
 	crop(q) <- crop
 	soil(q) <- soil
 	fert(q) <- fert
+	biom(q) <- biom
 	q
 }
 

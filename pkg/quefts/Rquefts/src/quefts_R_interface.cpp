@@ -52,10 +52,10 @@ NumericVector quefts(List soil, List crop, List fertilizer) {
 	q.crop.Yzero = doubleFromList(crop, "Yzero");
 	q.crop.Nfix = doubleFromList(crop, "Nfix");
 
-	q.crop.leaf_att = doubleFromList(crop, "leaf_att");
-	q.crop.stem_att = doubleFromList(crop, "stem_att");
-	q.crop.store_att = doubleFromList(crop, "store_att");
-	q.crop.SeasonLength = doubleFromList(crop, "SeasonLength");
+	q.leaf_att = doubleFromList(crop, "leaf_att");
+	q.stem_att = doubleFromList(crop, "stem_att");
+	q.store_att = doubleFromList(crop, "store_att");
+	q.SeasonLength = doubleFromList(crop, "SeasonLength");
 	
 // run model  
 	q.run();

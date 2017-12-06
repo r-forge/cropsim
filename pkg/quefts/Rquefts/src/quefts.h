@@ -17,10 +17,6 @@ struct QueftsSoil {
 
 
 struct QueftsCrop {
-	// Crop biomass weight (dry-matter, kg/ha) accumulated over growing season 
-	double leaf_att, stem_att, store_att;
-	double SeasonLength; // days
-
 	// minimum and maximum concentration of NPK in vegetative organs and in storage organs (kg/kg)
     double NminStore, NminVeg, NmaxStore, NmaxVeg;
     double PminStore, PminVeg, PmaxStore, PmaxVeg;
@@ -39,6 +35,10 @@ struct QueftsModel {
 // INPUT
 	QueftsSoil soil;
 	QueftsCrop crop;
+
+	// Crop biomass (water-limited production, by organ; dry-matter, kg/ha)
+	double leaf_att, stem_att, store_att;
+	double SeasonLength=120; // days
 	
 	// fertilizer supplied
 	double N_fertilizer=0, P_fertilizer=0, K_fertilizer=0;

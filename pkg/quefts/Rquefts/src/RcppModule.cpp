@@ -13,9 +13,9 @@ NumericVector runout(QueftsModel* q) {
 		_["N_uptake"] = q->UN,
 		_["P_uptake"] = q->UP,
 		_["K_uptake"] = q->UK,
-		_["leaf_yield"] = q->leaf_lim,
-		_["stem_yield"] = q->stem_lim,
-		_["storage_yield"] = q->store_lim,
+		_["leaf_lim"] = q->leaf_lim,
+		_["stem_lim"] = q->stem_lim,
+		_["store_lim"] = q->store_lim,
 		_["N_gap"] = q->N_gap,
 		_["P_gap"] = q->P_gap,
 		_["K_gap"] = q->K_gap
@@ -42,10 +42,6 @@ RCPP_MODULE(QUEFTS){
 	;
 
     class_<QueftsCrop>("QueftsCrop")
-		.field("leaf_att", &QueftsCrop::leaf_att, "leaf_att")
-		.field("stem_att", &QueftsCrop::stem_att, "stem_att")
-		.field("store_att", &QueftsCrop::store_att, "store_att")
-		.field("SeasonLength", &QueftsCrop::SeasonLength, "SeasonLength")
 		.field("NminStore", &QueftsCrop::NminStore, "NminStore")
 		.field("NminVeg", &QueftsCrop::NminVeg, "NminVeg")
 		.field("NmaxStore", &QueftsCrop::NmaxStore, "NmaxStore")
@@ -70,15 +66,29 @@ RCPP_MODULE(QUEFTS){
 		
 		.field("crop", &QueftsModel::crop, "crop")
 		.field("soil", &QueftsModel::soil, "soil")
+
+		// yield without nutrient limitation
+		.field("leaf_att", &QueftsModel::leaf_att, "leaf_att")
+		.field("stem_att", &QueftsModel::stem_att, "stem_att")
+		.field("store_att", &QueftsModel::store_att, "store_att")
+		// season length
+		.field("SeasonLength", &QueftsModel::SeasonLength, "SeasonLength")
+
+		// NPK input
 		.field("N", &QueftsModel::N_fertilizer, "N_fertilizer")
-		.field("P", &QueftsModel::N_fertilizer, "N_fertilizer")
-		.field("K", &QueftsModel::N_fertilizer, "N_fertilizer")
+		.field("P", &QueftsModel::P_fertilizer, "P_fertilizer")
+		.field("K", &QueftsModel::K_fertilizer, "K_fertilizer")
+		
+		// output
 		.field("N_supply", &QueftsModel::N_supply, "N_supply")
 		.field("P_supply", &QueftsModel::P_supply, "P_supply")
 		.field("K_supply", &QueftsModel::K_supply, "K_supply")
+
+		// nutrient limited yield
 		.field("leaf_lim", &QueftsModel::leaf_lim, "leaf_lim")
 		.field("stem_lim", &QueftsModel::stem_lim, "stem_lim")
 		.field("store_lim", &QueftsModel::store_lim, "store_lim")
+
 		.field("N_gap", &QueftsModel::N_gap, "N_gap")
 		.field("P_gap", &QueftsModel::P_gap, "P_gap")
 		.field("K_gap", &QueftsModel::K_gap, "K_gap")
