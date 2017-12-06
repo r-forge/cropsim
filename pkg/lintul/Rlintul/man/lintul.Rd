@@ -114,10 +114,10 @@ x = lintul3(crop, wth, soil, contr)
 # test LINTUL1
 
 library(meteor)
-library(LINTUL)
-f1 <- system.file("lintul/test/1/res.dat", package="LINTUL")
+library(Rlintul)
+f1 <- system.file("lintul/test/1/res.dat", package="Rlintul")
 s <- readLIN1output(f1)
-f2 <- system.file("weather/Netherlands_Wageningen.csv", package="LINTUL")
+f2 <- system.file("weather/Netherlands_Wageningen.csv", package="Rlintul")
 wth <- read.csv(f2)
 wth$date <- as.Date(wth$date)
 wth$srad <- wth$srad / 1000
@@ -135,9 +135,9 @@ points(x[, 'step']+58, x[, 'LAI'])
 
 library(meteor)
 library(LINTUL)
-f1 <- system.file("lintul/test/2/res.dat", package="LINTUL")
+f1 <- system.file("lintul/test/2/res.dat", package="Rlintul")
 s <- readLIN1output(f1)
-f2 <- system.file("weather/Netherlands_Wageningen.csv", package="LINTUL")
+f2 <- system.file("weather/Netherlands_Wageningen.csv", package="Rlintul")
 wth <- read.csv(f2)
 wth$date <- as.Date(wth$date)
 wth$srad <- wth$srad / 1000
@@ -159,8 +159,8 @@ points(x[, 'step']+58, x[, 'WSO'])
 # test LINTUL3
 
 library(meteor)
-library(LINTUL)
-wf <- system.file("weather/Netherlands_Wageningen.csv", package="LINTUL")
+library(Rlintul)
+wf <- system.file("weather/Netherlands_Wageningen.csv", package="Rlintul")
 wth <- read.csv(wf)
 wth$date <- as.Date(wth$date)
 wth$srad <- wth$srad / 1000
@@ -176,7 +176,7 @@ contr$PL = FALSE
 
 contr$IOPT = 1
 contr.IRRI = 1
-f1 <- system.file("lintul/test/3/WAGI1PTS.OUT", package="LINTUL")
+f1 <- system.file("lintul/test/3/WAGI1PTS.OUT", package="Rlintul")
 s1 <- readLIN3output(f1)
 x <- lintul3(crop, wth, soil, contr)
 plot(s1[,'DAY'], s1[,'LAI'], type='l')
@@ -184,25 +184,24 @@ points(x[, 'step']+1, x[, 'LAI'])
 
 contr$IOPT = 2
 contr.IRRI = 1
-f2 <- system.file("lintul/test/3/WAGW2PTS.OUT", package="LINTUL")
+f2 <- system.file("lintul/test/3/WAGW2PTS.OUT", package="Rlintul")
 s2 <- readLIN3output(f2)
 x2 <- lintul3(crop, wth, soil, contr)
 plot(s2[,'DAY'], s2[,'LAI'], type='l')
 points(x2[, 'step']+1, x2[, 'LAI'])
 
 contr$IOPT = 3
-f3 <- system.file("lintul/test/3/WAGW3PTS.OUT", package="LINTUL")
+f3 <- system.file("lintul/test/3/WAGW3PTS.OUT", package="Rlintul")
 s3 <- readLIN3output(f3)
 x3 <- lintul3(crop, wth, soil, contr)
 plot(s3[,'DAY'], s3[,'LAI'], type='l')
 points(x3[, 'step']+1, x3[, 'LAI'])
 
 contr$IOPT = 4
-f4 <- system.file("lintul/test/3/WAGW4PTS.OUT", package="LINTUL")
+f4 <- system.file("lintul/test/3/WAGW4PTS.OUT", package="Rlintul")
 s4 <- readLIN3output(f4)
 x4 <- lintul3(crop, wth, soil, contr)
 plot(s4[,'DAY'], s4[,'LAI'], type='l')
 points(x4[, 'step']+1, x4[, 'LAI'])
-
-
 }
+

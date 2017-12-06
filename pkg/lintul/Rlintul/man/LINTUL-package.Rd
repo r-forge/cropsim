@@ -1,16 +1,16 @@
 
-\name{LINTUL-package}
+\name{Rlintul-package}
 
-\alias{LINTUL-package}
+\alias{Rlintul-package}
 
-\alias{LINTUL}
+\alias{Rlintul}
 
 \docType{package}
 
 \title{
-\packageTitle{LINTUL}
+\packageTitle{Rlintul}
 }
 
 \description{
-R interface to a LINTUL crop models.
+R interface to LINTUL crop models.
 }

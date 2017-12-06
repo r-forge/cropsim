@@ -122,7 +122,6 @@ void Lintul1Model::crop_states() {
 void Lintul1Model::model_run() {
   
 	int nruns = control.emergence.size();
-	int maxstep = 365;
 
 	for (int run=0; run < nruns; run++) {
 

@@ -1,4 +1,3 @@
-#Rcpp::compileAttributes('e:/bitbucket/models/lintul/LINTUL')
 
 .trim2 <- function(x) return(gsub("^ *|(?<= ) | *$", "", x, perl=TRUE))
 
@@ -30,7 +29,7 @@ readLIN3output <- function(f) {
 }
 	
 default_weather <- function() {
-	f <- system.file("weather/18419.rds", package="LINTUL")
+	f <- system.file("weather/18419.rds", package="Rlintul")
 	readRDS(f)
 }
 
@@ -68,14 +67,14 @@ lintul2_soil <- function() {
 
 
 lintul3_control <- function() {
-	f <- system.file("lintul/control.ini", package="LINTUL")
+	f <- system.file("lintul/control.ini", package="Rlintul")
 	ini <- .readIniFile(f)
 	.getNumLst(ini)
 }
 
 
 lintul3_soil <- function(name='p1') {
-	f <- list.files(system.file("lintul/soil", package="LINTUL"), full.names=TRUE)
+	f <- list.files(system.file("lintul/soil", package="Rlintul"), full.names=TRUE)
 	soils <- gsub('LINTUL_soil_', '', basename(f))
 	soils <- gsub('.ini', '', soils)
 	if (name %in% soils) {
@@ -91,7 +90,7 @@ lintul3_soil <- function(name='p1') {
 
 
 lintul3_crop <- function(name) {
-    f <- list.files(system.file("lintul/crop", package="LINTUL"), full.names=TRUE)
+    f <- list.files(system.file("lintul/crop", package="Rlintul"), full.names=TRUE)
     crops <- gsub('lintul3_', '', basename(f))
     crops <- gsub('.ini', '', crops)
     if (name %in% crops) {

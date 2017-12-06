@@ -2,7 +2,7 @@
 
 
 struct Lintul1Control {
-  std::vector<int> emergence;
+	std::vector<int> emergence;
 };
 
 
@@ -40,7 +40,6 @@ struct Lintul1Crop {
 	void setFLVTB(std::vector<double> x);
 	void setFSTTB(std::vector<double> x);
 	void setFSOTB(std::vector<double> x);
-
 };
 
 
@@ -64,6 +63,7 @@ struct Lintul1Model {
 
 	double Tavg, Teff;
 	int time, step, maxdur;
+	int maxstep = 365;
 
 	void weather_step();
 
