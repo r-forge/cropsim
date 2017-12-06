@@ -1,0 +1,3 @@
+useDynLib(LINTUL)
+import(methods, Rcpp)
+exportPattern("^[^\\.]")

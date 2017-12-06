@@ -1,0 +1,12 @@
+Package: LINTUL
+Type: Package
+Title: R implementation of the LINTUL crop growth simulation model
+Version: 0.1-1
+Date: 2016-06-15
+LinkingTo: Rcpp
+SystemRequirements: C++11
+Imports: methods, Rcpp (>= 0.12.4)
+Author: Robert Hijmans
+Maintainer: <r.hijmans@gmail.com>
+Description: This package implements the LINTUL model of crop growth and development.
+License: GPL (>=3)
