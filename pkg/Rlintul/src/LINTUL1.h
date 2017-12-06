@@ -1,5 +1,11 @@
 #include "date.h"
 
+struct Lintul1Output {
+	std::vector<int> step;
+	std::vector<double> TSUM, LAI, WLVD, WLV, WLVG, WST, WRT, WSO; 
+};
+
+
 struct Lintul1Control {
 	int emergence;
 	int maxstep = 365;
@@ -54,9 +60,10 @@ struct Lintul1Model {
 	struct Lintul1Crop crop;
 	struct Lintul1Control control;
 	struct Lintul1Weather wth;
-
-	std::vector<std::vector<double> > out;
-	std::vector<std::string> out_names;
+	struct Lintul1Output out;
+	
+//	std::vector<std::vector<double> > out;
+//	std::vector<std::string> out_names;
 
 	double Tavg, Teff;
 	int time, step, maxdur;
@@ -69,7 +76,7 @@ struct Lintul1Model {
 	void crop_states();
 
 	void model_initialize();
-
 	void model_run();
 	void model_output();
 };
+

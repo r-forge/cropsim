@@ -6,6 +6,8 @@ using namespace std;
 #include "R_interface_util.h"
 #include "LINTUL1.h"
 
+
+
 // [[Rcpp::export]]
 NumericMatrix lintul1(List crop, DataFrame weather, List control) {
   
@@ -63,7 +65,30 @@ NumericMatrix lintul1(List crop, DataFrame weather, List control) {
 	
 	m.model_run();
 	
-	int r = m.out.size();
+	std::vector<std::vector<double>> mat(7, vector<double>(0));
+	
+//	mat[0] = m.out.step; 
+	mat[1] = m.out.TSUM;
+	mat[2] = m.out.LAI;
+	mat[3] = m.out.WLV;
+	mat[4] = m.out.WST;
+	mat[5] = m.out.WRT;
+	mat[6] = m.out.WSO;
+
+
+	size_t nc = mat.size(), nr = mat[1].size() ;
+	NumericMatrix out( nr, nc ) ;
+	for( size_t j=1; j<nc; j++){
+		for(size_t i=0; i<nr; i++){
+			out(i,j) = mat[j][i] ;
+		}
+	}
+
+
+	return out;
+	
+	
+/*	int r = m.out.size();
 	int c = m.out[0].size();
 	
 	NumericMatrix mat(r, c);
@@ -75,6 +100,8 @@ NumericMatrix lintul1(List crop, DataFrame weather, List control) {
 	
 	colnames(mat) = CharacterVector::create("step", "Tsum", "LAI", "WLV", "WST", "WRT", "WSO");		
 	return(mat);
+*/
+	
 }
 
 

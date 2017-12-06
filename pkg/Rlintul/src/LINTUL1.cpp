@@ -6,9 +6,16 @@ using namespace std;
 #include "SimUtil.h"
 #include "LINTUL1.h"
 
-
 void Lintul1Model::model_output(){
-    out.push_back( {double(step), crop.TSUM, crop.LAI, crop.WLV, crop.WST, crop.WRT, crop.WSO} );
+	out.step.push_back(step);
+	out.TSUM.push_back(crop.TSUM);
+	out.LAI.push_back(crop.LAI);
+	out.WLVD.push_back(crop.WLVD);
+	out.WLV.push_back(crop.WLV);
+	out.WLVG.push_back(crop.WLVG);
+	out.WST.push_back(crop.WST);
+	out.WRT.push_back(crop.WRT);
+	out.WSO.push_back(crop.WSO);
 }
 
 
@@ -38,7 +45,7 @@ void Lintul1Model::model_initialize() {
 	crop_initialize();
 	crop.emergday = true;	
 	time = control.emergence;	
-	out_names = { "step", "Tsum", "LAI", "WLV", "WST", "WRT", "WSO" };
+//	out_names = { "step", "Tsum", "LAI", "WLV", "WST", "WRT", "WSO" };
 }
 
 
