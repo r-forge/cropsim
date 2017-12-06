@@ -1,4 +1,3 @@
-
-#loadModule("lintul1_Module", TRUE)
+loadModule("LINTUL", TRUE)
 
 
