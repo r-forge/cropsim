@@ -9,6 +9,7 @@ using namespace std;
 void Lintul1Model::model_output(){
 	out.step.push_back(step);
 	out.TSUM.push_back(crop.TSUM);
+	out.DLV.push_back(crop.DLV);
 	out.LAI.push_back(crop.LAI);
 	out.WLVD.push_back(crop.WLVD);
 	out.WLV.push_back(crop.WLV);

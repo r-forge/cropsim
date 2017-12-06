@@ -57,7 +57,6 @@ NumericMatrix lintul1(List crop, DataFrame weather, List control) {
 	
 	ctr.emergence = { int(emergence[s] - wdate[0]) };
 
-
 	Lintul1Model m;
 	m.crop = crp;
 	m.control = ctr;
@@ -67,40 +66,23 @@ NumericMatrix lintul1(List crop, DataFrame weather, List control) {
 	
 	std::vector<std::vector<double>> mat(7, vector<double>(0));
 	
-//	mat[0] = m.out.step; 
-	mat[1] = m.out.TSUM;
-	mat[2] = m.out.LAI;
-	mat[3] = m.out.WLV;
-	mat[4] = m.out.WST;
-	mat[5] = m.out.WRT;
-	mat[6] = m.out.WSO;
-
-
-	size_t nc = mat.size(), nr = mat[1].size() ;
-	NumericMatrix out( nr, nc ) ;
-	for( size_t j=1; j<nc; j++){
-		for(size_t i=0; i<nr; i++){
-			out(i,j) = mat[j][i] ;
-		}
+	size_t nr = m.out.step.size();
+	NumericMatrix out(nr, 10) ;
+	for( size_t i=1; i<nr; i++){
+		out(i,0) = m.out.step[i];
+		out(i,1) = m.out.TSUM[i];
+		out(i,2) = m.out.DLV[i];
+		out(i,3) = m.out.LAI[i];
+		out(i,4) = m.out.WLVG[i];
+		out(i,5) = m.out.WLVD[i];
+		out(i,6) = m.out.WLV[i];
+		out(i,7) = m.out.WST[i];
+		out(i,8) = m.out.WRT[i];
+		out(i,9) = m.out.WSO[i];	
 	}
-
-
+	colnames(out) = CharacterVector::create("step", "Tsum", "DLV", "LAI", "WLVG", "WLVD", "WLV", "WST", "WRT", "WSO");		
 	return out;
-	
-	
-/*	int r = m.out.size();
-	int c = m.out[0].size();
-	
-	NumericMatrix mat(r, c);
-	for (int i = 0; i < r; i++) {
-		for (int j = 0; j < c; j++) {
-			mat(i, j) = m.out[i][j];  
-		}
-	}
-	
-	colnames(mat) = CharacterVector::create("step", "Tsum", "LAI", "WLV", "WST", "WRT", "WSO");		
-	return(mat);
-*/
+
 	
 }
 

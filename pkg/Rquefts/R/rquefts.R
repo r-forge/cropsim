@@ -121,11 +121,11 @@ setMethod ('show' , 'Rcpp_QueftsModel',
 
 
 quefts <- function(soil, crop, fert, biom) {
-	q <- QueftsModel$new()
 	if (missing(soil)) { crop <- quefts_soil() }
 	if (missing(crop)) { crop <- quefts_crop() }
 	if (missing(fert)) { fert <- quefts_fert() }
 	if (missing(biom)) { biom <- quefts_biom() }	
+	q <- QueftsModel$new()
 	crop(q) <- crop
 	soil(q) <- soil
 	fert(q) <- fert

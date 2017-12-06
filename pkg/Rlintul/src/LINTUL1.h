@@ -2,7 +2,7 @@
 
 struct Lintul1Output {
 	std::vector<int> step;
-	std::vector<double> TSUM, LAI, WLVD, WLV, WLVG, WST, WRT, WSO; 
+	std::vector<double> TSUM, DLV, LAI, WLVD, WLV, WLVG, WST, WRT, WSO; 
 };
 
 
@@ -26,24 +26,26 @@ struct Lintul1Crop {
 		K = 0.6;
 	}
 
-// parameters
-	double WLVi, LAIi, LAIcr, SLA, Tbase, RGRL, Tsum1, Tsum2, RDRSHM, RUE, K;
-	
+// PARAMETERS
+	double LAIi, LAIcr, SLA, Tbase, RGRL, Tsum1, Tsum2, RDRSHM, RUE, K;
 //  Partitioning tables for leaves (LV), stems (ST), storage organs (SO) and roots (RT):
 	std::vector<std::vector<double> > RDRT, FLVTB, FSTTB, FSOTB, FRTTB;
-// variables
+
+// VARIABLES
     bool emerged, emergday, alive;
-	double GLV;
-// rates
+	double WLVi, GLV;
+	
+// RATES
 	double rLAI, RWLVG, DLV, RWST, RWSO, RWRT;
-// states
+	
+// STATES
 	double TSUM, LAI, WLVD, WST, WSO, WRT, WLVG, WLV;
 
-	void setRDRT(std::vector<double> x);
-	void setFRTTB(std::vector<double> x);
-	void setFLVTB(std::vector<double> x);
-	void setFSTTB(std::vector<double> x);
-	void setFSOTB(std::vector<double> x);
+//	void setRDRT(std::vector<double> x);
+//	void setFRTTB(std::vector<double> x);
+//	void setFLVTB(std::vector<double> x);
+//	void setFSTTB(std::vector<double> x);
+//	void setFSOTB(std::vector<double> x);
 };
 
 
