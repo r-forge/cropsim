@@ -1,9 +1,9 @@
 Package: cropsim
 Type: Package
 Title: Simulation modeling of crops and their diseases
-Version: 0.2.0-5
+Version: 0.2-6
 Date: 2009-9-27
-Depends: methods, raster, oldweather
+Depends: methods, raster, meteor
 Author: Robert J. Hijmans, Serge Savary, Rene Pangga, Jorrel Aunario
 Maintainer: Robert J. Hijmans <r.hijmans@gmail.com>
 Description: nothing much so far

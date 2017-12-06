@@ -1,2 +1,3 @@
+import("raster")
 importFrom("graphics", plot)
 exportPattern("^[^\\.]")
