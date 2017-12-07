@@ -1,7 +1,24 @@
 #include <Rcpp.h>
+using namespace Rcpp;
+using namespace std;
+#include "R_interface_util.h"
 #include "LINTUL1.h"
 
-using namespace Rcpp;
+void setWeather(Lintul1Model* m, DataFrame w) {
+	Lintul1Weather wth;
+	wth.tmin = doubleFromDF(w, "tmin");
+	wth.tmax = doubleFromDF(w, "tmax");
+	wth.srad = doubleFromDF(w, "srad");	
+	DateVector wdate = dateFromDF(w, "date");
+	wth.date.resize(wdate.size());
+	for (int i = 0; i < wdate.size(); i++) {
+		wth.date[i] = SimDate(wdate[i].getYear(), wdate[i].getMonth(),  wdate[i].getDay());
+	}
+//	wth.longitude = location[0]; 
+//	wth.latitude  = location[1];
+//	wth.elevation = location[2];
+	m->wth = wth;
+}
 
 
 RCPP_EXPOSED_CLASS(Lintul1Crop)
@@ -39,9 +56,9 @@ RCPP_MODULE(LINTUL){
 	;
 	
     class_<Lintul1Weather>("Lintul1Weather")
-		.field("longitude", &Lintul1Weather::longitude) 
-		.field("latitude", &Lintul1Weather::latitude) 
-		.field("elevation", &Lintul1Weather::elevation) 
+//		.field("longitude", &Lintul1Weather::longitude) 
+//		.field("latitude", &Lintul1Weather::latitude) 
+//		.field("elevation", &Lintul1Weather::elevation) 
 		.field("CO2", &Lintul1Weather::CO2) 
 		//.field("date", &Lintul1Weather::date) 
 		.field("srad", &Lintul1Weather::srad) 
@@ -53,6 +70,8 @@ RCPP_MODULE(LINTUL){
 	    //.constructor<Lintul1Crop, Lintul1Control, Lintul1Weather>()
 		.constructor()
 		.method("run", &Lintul1Model::model_run, "run the model")		
+		.method("setWeather", &setWeather, "set the weather") 
+
 		.field("crop", &Lintul1Model::crop, "crop")
 		.field("control", &Lintul1Model::control, "crop")
 		.field("out", &Lintul1Model::out, "crop")

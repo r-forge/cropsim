@@ -5,9 +5,10 @@ Date: May 2016
 License: GNU General Public License (GNU GPL) v. 2 
 */
 
+using namespace std;
 #include <Rcpp.h>
 using namespace Rcpp;
-using namespace std;
+
 #include <vector>
 #include <string>
 #include "SimDate.h"

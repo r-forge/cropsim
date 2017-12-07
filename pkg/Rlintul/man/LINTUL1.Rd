@@ -42,7 +42,8 @@ contr <- list(emergence=as.Date('2012-04-01'), maxstep=365, long_output=FALSE)
 m <- Lintul1Model$new()
 crop(m) <- crop
 control(m) <- contr
-weather(m) <- w
+#weather(m) <- w
+m$setWeather(w, lon=0, lat=10, elevation=100)
 
 
 \dontrun{
