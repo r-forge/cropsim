@@ -146,6 +146,7 @@ for (i in 1:nrow(f)) {0
 }
 x <- cbind(f, x)
 
+\dontrun{
 
 library(raster  )
 r0 <- rasterFromXYZ(x[x$K==0, -3])
@@ -157,4 +158,5 @@ contour(r0, add=TRUE)
 plot(r200, xlab='N fertilizer', ylab='P fertilizer', las=1, main="K=200")
 contour(r200, add=TRUE)
 plot(stack(r0, r200))
+}
 }
