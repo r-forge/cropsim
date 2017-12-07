@@ -1,4 +1,4 @@
-\name{LINTUL}
+\name{lintul}
 
 \alias{lintul1}
 \alias{lintul1_crop}

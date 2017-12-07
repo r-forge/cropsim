@@ -4,11 +4,12 @@
 using namespace Rcpp;
 
 
-RCPP_EXPOSED_CLASS(Lintul1Model)
 RCPP_EXPOSED_CLASS(Lintul1Crop)
 RCPP_EXPOSED_CLASS(Lintul1Control)
 RCPP_EXPOSED_CLASS(Lintul1Weather)
-
+RCPP_EXPOSED_CLASS(Lintul1Model)
+RCPP_EXPOSED_CLASS(Lintul1Output)
+RCPP_EXPOSED_CLASS(date)
 	
 
 RCPP_MODULE(LINTUL){
@@ -38,24 +39,39 @@ RCPP_MODULE(LINTUL){
 		.field("elevation", &Lintul1Weather::elevation) 
 		.field("CO2", &Lintul1Weather::CO2) 
 		.field("DAYLP", &Lintul1Weather::DAYLP) 
-	//	.field("startdate", &Lintul1Weather::startdate) 
+		.field("startdate", &Lintul1Weather::startdate) 
 		.field("srad", &Lintul1Weather::srad) 
 		.field("tmin", &Lintul1Weather::tmin) 
 		.field("tmax", &Lintul1Weather::tmax) 
 	;
 	
     class_<Lintul1Model>("Lintul1Model")
-
 	    //.constructor<Lintul1Crop, Lintul1Control, Lintul1Weather>()
 		.constructor()
-		.method("run", &Lintul1Model::model_run, "run the model")
-		
+		.method("run", &Lintul1Model::model_run, "run the model")		
 		.field("crop", &Lintul1Model::crop, "crop")
+		.field("control", &Lintul1Model::control, "crop")
+		.field("out", &Lintul1Model::out, "crop")
 		.field("weather", &Lintul1Model::wth, "weather")
-
-		
 	;			
-}
+
+    class_<Lintul1Output>("Lintul1Output")
+		.field_readonly("step", &Lintul1Output::step)
+		.field_readonly("TSUM", &Lintul1Output::TSUM)
+		.field_readonly("DLV", &Lintul1Output::DLV)
+		.field_readonly("LAI", &Lintul1Output::LAI)
+		.field_readonly("WLV", &Lintul1Output::WLV)
+		.field_readonly("WLVD", &Lintul1Output::WLVD)
+		.field_readonly("WLVG", &Lintul1Output::WLVG)
+		.field_readonly("WST", &Lintul1Output::WST)
+		.field_readonly("WRT", &Lintul1Output::WRT)
+		.field_readonly("WSO", &Lintul1Output::WSO)
+	;
+	
+};
+
+	
+
 
 
 

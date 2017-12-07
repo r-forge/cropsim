@@ -1,7 +1,6 @@
 /*
-Auhtor: Amandeep Sidhu, 
+Auhtor: Amandeep Sidhu and Robert Hijmans 
 partly based on code by __________
-with contribution by Robert Hijmans
 
 Date: July 2016
 
