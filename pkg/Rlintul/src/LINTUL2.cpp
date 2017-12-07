@@ -106,14 +106,14 @@ void Lintul2Model::soil_initialize() {
 
 
 
-void Lintul2Model::model_initialize(int run) {
+void Lintul2Model::model_initialize() {
 	step = 0;
 	Tsum = 0;
 	Teff = 0;
 	crop_initialize();
 	soil_initialize();
-	time = control.start[run];	
-	emergence = control.emergence[run];
+	time = control.start;	
+	emergence = control.emergence;
 }
 
 
@@ -244,19 +244,16 @@ void Lintul2Model::model_output(int i){
 
 void Lintul2Model::model_run() {
 
-	int nruns = control.start.size();
     int maxstep = 365;
 
 
 	out_names = { "step", "Tsum", "LAI", "WLV", "WST", "WRT", "WSO", "EVAP", "TRAN", "TRANRF", "WA", "WC", "RWA", "prec" };
 	out = matrix(maxstep, 14);
 
-	for (int run=0; run < nruns; run++) {
-
-		model_initialize(run); 
+	model_initialize(); 
 
 	// --- START SIMULATION --- 
-		while ((crop.alive) & (step < maxstep)) {
+	while ((crop.alive) & (step < maxstep)) {
 
 			weather_step();
 			
@@ -277,8 +274,7 @@ void Lintul2Model::model_run() {
 			time++;
 			step++;
 						
-		} // while alive
-	}
+	} // while alive
 		
 }	  
 

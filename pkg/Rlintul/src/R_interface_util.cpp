@@ -10,7 +10,7 @@ using namespace Rcpp;
 using namespace std;
 #include <vector>
 #include <string>
-#include "date.h"
+#include "SimDate.h"
 
 /*
 template< typename T, size_t N >

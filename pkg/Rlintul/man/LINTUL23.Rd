@@ -1,10 +1,8 @@
-\name{lintul}
+\name{lintul2}
 
 \alias{lintul0}
-\alias{lintul1}
 \alias{lintul2}
 \alias{lintul3}
-\alias{lintul1_crop}
 \alias{lintul2_crop}
 \alias{lintul3_crop}
 \alias{lintul2_soil}
@@ -14,7 +12,7 @@
 \alias{default_weather}
 
 \title{
-LINTUL crop growth model
+LINTUL2 crop growth model
 }
 
 \description{
@@ -55,6 +53,7 @@ Spitters, C.J.T. and A.H.C.M. Schapendonk, 1990. Evaluation of breeding strategi
 
 
 \examples{
+\dontrun{
 w <- default_weather()
 wth <- subset(w, date > as.Date('2012-01-01'))
 crop <- lintul1_crop()
@@ -203,5 +202,7 @@ s4 <- readLIN3output(f4)
 x4 <- lintul3(crop, wth, soil, contr)
 plot(s4[,'DAY'], s4[,'LAI'], type='l')
 points(x4[, 'step']+1, x4[, 'LAI'])
+}
+
 }
 

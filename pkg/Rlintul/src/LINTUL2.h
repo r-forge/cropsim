@@ -1,7 +1,7 @@
-#include "date.h"
+#include "SimDate.h"
 
 struct Lintul2Control {
-  std::vector<int> start, emergence;
+  int start, emergence;
 }; 
 
 
@@ -23,7 +23,7 @@ struct Lintul2Crop {
 // parameters
 	double WLVi, LAIi, LAIcr, SLA, Tbase, RGRL, Tsum1, Tsum2, RDRSHM, RUE, K;
 	//  Partitioning tables for leaves (LV), stems (ST), storage organs (SO) and roots (RT):
-	std::vector<std::vector<double> > RDRT, FLVTB, FSTTB, FSOTB, FRTTB;
+	std::vector<double> RDRT, FLVTB, FSTTB, FSOTB, FRTTB;
 // variables 
     bool emerged, emergday, alive;
 	double GLV;
@@ -47,7 +47,7 @@ struct Lintul2Crop {
 
 struct Lintul2Weather {
 	double longitude, latitude, elevation, CO2, DAYLP;
-	date startdate;
+	SimDate startdate;
 	std::vector<double> srad, tmin, tmax, prec, wind, vapr;
 };
 
@@ -68,23 +68,16 @@ struct Lintul2Model {
 	double Tavg, Teff, Tsum, RainIntercepted;
 	int time, step, emergence, maxdur;
 
-	
 	Lintul2Model(Lintul2Crop c, Lintul2Soil s, Lintul2Control t, Lintul2Weather w) : crop(c), soil(s), control(t), wth(w) { };
 	
 	void weather_step();
-	
 	void crop_initialize();
 	void crop_rates();
 	void crop_states();
-
 	void soil_initialize();
 	void soil_rates();
 	void soil_states();
-	
-	void model_initialize(int run);	
-		
-		
+	void model_initialize();	
 	void model_output(int i);
-	
 };
 

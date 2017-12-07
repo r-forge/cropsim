@@ -8,7 +8,7 @@ using namespace std;
 
 
 
-// [[Rcpp::export]]
+// [[Rcpp::export(name = ".lintul2")]]
 NumericMatrix lintul2(List crop, DataFrame weather, List soil, List control) {
  
 // crop parameters
@@ -24,11 +24,11 @@ NumericMatrix lintul2(List crop, DataFrame weather, List soil, List control) {
 	crp.RUE = doubleFromList(crop, "RUE");  
 	crp.K = doubleFromList(crop, "K");
 	 
-	crp.RDRT = matFromList(crop, "RDRT");
-	crp.FRTTB = matFromList(crop, "FRTTB");
-	crp.FLVTB = matFromList(crop, "FLVTB");
-	crp.FSTTB = matFromList(crop, "FSTTB");
-	crp.FSOTB = matFromList(crop, "FSOTB");
+	crp.RDRT = TBFromList(crop, "RDRT");
+	crp.FRTTB = TBFromList(crop, "FRTTB");
+	crp.FLVTB = TBFromList(crop, "FLVTB");
+	crp.FSTTB = TBFromList(crop, "FSTTB");
+	crp.FSOTB = TBFromList(crop, "FSOTB");
        
 	crp.TRANCO = doubleFromList(crop, "TRANCO");
 	crp.ROOTDi = doubleFromList(crop, "ROOTDi");
@@ -42,8 +42,8 @@ NumericMatrix lintul2(List crop, DataFrame weather, List soil, List control) {
 	wth.prec = doubleFromDF(weather, "prec");	
 	wth.vapr = doubleFromDF(weather, "vapr");
 	wth.wind = doubleFromDF(weather, "wind");	
-	DateVector wdate = dateFromDF(weather, "date");
-	wth.startdate = date(wdate[0].getDay(), wdate[0].getMonth(), wdate[0].getYear());
+	DateVector wdate = dateFromDF(weather, "SimDate");
+	wth.startdate = SimDate(wdate[0].getDay(), wdate[0].getMonth(), wdate[0].getYear());
 
 
 	struct Lintul2Soil sol;

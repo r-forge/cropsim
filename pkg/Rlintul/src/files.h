@@ -4,7 +4,7 @@ std::vector< std::vector<std::string> > readCSV(std::string);
 std::vector<std::vector<std::string> > readINI(const char* filename);
 double dFromINI(std::vector<std::vector<std::string> > ini, std::string name);
 std::vector<std::vector<double> > mFromINI(std::vector<std::vector<std::string> > ini, std::string name);
-date dateFromINI(std::vector<std::vector<std::string> > ini, std::string name);
+SimDate dateFromINI(std::vector<std::vector<std::string> > ini, std::string name);
 bool bFromINI(std::vector<std::vector<std::string> > ini, std::string name);
 int iFromINI(std::vector<std::vector<std::string> > ini, std::string name);
 string sFromINI(std::vector<std::vector<std::string> > ini, std::string name);

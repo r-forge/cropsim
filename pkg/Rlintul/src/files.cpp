@@ -4,7 +4,7 @@
 #include <fstream>      // std::ifstream
 #include <sstream>
 #include <algorithm>
-#include "date.h"
+#include "SimDate.h"
 
 using namespace std;
 
@@ -231,10 +231,10 @@ std::vector<std::vector<double> > mFromINI(std::vector<std::vector<std::string> 
 	return(out);
 }
 
-date dateFromINI(std::vector<std::vector<std::string> > ini, std::string name) {
+SimDate dateFromINI(std::vector<std::vector<std::string> > ini, std::string name) {
 	int p = find(ini[0].begin(), ini[0].end(), name) - ini[0].begin();
 	std::vector<std::string> ss;
-	date dates;
+	SimDate dates;
 
 	int inisize = ini[0].size();
 	if ( p < inisize) {

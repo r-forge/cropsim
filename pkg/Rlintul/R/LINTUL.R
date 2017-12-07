@@ -35,7 +35,7 @@ readLIN3output <- function(f) {
 }
 	
 default_weather <- function() {
-	f <- system.file("weather/18419.rds", package="Rlintul")
+	f <- system.file("extdata/18419.rds", package="meteor")
 	readRDS(f)
 }
 

@@ -8,7 +8,7 @@ using namespace std;
 
 
 
-// [[Rcpp::export]]
+// [[Rcpp::export(name = ".lintul1")]]
 NumericMatrix lintul1(List crop, DataFrame weather, List control) {
   
 // crop parameters
@@ -24,11 +24,11 @@ NumericMatrix lintul1(List crop, DataFrame weather, List control) {
 	crp.RUE = doubleFromList(crop, "RUE");  
 	crp.K = doubleFromList(crop, "K"); 
 	 
-	crp.RDRT = matFromList(crop, "RDRT");
-	crp.FRTTB = matFromList(crop, "FRTTB");
-	crp.FLVTB = matFromList(crop, "FLVTB");
-	crp.FSTTB = matFromList(crop, "FSTTB");
-	crp.FSOTB = matFromList(crop, "FSOTB");
+	crp.RDRT = TBFromList(crop, "RDRT");
+	crp.FRTTB = TBFromList(crop, "FRTTB");
+	crp.FLVTB = TBFromList(crop, "FLVTB");
+	crp.FSTTB = TBFromList(crop, "FSTTB");
+	crp.FSOTB = TBFromList(crop, "FSOTB");
        
 	Lintul1Weather wth;
 	wth.tmin = doubleFromDF(weather, "tmin");
@@ -36,7 +36,7 @@ NumericMatrix lintul1(List crop, DataFrame weather, List control) {
 	wth.srad = doubleFromDF(weather, "srad");	
 	int nwth = weather.nrows();
 	DateVector wdate = dateFromDF(weather, "date");
-	wth.startdate = date(wdate[0].getDay(), wdate[0].getMonth(), wdate[0].getYear());
+//	wth.startdate = SimDate(wdate[0].getDay(), wdate[0].getMonth(), wdate[0].getYear());
 	
 	DateVector emergence = datesFromList(control, "emergence"); 
 	

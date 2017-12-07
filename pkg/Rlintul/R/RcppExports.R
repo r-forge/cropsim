@@ -9,11 +9,11 @@ lintul0 <- function(crop, weather, control) {
     .Call('_Rlintul_lintul0', PACKAGE = 'Rlintul', crop, weather, control)
 }
 
-lintul1 <- function(crop, weather, control) {
+.lintul1 <- function(crop, weather, control) {
     .Call('_Rlintul_lintul1', PACKAGE = 'Rlintul', crop, weather, control)
 }
 
-lintul2 <- function(crop, weather, soil, control) {
+.lintul2 <- function(crop, weather, soil, control) {
     .Call('_Rlintul_lintul2', PACKAGE = 'Rlintul', crop, weather, soil, control)
 }
 

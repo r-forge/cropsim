@@ -1,4 +1,4 @@
-#include "date.h"
+#include "SimDate.h"
 
 struct Lintul0Control {
   std::vector<int> emergence;
@@ -41,7 +41,7 @@ struct Lintul0Crop {
 
 struct Lintul0Weather {
 	double longitude, latitude, elevation, CO2, DAYLP;
-	date startdate;
+	SimDate startdate;
 	std::vector<double> srad, tmin, tmax;
 };
 

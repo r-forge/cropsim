@@ -1,4 +1,4 @@
-#include "date.h"
+#include "SimDate.h"
 
 struct Lintul1Output {
 	std::vector<int> step;
@@ -29,7 +29,7 @@ struct Lintul1Crop {
 // PARAMETERS
 	double LAIi, LAIcr, SLA, Tbase, RGRL, Tsum1, Tsum2, RDRSHM, RUE, K;
 //  Partitioning tables for leaves (LV), stems (ST), storage organs (SO) and roots (RT):
-	std::vector<std::vector<double> > RDRT, FLVTB, FSTTB, FSOTB, FRTTB;
+	std::vector<double> RDRT, FLVTB, FSTTB, FSOTB, FRTTB;
 
 // VARIABLES
     bool emerged, emergday, alive;
@@ -51,7 +51,7 @@ struct Lintul1Crop {
 
 struct Lintul1Weather {
 	double longitude, latitude, elevation, CO2, DAYLP;
-	date startdate;
+	std::vector<SimDate> date;
 	std::vector<double> srad, tmin, tmax;
 };
 
