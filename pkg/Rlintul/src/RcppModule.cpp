@@ -4,6 +4,7 @@ using namespace std;
 #include "R_interface_util.h"
 #include "LINTUL1.h"
 
+/*
 void setWeather(Lintul1Model* m, DataFrame w) {
 	Lintul1Weather wth;
 	wth.tmin = doubleFromDF(w, "tmin");
@@ -19,7 +20,7 @@ void setWeather(Lintul1Model* m, DataFrame w) {
 //	wth.elevation = location[2];
 	m->wth = wth;
 }
-
+*/
 
 RCPP_EXPOSED_CLASS(Lintul1Crop)
 RCPP_EXPOSED_CLASS(Lintul1Control)
@@ -52,7 +53,7 @@ RCPP_MODULE(LINTUL){
 	
     class_<Lintul1Control>("Lintul1Control")
 		.field("emergence", &Lintul1Control::emergence) 
-		.field("maxstep", &Lintul1Control::maxstep) 
+		.field("maxdur", &Lintul1Control::maxdur) 
 	;
 	
     class_<Lintul1Weather>("Lintul1Weather")
@@ -60,7 +61,7 @@ RCPP_MODULE(LINTUL){
 //		.field("latitude", &Lintul1Weather::latitude) 
 //		.field("elevation", &Lintul1Weather::elevation) 
 		.field("CO2", &Lintul1Weather::CO2) 
-		//.field("date", &Lintul1Weather::date) 
+		.field("date", &Lintul1Weather::date) 
 		.field("srad", &Lintul1Weather::srad) 
 		.field("tmin", &Lintul1Weather::tmin) 
 		.field("tmax", &Lintul1Weather::tmax) 
@@ -70,7 +71,7 @@ RCPP_MODULE(LINTUL){
 	    //.constructor<Lintul1Crop, Lintul1Control, Lintul1Weather>()
 		.constructor()
 		.method("run", &Lintul1Model::model_run, "run the model")		
-		.method("setWeather", &setWeather, "set the weather") 
+		//.method("setWeather", &setWeather, "set the weather") 
 
 		.field("crop", &Lintul1Model::crop, "crop")
 		.field("control", &Lintul1Model::control, "crop")

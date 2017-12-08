@@ -7,7 +7,6 @@ using namespace std;
 #include "LINTUL1.h"
 
 
-
 // [[Rcpp::export(name = ".lintul1")]]
 NumericMatrix lintul1(List crop, DataFrame weather, List control) {
   
@@ -39,9 +38,9 @@ NumericMatrix lintul1(List crop, DataFrame weather, List control) {
 //	wth.startdate = SimDate(wdate[0].getDay(), wdate[0].getMonth(), wdate[0].getYear());
 	
 	DateVector emergence = datesFromList(control, "emergence"); 
-	
-	//ctr.MaxDur = intFromList(control, "MaxDur");
+
 	struct Lintul1Control ctr;
+	ctr.maxdur = intFromList(control, "maxdur");
 //	ctr.long_output = boolFromList(control, "long_output"); 
 
 //	int nsim = emergence.size();

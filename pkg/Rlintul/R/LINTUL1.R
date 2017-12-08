@@ -16,8 +16,8 @@ setMethod("crop<-", signature('Rcpp_Lintul1Model', 'list'),
 
 setMethod("weather<-", signature('Rcpp_Lintul1Model', 'list'), 
 	function(x, value) {
-		#parameters <- c("date" "srad", "tmin", "tmax")
-		parameters <- c("srad", "tmin", "tmax")
+		parameters <- c("date", "srad", "tmin", "tmax")
+		#parameters <- c("srad", "tmin", "tmax")
 		nms <- names(value)
 		if (!all(parameters %in% nms)) stop(paste("parameters missing:", paste(parameters[!(parameters %in% nms)], collapse=", ")))
 		value <- value[parameters]
@@ -30,8 +30,8 @@ setMethod("weather<-", signature('Rcpp_Lintul1Model', 'list'),
 
 setMethod("control<-", signature('Rcpp_Lintul1Model', 'list'), 
 	function(x, value) {
-		#parameters <- c("emergence", "maxstep", "long_output")
-		parameters <- c("emergence", "maxstep")
+		#parameters <- c("emergence", "maxdur", "long_output")
+		parameters <- c("emergence", "maxdur")
 		nms <- names(value)
 		if (!all(parameters %in% nms)) stop(paste("parameters missing:", paste(parameters[!(parameters %in% nms)], collapse=", ")))
 		value <- value[parameters]
@@ -54,6 +54,36 @@ lintul1_crop <- function() {
 }
 
 
+
+setMethod ('show' , 'Rcpp_Lintul1Model', 
+	function(object) {
+		utils::str(object)
+	}
+)	
+
+setMethod ('show' , 'Rcpp_Lintul1Output', 
+	function(object) {
+		utils::str(object)
+	}
+)	
+
+setMethod ('show' , 'Rcpp_Lintul1Crop', 
+	function(object) {
+		utils::str(object)
+	}
+)	
+
+setMethod ('show' , 'Rcpp_Lintul1Control', 
+	function(object) {
+		utils::str(object)
+	}
+)	
+
+setMethod ('show' , 'Rcpp_Lintul1Weather', 
+	function(object) {
+		utils::str(object)
+	}
+)	
 
 readLIN1output <- function(f) {
 	X <- readLines(f)

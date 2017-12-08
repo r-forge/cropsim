@@ -6,6 +6,20 @@ using namespace std;
 #include "SimUtil.h"
 #include "LINTUL1.h"
 
+void Lintul1Model::output_initialize() {
+	out.step.resize(0);
+	out.TSUM.resize(0);
+	out.DLV.resize(0);
+	out.LAI.resize(0);
+	out.WLVD.resize(0);
+	out.WLV.resize(0);
+	out.WLVG.resize(0);
+	out.WST.resize(0);
+	out.WRT.resize(0);
+	out.WSO.resize(0);
+}
+
+
 void Lintul1Model::model_output(){
 	out.step.push_back(step);
 	out.TSUM.push_back(crop.TSUM);
@@ -44,9 +58,15 @@ void Lintul1Model::crop_initialize() {
 void Lintul1Model::model_initialize() {
 	step = 0;
 	crop_initialize();
+	output_initialize();
 	crop.emergday = true;	
-	time = control.emergence;	
-//	out_names = { "step", "Tsum", "LAI", "WLV", "WST", "WRT", "WSO" };
+	for (size_t i=0; i<wth.date.size(); i++) {
+		// need to check for out of bounds times (before of after start)
+		if (wth.date[i] == control.emergence) {
+			time = i;
+			break;
+		}
+	}
 }
 
 
@@ -131,7 +151,7 @@ void Lintul1Model::model_run() {
   
 	model_initialize(); 
 				
-	while ((crop.alive) & (step < control.maxstep)) {  
+	while ((crop.alive) & (step < control.maxdur)) {  
 		weather_step();
 		crop_rates();
 		model_output();

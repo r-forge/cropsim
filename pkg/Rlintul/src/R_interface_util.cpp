@@ -21,8 +21,8 @@ std::vector<T> makeVector( const T (&data)[N] ) {
 */
 
 
-std::vector<double> doubleFromDF(DataFrame d, const char* s) {
-	CharacterVector nms = d.names();
+std::vector<double> doubleFromDF(Rcpp::DataFrame d, const char* s) {
+	Rcpp::CharacterVector nms = d.names();
 	for (int i=0; i < nms.size(); i++) {
 		if (nms[i] == s) {
 			std::vector<double> v = d[i];
@@ -38,10 +38,10 @@ std::vector<double> doubleFromDF(DataFrame d, const char* s) {
 
 
 
-DateVector dateFromDF(DataFrame d, const char* s) {
+Rcpp::DateVector dateFromDF(Rcpp::DataFrame d, const char* s) {
   
 //	int nrow = d.nrows();
-	CharacterVector nms = d.names();
+	Rcpp::CharacterVector nms = d.names();
 	for (int i=0; i < nms.size(); i++) {
 		if (nms[i] == s) {
 			DateVector v = d[i];
@@ -56,9 +56,9 @@ DateVector dateFromDF(DataFrame d, const char* s) {
 }
 
 
-std::vector<double> vecFromMat(NumericMatrix m, const char* s) {
+std::vector<double> vecFromMat(Rcpp::NumericMatrix m, const char* s) {
   
- 	CharacterVector nms = colnames(m);
+ 	Rcpp::CharacterVector nms = colnames(m);
 
 	for (int j=0; j < nms.size(); j++) {
 		if (nms[j] == s) {
@@ -79,7 +79,7 @@ std::vector<double> vecFromMat(NumericMatrix m, const char* s) {
 }
 
 
-double doubleFromList(List lst, const char* s) {
+double doubleFromList(Rcpp::List lst, const char* s) {
 	if (!lst.containsElementNamed(s) ) {
 		std::string ss = "parameter '" +  std::string(s) + "' not found";
 		stop(ss);
@@ -89,7 +89,7 @@ double doubleFromList(List lst, const char* s) {
 	return(v);
 }
 
-int intFromList(List lst, const char* s) {
+int intFromList(Rcpp::List lst, const char* s) {
 	if (!lst.containsElementNamed(s) ) {
 		std::string ss = "parameter '" +  std::string(s) + "' not found";
 		stop(ss);
@@ -100,7 +100,7 @@ int intFromList(List lst, const char* s) {
 }
 
 
-bool boolFromList(List lst, const char* s) {
+bool boolFromList(Rcpp::List lst, const char* s) {
 	if (!lst.containsElementNamed(s) ) {
 		std::string ss = "parameter '" +  std::string(s) + "' not found";
 		stop(ss);
@@ -111,7 +111,7 @@ bool boolFromList(List lst, const char* s) {
 }
 
 
-DateVector datesFromList(List lst, const char* s) {
+Rcpp::DateVector datesFromList(Rcpp::List lst, const char* s) {
   if (!lst.containsElementNamed(s)) {
     // todo: check if this is a single number
     std::string ss = "parameter '" +  std::string(s) + "' not found";
@@ -122,7 +122,7 @@ DateVector datesFromList(List lst, const char* s) {
 }
 
 
-std::vector<std::vector<double> > matFromList(List lst, const char* s) {
+std::vector<std::vector<double> > matFromList(Rcpp::List lst, const char* s) {
 	
 	if (! lst.containsElementNamed(s)) {
 		std::string ss = "parameter matrix '" +  std::string(s) + "' not found";
@@ -130,7 +130,7 @@ std::vector<std::vector<double> > matFromList(List lst, const char* s) {
 	}
 	
 // todo: check if this is a matrix
-	NumericMatrix x = lst[s];
+	Rcpp::NumericMatrix x = lst[s];
 	int nrow = x.nrow();
 	std::vector<std::vector<double> > m(nrow, std::vector<double>(2));
 	for (int i=0; i < nrow; i++) {
@@ -141,13 +141,13 @@ std::vector<std::vector<double> > matFromList(List lst, const char* s) {
 }
 
 
-std::vector<double> TBFromList(List lst, const char* s){
+std::vector<double> TBFromList(Rcpp::List lst, const char* s){
 	if(! lst.containsElementNamed(s)){
 		std::string ss = "parameter matrix '" +  std::string(s) + "' not found";
 		stop(ss);
 	}
 
-	NumericMatrix x = lst[s];
+	Rcpp::NumericMatrix x = lst[s];
 	if(x.ncol() != 2){
 		std::string ss2 = "ncol != 2";
 		stop(ss2);

@@ -37,41 +37,33 @@ Spitters, C.J.T. and A.H.C.M. Schapendonk, 1990. Evaluation of breeding strategi
 library(Rlintul)
 w <- default_weather()
 crop <- lintul1_crop()
-contr <- list(emergence=as.Date('2012-04-01'), maxstep=365, long_output=FALSE)
+contr <- list(emergence=as.Date('2012-04-01'), maxdur=200, long_output=FALSE)
 
 m <- Lintul1Model$new()
 crop(m) <- crop
 control(m) <- contr
-#weather(m) <- w
-m$setWeather(w, lon=0, lat=10, elevation=100)
+weather(m) <- w
 
+m$run()
 
-\dontrun{
-crop$RUE <- 3.5
+m$crop$RUE <- 3.5
 
-contr <- list(emergence=as.Date('2012-04-01'), long_output=TRUE)
-d <- lintul1(crop, wth, contr)
+m$control$emergence=as.Date('2012-04-01')
+m$run()
 
-head(d)
-tail(d)
+m$out
+out <- m$out
 
-date <- contr$emergence + d[,'step']
+date <- as.Date(m$control$emergence, origin="1970-01-01") + out$step
 par(mfrow=c(1,2))
-plot(date, d[,'LAI'])
+plot(date, out$LAI)
 
-wtot <- rowSums(d[,4:7])
+prod <- cbind(out$WRT, out$WLV, out$WST, out$WSO)
+
+wtot <- rowSums(prod)
 plot(date, wtot, type='l', lwd=2)
-lines(date, d[,4], col='green', lwd=2)
-lines(date, d[,7], col='red', lwd=2)
-
-
-dates <- as.Date(gsub(' ', '-', paste(2010, 1:12, 15)))
-dates <- c(dates, dates + 365)
-dates
-contr$emergence <- dates
-x <- lintul1(crop, w, contr)
-head(x)
-}
+lines(date, prod[,2], col='green', lwd=2)
+lines(date, prod[,4], col='red', lwd=2)
 
 }
 
