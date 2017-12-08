@@ -1,3 +1,30 @@
+# Author: Robert J. Hijmans, r.hijmans@gmail.com
+# License GPL3
+# Version 0.1  July 2016
+
+
+
+lintul1 <- function(crop, control, weather) {
+	m <- Lintul1Model$new()
+	if (!missing(crop)) { crop(m) <- crop }
+	if (!missing(control)) { control(m) <- control }
+	if (!missing(weather)) { weather(m) <- weather }
+	return(m)
+}
+
+
+setMethod("run", signature('Rcpp_Lintul1Model'), 
+	function(x, ...) {
+		x$run()
+		#ff <- names(getRefClass("Rcpp_Lintul1Output")$fields())
+		out <- x$out
+		date <- as.Date(x$control$emergence, origin="1970-01-01") + out$step
+		v <- data.frame(date, out$DLV, out$LAI, out$TSUM, out$WRT, out$WLV, out$WLVD, out$WLVG, out$WST, out$WSO)	
+		colnames(v) <- c("date", "DLV", "LAI", "TSUM", "WRT", "WLV", "WLVD", "WLVG", "WST", "WSO")
+		v$Wtot <- v$WRT + v$WLVD + v$WLVG + v$WST + v$WSO
+		v
+	}
+)
 
 
 setMethod("crop<-", signature('Rcpp_Lintul1Model', 'list'), 
@@ -54,36 +81,12 @@ lintul1_crop <- function() {
 }
 
 
+setMethod ('show' , 'Rcpp_Lintul1Model', function(object) { utils::str(object) } )	
+setMethod ('show' , 'Rcpp_Lintul1Output', function(object) { utils::str(object) } )	
+setMethod ('show' , 'Rcpp_Lintul1Crop', function(object) { utils::str(object) } )	
+setMethod ('show' , 'Rcpp_Lintul1Control', function(object) { utils::str(object) })	
+setMethod ('show' , 'Rcpp_Lintul1Weather', function(object) { utils::str(object) })	
 
-setMethod ('show' , 'Rcpp_Lintul1Model', 
-	function(object) {
-		utils::str(object)
-	}
-)	
-
-setMethod ('show' , 'Rcpp_Lintul1Output', 
-	function(object) {
-		utils::str(object)
-	}
-)	
-
-setMethod ('show' , 'Rcpp_Lintul1Crop', 
-	function(object) {
-		utils::str(object)
-	}
-)	
-
-setMethod ('show' , 'Rcpp_Lintul1Control', 
-	function(object) {
-		utils::str(object)
-	}
-)	
-
-setMethod ('show' , 'Rcpp_Lintul1Weather', 
-	function(object) {
-		utils::str(object)
-	}
-)	
 
 readLIN1output <- function(f) {
 	X <- readLines(f)
