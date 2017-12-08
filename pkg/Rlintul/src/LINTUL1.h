@@ -1,3 +1,4 @@
+#include "LINTUL.h"
 
 struct Lintul1Output {
 	std::vector<int> step;
@@ -41,21 +42,22 @@ struct Lintul1Crop {
 	double TSUM, LAI, WLVD, WST, WSO, WRT, WLVG, WLV;
 };
 
-
+/*
 struct Lintul1Weather {
 //	double longitude, latitude, elevation, DAYLP;
 	double CO2 = 400; 
 	std::vector<long> date;
 	std::vector<double> srad, tmin, tmax;
 };
-
+*/
 
 struct Lintul1Model {
 	//Lintul1Model(Lintul1Crop c, Lintul1Control t, Lintul1Weather w) : crop(c), control(t), wth(w) { };
 
+	struct LintulWeather wth;
+	
 	struct Lintul1Crop crop;
 	struct Lintul1Control control;
-	struct Lintul1Weather wth;
 	struct Lintul1Output out;
 
 	double Tavg, Teff;

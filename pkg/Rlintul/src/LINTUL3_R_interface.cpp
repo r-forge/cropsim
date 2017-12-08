@@ -97,7 +97,7 @@ NumericMatrix lintul3(List crop, DataFrame weather, List soil, List control) {
     crp.RDI = doubleFromList(crop, "RDI");
 
 	
-	struct Lintul3Weather wth;
+	struct LintulWeather wth;
 	wth.tmin = doubleFromDF(weather, "tmin");
 	wth.tmax = doubleFromDF(weather, "tmax");
 	wth.srad = doubleFromDF(weather, "srad");	
@@ -105,7 +105,7 @@ NumericMatrix lintul3(List crop, DataFrame weather, List soil, List control) {
 	wth.vapr = doubleFromDF(weather, "vapr");
 	wth.wind = doubleFromDF(weather, "wind");	
 	DateVector wdate = dateFromDF(weather, "date");	
-	wth.startdate = SimDate(wdate[0].getDay(), wdate[0].getMonth(), wdate[0].getYear());
+//	wth.startdate = SimDate(wdate[0].getDay(), wdate[0].getMonth(), wdate[0].getYear());
 	
 	struct Lintul3Soil sol;
     sol.SMDRY =  doubleFromList(soil, "SMDRY");
@@ -170,7 +170,7 @@ NumericMatrix lintul3(List crop, DataFrame weather, List soil, List control) {
 	ctr.start = { (int)(start[s] - wdate[0]) };
 	// temp hack
 	Date sd = start[s];
-	wth.startdate = SimDate(sd.getDay(), sd.getMonth(), sd.getYear());
+//	wth.startdate = SimDate(sd.getDay(), sd.getMonth(), sd.getYear());
 //	}
 	Lintul3Model m(crp, sol, ctr, wth);
 	

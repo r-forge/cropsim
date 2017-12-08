@@ -34,7 +34,7 @@ NumericMatrix lintul0(List crop, DataFrame weather, List control) {
 	wth.srad = doubleFromDF(weather, "srad");	
 	int nwth = weather.nrows();
 	DateVector wdate = dateFromDF(weather, "date");
-	wth.startdate = SimDate(wdate[0].getDay(), wdate[0].getMonth(), wdate[0].getYear());
+//	wth.startdate = SimDate(wdate[0].getDay(), wdate[0].getMonth(), wdate[0].getYear());
 
 
 	DateVector emergence = datesFromList(control, "emergence"); 

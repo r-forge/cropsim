@@ -35,15 +35,15 @@ NumericMatrix lintul2(List crop, DataFrame weather, List soil, List control) {
 	crp.ROOTDM = doubleFromList(crop, "ROOTDM");
 	crp.RRDMAX = doubleFromList(crop, "RRDMAX");
 	  
-	struct Lintul2Weather wth;
+	struct LintulWeather wth;
 	wth.tmin = doubleFromDF(weather, "tmin");
 	wth.tmax = doubleFromDF(weather, "tmax");
 	wth.srad = doubleFromDF(weather, "srad");	
 	wth.prec = doubleFromDF(weather, "prec");	
 	wth.vapr = doubleFromDF(weather, "vapr");
 	wth.wind = doubleFromDF(weather, "wind");	
-	DateVector wdate = dateFromDF(weather, "SimDate");
-	wth.startdate = SimDate(wdate[0].getDay(), wdate[0].getMonth(), wdate[0].getYear());
+//	DateVector wdate = dateFromDF(weather, "SimDate");
+//	wth.startdate = SimDate(wdate[0].getDay(), wdate[0].getMonth(), wdate[0].getYear());
 
 
 	struct Lintul2Soil sol;
@@ -73,11 +73,11 @@ NumericMatrix lintul2(List crop, DataFrame weather, List soil, List control) {
 
 //  Rcpp::Rcout << ctr.long_output << std::endl;
 
-	int nwth = wth.tmin.size();
+//	int nwth = wth.tmin.size();
 	
 	//for (int s=0; s < nsim; s++) {
-	int s = 0;
-	if (emergence[s] < wdate[0]) {
+//	int s = 0;
+/*	if (emergence[s] < wdate[0]) {
 		stop("emergence requested before the beginning of the weather data");
 	} else if (emergence[s] > wdate[nwth-1]) {
 		stop("emergence requested after the end of the weather data");
@@ -90,7 +90,7 @@ NumericMatrix lintul2(List crop, DataFrame weather, List soil, List control) {
 	ctr.emergence = { int(emergence[s] - wdate[0]) };
 	ctr.start = { int(start[s] - wdate[0]) };
 	
-	
+*/	
 	Lintul2Model m(crp, sol, ctr, wth);
 	
 	m.model_run();

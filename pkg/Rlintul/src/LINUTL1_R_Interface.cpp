@@ -29,7 +29,7 @@ NumericMatrix lintul1(List crop, DataFrame weather, List control) {
 	crp.FSTTB = TBFromList(crop, "FSTTB");
 	crp.FSOTB = TBFromList(crop, "FSOTB");
        
-	Lintul1Weather wth;
+	LintulWeather wth;
 	wth.tmin = doubleFromDF(weather, "tmin");
 	wth.tmax = doubleFromDF(weather, "tmax");
 	wth.srad = doubleFromDF(weather, "srad");	

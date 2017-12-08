@@ -1,4 +1,6 @@
-#include "SimDate.h"
+//#include "SimDate.h"
+#include "LINTUL.h"
+#include <string>
 
 
 struct Lintul3Control {
@@ -83,13 +85,6 @@ struct Lintul3Crop {
 };
 
 
-struct Lintul3Weather {
-	double longitude, latitude, elevation, CO2, DAYLP;
-	SimDate startdate;
-	std::vector<double> srad, tmin, tmax, prec, wind, vapr;
-};
-
-
 
 struct Lintul3Model {
 
@@ -98,7 +93,7 @@ struct Lintul3Model {
 	struct Lintul3Crop crop;
 	struct Lintul3Soil soil;
 	struct Lintul3Control control;
-	struct Lintul3Weather wth;
+	struct LintulWeather wth;
 	
 	std::vector<std::vector<double> > out;
 	std::vector<std::string> out_names;
@@ -108,9 +103,9 @@ struct Lintul3Model {
 	
 	int time, step, emergence, maxdur;
 	int DOY;
-	SimDate today;
+	long today;
 
-	Lintul3Model(Lintul3Crop c, Lintul3Soil s, Lintul3Control t, Lintul3Weather w) : crop(c), soil(s), control(t), wth(w) { };
+	Lintul3Model(Lintul3Crop c, Lintul3Soil s, Lintul3Control t, LintulWeather w) : crop(c), soil(s), control(t), wth(w) { };
 	
 	void weather_step();
 	

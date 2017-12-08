@@ -11,7 +11,6 @@ using namespace Rcpp;
 
 #include <vector>
 #include <string>
-#include "SimDate.h"
 
 /*
 template< typename T, size_t N >

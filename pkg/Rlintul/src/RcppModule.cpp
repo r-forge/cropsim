@@ -22,12 +22,12 @@ void setWeather(Lintul1Model* m, DataFrame w) {
 }
 */
 
+RCPP_EXPOSED_CLASS(LintulWeather)
+
 RCPP_EXPOSED_CLASS(Lintul1Crop)
 RCPP_EXPOSED_CLASS(Lintul1Control)
-RCPP_EXPOSED_CLASS(Lintul1Weather)
 RCPP_EXPOSED_CLASS(Lintul1Model)
 RCPP_EXPOSED_CLASS(Lintul1Output)
-RCPP_EXPOSED_CLASS(SimDate)
 	
 
 RCPP_MODULE(LINTUL){
@@ -56,19 +56,19 @@ RCPP_MODULE(LINTUL){
 		.field("maxdur", &Lintul1Control::maxdur) 
 	;
 	
-    class_<Lintul1Weather>("Lintul1Weather")
+    class_<LintulWeather>("Lintul1Weather")
 //		.field("longitude", &Lintul1Weather::longitude) 
 //		.field("latitude", &Lintul1Weather::latitude) 
 //		.field("elevation", &Lintul1Weather::elevation) 
-		.field("CO2", &Lintul1Weather::CO2) 
-		.field("date", &Lintul1Weather::date) 
-		.field("srad", &Lintul1Weather::srad) 
-		.field("tmin", &Lintul1Weather::tmin) 
-		.field("tmax", &Lintul1Weather::tmax) 
+		.field("CO2",  &LintulWeather::CO2) 
+		.field("date", &LintulWeather::date) 
+		.field("srad", &LintulWeather::srad) 
+		.field("tmin", &LintulWeather::tmin) 
+		.field("tmax", &LintulWeather::tmax) 
 	;
 	
     class_<Lintul1Model>("Lintul1Model")
-	    //.constructor<Lintul1Crop, Lintul1Control, Lintul1Weather>()
+	    //.constructor<Lintul1Crop, Lintul1Control, LintulWeather>()
 		.constructor()
 		.method("run", &Lintul1Model::model_run, "run the model")		
 		//.method("setWeather", &setWeather, "set the weather") 

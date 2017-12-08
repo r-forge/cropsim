@@ -253,8 +253,11 @@ void Lintul3Model::weather_step() {
 	wth.CO2 = 360;
 
 // calculate daylength DAYL,DAYLP,SINLD,COSLD
-	DOY = today.dayofyear();
 
+// FIX THIS:
+	//DOY = today.dayofyear();
+    DOY = 1;
+	
 	std::vector<double> astro = ASTRO(DOY, wth.latitude);
 	wth.DAYLP = astro[1];
 
