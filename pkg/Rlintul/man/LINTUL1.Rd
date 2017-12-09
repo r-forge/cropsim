@@ -32,7 +32,7 @@ run(x, ...)
 
 \arguments{
  \item{x}{Rcpp_Lintul1Model object}
- \item{crop}{list with named crop parameters. See Details. An example is returned by \code{lintul_crop()}} 
+ \item{crop}{list with named crop parameters. See Details. An example is returned by \code{lintul1_crop()}} 
  \item{control}{list with named control parameters} 
  \item{weather}{data.frame with daily weather data} 
  \item{value}{a list with crop or control parameters, or a data.frame with weather data. As above}
@@ -49,7 +49,7 @@ matrix
 library(Rlintul)
 w <- default_weather()
 crop <- lintul1_crop()
-contr <- list(emergence=as.Date('2012-04-01'), maxdur=200, long_output=FALSE)
+contr <- list(emergence=as.Date('2012-04-01'), maxdur=200)
 
 m <- lintul1(crop, contr, w)
 # or

@@ -1,3 +1,10 @@
+/*
+Author Robert Hijmans
+Date: May 2016
+License: GNU General Public License (GNU GPL) v. 2 
+*/
+
+
 #include <Rcpp.h>
 using namespace Rcpp;
 using namespace std;
@@ -54,7 +61,6 @@ NumericMatrix lintul1(List crop, DataFrame weather, List control) {
 	
 	m.model_run();
 	
-//	std::vector<std::vector<double>> mat(7, vector<double>(0));
 	size_t nr = m.out.step.size();
 	NumericMatrix out(nr, 10) ;
 	for( size_t i=1; i<nr; i++){

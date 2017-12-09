@@ -1,4 +1,9 @@
-//#include "SimDate.h"
+/*
+Author Robert Hijmans
+Date: May 2016
+License: GNU General Public License (GNU GPL) v. 2 
+*/
+
 #include "LINTUL.h"
 
 struct Lintul2Output {

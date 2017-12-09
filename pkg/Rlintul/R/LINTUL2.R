@@ -45,17 +45,16 @@ setMethod("soil<-", signature('Rcpp_Lintul2Model', 'list'),
 		if (!all(parameters %in% nms)) stop(paste("parameters missing:", paste(parameters[!(parameters %in% nms)], collapse=", ")))
 		value <- value[parameters]
 		nms <- names(value)
-		lapply(1:length(value), function(i) eval(parse(text = paste0("x$crop$", nms[i], " <- ", value[i]))))
+		lapply(1:length(value), function(i) eval(parse(text = paste0("x$soil$", nms[i], " <- ", value[i]))))
 		return(x)
 	}
 )
 
 
 
-
 setMethod("weather<-", signature('Rcpp_Lintul2Model', 'list'), 
 	function(x, value) {
-		parameters <- c("date", "srad", "tmin", "tmax", "prec")
+		parameters <- c("date", "srad", "tmin", "tmax", "prec", "wind", "vapr")
 		nms <- names(value)
 		if (!all(parameters %in% nms)) stop(paste("parameters missing:", paste(parameters[!(parameters %in% nms)], collapse=", ")))
 		value <- value[parameters]

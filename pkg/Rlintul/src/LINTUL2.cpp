@@ -1,3 +1,10 @@
+/*
+Author Robert Hijmans
+Date: May 2016
+License: GNU General Public License (GNU GPL) v. 2 
+*/
+
+
 using namespace std;
 #include <vector>
 #include <algorithm>
@@ -112,8 +119,18 @@ void Lintul2Model::model_initialize() {
 	Teff = 0;
 	crop_initialize();
 	soil_initialize();
-	time = control.start;	
-	emergence = control.emergence;
+//	time = control.start;	
+//	emergence = control.emergence - control.start;
+	
+	for (size_t i=0; i<wth.date.size(); i++) {
+		// need to check for out of bounds times (before of after start)
+		if (wth.date[i] == control.start) {
+			time = i;
+			break;
+		}
+	}
+	emergence = time + control.emergence - control.start;
+
 }
 
 
@@ -267,7 +284,6 @@ void Lintul2Model::model_output(){
 
 void Lintul2Model::model_run() {
 
-
 	output_initialize();
 	model_initialize(); 
 
@@ -293,7 +309,6 @@ void Lintul2Model::model_run() {
 		time++;
 		step++;
 						
-	} // while alive
-		
+	} // while alive		
 }	  
 

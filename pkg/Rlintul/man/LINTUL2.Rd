@@ -21,22 +21,20 @@ LINTUL is a relatively simple crop growth simulation model
 lintul2(crop, weather, soil, control)
 lintul2_crop()
 lintul2_soil()
-crop(x) <- value
-soil(x) <- value
-control(x) <- value
-weather(x) <- value
-run(x, ...)
-}
-
-\arguments{
- \item{x}{Rcpp_Lintul2Model object}
 \S4method{crop}{Rcpp_Lintul2Model}(x)<-value
- \item{name}{character. crop name} 
 \S4method{soil}{Rcpp_Lintul2Model}(x)<-value
 \S4method{control}{Rcpp_Lintul2Model}(x)<-value
 \S4method{weather}{Rcpp_Lintul2Model}(x)<-value
 \S4method{run}{Rcpp_Lintul2Model}(x, ...)
- \item{value}{a list with crop, soil, or control parameters, or a data.frame with weather data. As above}
+}
+
+\arguments{
+ \item{x}{Rcpp_Lintul2Model object}
+ \item{crop}{list with named crop parameters. See Details. An example is returned by \code{lintul2_crop()}} 
+ \item{soil}{list with named soil parameters. See Details. An example is returned by \code{lintul2_soil()}} 
+ \item{control}{list with named control parameters} 
+ \item{weather}{data.frame with daily weather data} 
+ \item{value}{a list with crop or control parameters, or a data.frame with weather data. As above}
  \item{...}{additional arguments. None implemented}
 }
 
@@ -45,28 +43,26 @@ matrix
 }
 
 \references{
-Spitters, C.J.T. and A.H.C.M. Schapendonk, 1990. Evaluation of breeding strategies for drought tolerance in potato by means of crop growth simulation. Plant and Soil 123: 193-203.
+???
 }
 
 
 \examples{
+
+m <- lintul2()
+emerg=as.Date('2012-04-01')
+contr <- list(emergence=emerg, start=emerg-30, maxdur=200)
+
+crop(m) <- lintul2_crop()
+soil(m) <- lintul2_soil()
+control(m) <- contr
+weather(m) <- default_weather()
+
+m$run()
+
 \dontrun{
-w <- default_weather()
-wth <- subset(w, date > as.Date('2012-01-01'))
-crop <- lintul1_crop()
-str(crop)
-
-## LINTUL2
-s <- lintul2_soil()
-crp <- lintul2_crop()
-contr <- list(emergence=as.Date('2012-04-01'), long_output=TRUE)
-contr$start <- contr$emergence - 10
-d <- lintul2(crp, wth, s, contr)
-
 # test LINTUL2
 
-library(meteor)
-library(LINTUL)
 f1 <- system.file("lintul/test/2/res.dat", package="Rlintul")
 s <- readLIN1output(f1)
 f2 <- system.file("weather/Netherlands_Wageningen.csv", package="meteor")
