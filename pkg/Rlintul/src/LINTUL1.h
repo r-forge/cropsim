@@ -39,7 +39,7 @@ struct Lintul1Crop {
 
 /*
 struct Lintul1Weather {
-//	double longitude, latitude, elevation, DAYLP;
+//	double longitude, latitude, elevation;
 	double CO2 = 400; 
 	std::vector<long> date;
 	std::vector<double> srad, tmin, tmax;

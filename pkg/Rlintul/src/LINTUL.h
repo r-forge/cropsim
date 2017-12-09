@@ -15,9 +15,9 @@ struct LintulControl {
 
 
 struct LintulWeather {
-	double longitude, latitude, elevation, DAYLP;
+	double longitude, latitude, elevation;
 	double CO2 = 400;
-	long startdate;
+	//long startdate;
 	std::vector<double> srad, tmin, tmax, prec, wind, vapr;
 	std::vector<long> date;
 };

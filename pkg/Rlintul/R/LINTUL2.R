@@ -68,7 +68,7 @@ setMethod("weather<-", signature('Rcpp_Lintul2Model', 'list'),
 setMethod("control<-", signature('Rcpp_Lintul2Model', 'list'), 
 	function(x, value) {
 		#parameters <- c("emergence", "maxdur", "long_output")
-		parameters <- c("emergence", "maxdur")
+		parameters <- c("start", "emergence", "maxdur")
 		nms <- names(value)
 		if (!all(parameters %in% nms)) stop(paste("parameters missing:", paste(parameters[!(parameters %in% nms)], collapse=", ")))
 		value <- value[parameters]

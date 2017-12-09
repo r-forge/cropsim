@@ -14,7 +14,6 @@ using namespace std;
 #include "LINTUL2.h"
 
 
-
 double Penman(double tavg, double vapr, double srad, double wind, double albedo) {
   static double BOLTZM = 5.668E-8;
   static double LHVAP  = 2.4E6;
@@ -138,7 +137,6 @@ void Lintul2Model::soil_rates() {
 
 	double WAFC = 1000. * soil.WCFC * crop.ROOTD;
 	double WAST = 1000. * soil.WCST * crop.ROOTD;
-
 	soil.DRAIN  = clamp(0., soil.DRATE, (soil.WA - WAFC) + (wth.prec[time] - RainIntercepted - soil.EVAP - crop.TRAN));
 	soil.RUNOFF = std::max(0., (soil.WA - WAST) + (wth.prec[time] - RainIntercepted - soil.EVAP - crop.TRAN - soil.DRAIN));
 	soil.IRRIG  = soil.IRRIGF * std::max(0., (WAFC - soil.WA - wth.prec[time] - RainIntercepted - soil.EVAP - crop.TRAN - soil.DRAIN - soil.RUNOFF) );
@@ -148,10 +146,18 @@ void Lintul2Model::soil_rates() {
 		
 void Lintul2Model::crop_rates() {
 
+	if (!crop.emerged) { 
+		crop.emerged = (time >= emergence) & (soil.WC > soil.WCWP);
+		if (!crop.emerged) { 
+			return; 
+		} else {
+			crop.emergday = true;
+		}
+	}
+
 	double RDR, RDRDV, RDRSH, dLAI, gLAI; 
 	double PARint, FRT, FST, FSO, GTotal;
 	double FRTWET, FRTMOD, FSHMOD, FLV;
-	
 	
 	// LAI growth rate	
 	if (crop.emergday) {
@@ -222,15 +228,15 @@ void Lintul2Model::crop_rates() {
 
 
 void Lintul2Model::crop_states() {
-	crop.LAI  = crop.LAI + crop.rLAI;
-	crop.WLVG = crop.WLVG + crop.RWLVG;
-	crop.WLVD = crop.WLVD + crop.DLV;
-	crop.WLV  = crop.WLVG + crop.WLVD;
-	crop.WST  = crop.WST + crop.RWST;
-	crop.WSO  = crop.WSO + crop.RWSO;
-	crop.WRT  = crop.WRT + crop.RWRT;
-	crop.ROOTD = crop.ROOTD + crop.RROOTD;
 	if (crop.emerged) {
+		crop.LAI  = crop.LAI + crop.rLAI;
+		crop.WLVG = crop.WLVG + crop.RWLVG;
+		crop.WLVD = crop.WLVD + crop.DLV;
+		crop.WLV  = crop.WLVG + crop.WLVD;
+		crop.WST  = crop.WST + crop.RWST;
+		crop.WSO  = crop.WSO + crop.RWSO;
+		crop.WRT  = crop.WRT + crop.RWRT;
+		crop.ROOTD = crop.ROOTD + crop.RROOTD;
 		Tsum = Tsum + Teff;
 	}
 }
@@ -244,7 +250,6 @@ void Lintul2Model::soil_states() {
 void Lintul2Model::output_initialize() {
 	out.step.resize(0);
 	out.TSUM.resize(0);
-	out.DLV.resize(0);
 	out.LAI.resize(0);
 	out.WLVD.resize(0);
 	out.WLV.resize(0);
@@ -264,7 +269,6 @@ void Lintul2Model::output_initialize() {
 void Lintul2Model::model_output(){
 	out.step.push_back(step);
 	out.TSUM.push_back(Tsum);
-	out.DLV.push_back(crop.DLV);
 	out.LAI.push_back(crop.LAI);
 	out.WLVD.push_back(crop.WLVD);
 	out.WLV.push_back(crop.WLV);
@@ -291,21 +295,11 @@ void Lintul2Model::model_run() {
 	while ((crop.alive) & (step < control.maxdur)) {
 
 		weather_step();
-			
-		if (crop.emerged) {
-			crop_rates();
-		} else {
-			crop.emerged = ((time+1) >= emergence)  & (soil.WC > soil.WCWP);
-		}
-		soil_rates();
-			
+		crop_rates();
+		soil_rates();	
 		model_output();
-			
-		if (crop.emerged) {
-			crop_states();
-		}
+		crop_states();
 		soil_states();
-
 		time++;
 		step++;
 						

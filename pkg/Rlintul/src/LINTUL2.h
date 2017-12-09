@@ -8,7 +8,7 @@ License: GNU General Public License (GNU GPL) v. 2
 
 struct Lintul2Output {
 	std::vector<unsigned> step;
-	std::vector<double> TSUM, DLV, LAI, WLVD, WLV, WLVG, WST, WRT, WSO, EVAP, TRAN, TRANRF, WA, WC, RWA; 
+	std::vector<double> TSUM, LAI, WLVD, WLV, WLVG, WST, WRT, WSO, EVAP, TRAN, TRANRF, WA, WC, RWA; 
 };
 
 
