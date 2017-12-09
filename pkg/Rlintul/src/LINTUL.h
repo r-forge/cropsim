@@ -1,5 +1,10 @@
 
 
+struct LintulControl {
+  long start, emergence;
+  unsigned maxdur = 365;
+}; 
+
 
 struct LintulWeather {
 	double longitude, latitude, elevation, DAYLP;

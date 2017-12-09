@@ -33,29 +33,20 @@ NumericMatrix lintul1(List crop, DataFrame weather, List control) {
 	wth.tmin = doubleFromDF(weather, "tmin");
 	wth.tmax = doubleFromDF(weather, "tmax");
 	wth.srad = doubleFromDF(weather, "srad");	
-	int nwth = weather.nrows();
+
 	DateVector wdate = dateFromDF(weather, "date");
 //	wth.startdate = SimDate(wdate[0].getDay(), wdate[0].getMonth(), wdate[0].getYear());
-	
-	DateVector emergence = datesFromList(control, "emergence"); 
 
-	struct Lintul1Control ctr;
+	struct LintulControl ctr;
 	ctr.maxdur = intFromList(control, "maxdur");
-//	ctr.long_output = boolFromList(control, "long_output"); 
+	ctr.emergence = intFromList(control, "emergence"); 
 
-//	int nsim = emergence.size();
-	
-//	for (int s=0; s < nsim; s++) {
-
-	int s=0;		
-	if (emergence[s] < wdate[0]) {
+/*	if (emergence < wdate[0]) {
 		stop("emergence requested before the beginning of the weather data");
 	} else if (emergence[s] > wdate[nwth-1]) {
 		stop("emergence requested after the end of the weather data");
-	}
+	} */
 	
-	ctr.emergence = { int(emergence[s] - wdate[0]) };
-
 	Lintul1Model m;
 	m.crop = crp;
 	m.control = ctr;
@@ -63,8 +54,7 @@ NumericMatrix lintul1(List crop, DataFrame weather, List control) {
 	
 	m.model_run();
 	
-	std::vector<std::vector<double>> mat(7, vector<double>(0));
-	
+//	std::vector<std::vector<double>> mat(7, vector<double>(0));
 	size_t nr = m.out.step.size();
 	NumericMatrix out(nr, 10) ;
 	for( size_t i=1; i<nr; i++){

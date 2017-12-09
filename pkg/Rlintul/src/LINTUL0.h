@@ -1,8 +1,10 @@
 //#include "SimDate.h"
+#include "LINTUL.h"
 
-struct Lintul0Control {
-  std::vector<int> emergence;
-}; 
+struct Lintul0Output {
+	std::vector<unsigned> step;
+	std::vector<double> TSUM, GC, W, WSO; 
+};
 
 
 struct Lintul0Crop {
@@ -39,36 +41,29 @@ struct Lintul0Crop {
 
 
 
-struct Lintul0Weather {
-	double longitude, latitude, elevation, CO2, DAYLP;
-	long startdate;
-	std::vector<double> srad, tmin, tmax;
-};
-
-
 struct Lintul0Model {
-	
-	Lintul0Model(Lintul0Crop c, Lintul0Control t, Lintul0Weather w) : crop(c), control(t), wth(w) { };
 
-	struct Lintul0Crop crop;
-	struct Lintul0Control control;
-	struct Lintul0Weather wth;
+	LintulControl control;
+	LintulWeather wth;
+	Lintul0Crop crop;
+	Lintul0Output out;
 	
-	std::vector<std::vector<double> > out;
+//	Lintul0Model(Lintul0Crop c, LintulControl t, LintulWeather w) : crop(c), control(t), wth(w) { };
 
 	double Tavg, Teff, Tsum;
-	int time, step, maxdur;
+	int time;
+	unsigned step;
 	
 	void weather_step();
-	
+
+	void model_initialize();	
+	void output_initialize();
 	void crop_initialize();
 	void crop_rates();
 	void crop_states();
 
-	void model_initialize(int run);	
-
 	void model_run();
-	void model_output(int i);	
+	void model_output();	
 };
 
 

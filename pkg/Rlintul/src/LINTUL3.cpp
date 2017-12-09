@@ -448,15 +448,15 @@ and total amount of water in maximum rooted zone (WTOT), all in cm. */
 }
 
 
-void Lintul3Model::model_initialize(int run) {
+void Lintul3Model::model_initialize() {
 	step = 0;
 	crop_initialize();
 	soil_initialize();
-	time = control.start[run];
+	time = control.start;
 	//DOY = (wth.startdate + time).dayoftheyear();
 	//ojo because we do not have date + int yet
 	today = wth.startdate;
-	emergence = control.emergence[run];
+	emergence = control.emergence;
 //	control.DAYPL = emergence;
 //	control.DAYPL = control.planting[run];
 
@@ -819,12 +819,12 @@ void Lintul3Model::soil_states() {
 }
 
 
-void Lintul3Model::model_output(int i){
+void Lintul3Model::model_output(){
 
 	out.push_back( { double(step), crop.TSUM, crop.DVS, crop.LAI, crop.WLVG + crop.WLVD, crop.WST, 
 	     crop.WRT, crop.WSO, ES0, ETC, crop.TRANRF, crop.GLAI, crop.NNI, crop.NPKI, soil.NMINT, soil.NMIN,
 		 crop.NUPTT, crop.NFIXTT, crop.NLIVT, crop.NLOSST, soil.PMINT, soil.PMIN, crop.PUPTT, crop.PLIVT, crop.PLOSST,
-		 soil.KMINT, soil.KMIN, crop.KUPTT, crop.KLIVT, crop.KLOSST, double(i) } );
+		 soil.KMINT, soil.KMIN, crop.KUPTT, crop.KLIVT, crop.KLOSST } );
 	
 //	out[i][11] = soil.WC;
 //	out[i][12] = DOY;
@@ -836,16 +836,13 @@ void Lintul3Model::model_output(int i){
 
 void Lintul3Model::model_run() {
 
-	int nruns = control.emergence.size();
-	int maxstep = 365;
 
-    out_names =	{ "step", "TSUM", "DVS", "LAI", "WLVG +WLVD", "WST", " WRT", "WSO", " ES0", " ETC", "TRANRF", "GLAI", "NNI", "NPKI", "NMINT", "NMIN", "NUPT", "NFIX", "NLIV", "NLOSS", "PMINT", "PMIN", "PUPT", "PLIV", "PLOSS", "KMINT", "KMIN", "KUPT", "KLIV", "KLOSS", "run" };
+    out_names =	{ "step", "TSUM", "DVS", "LAI", "WLVG +WLVD", "WST", " WRT", "WSO", " ES0", " ETC", "TRANRF", "GLAI", "NNI", "NPKI", "NMINT", "NMIN", "NUPT", "NFIX", "NLIV", "NLOSS", "PMINT", "PMIN", "PUPT", "PLIV", "PLOSS", "KMINT", "KMIN", "KUPT", "KLIV", "KLOSS"};
 
-	for (int run=0; run < nruns; run++) {
-		crop.alive =true;
-		model_initialize(run);
+	crop.alive =true;
+	model_initialize();
 
-		while ((crop.alive) & (step < maxstep)) {
+	while ((crop.alive) & (step < control.maxdur)) {
 			weather_step();
 			crop_rates();
 
@@ -860,7 +857,7 @@ void Lintul3Model::model_run() {
 			if (control.IOPT > 1) {
 				soil_rates();
 			}
-			model_output(run);
+			model_output();
 			crop_states();
 			if (control.IOPT > 1) {
 				soil_states();
@@ -868,6 +865,6 @@ void Lintul3Model::model_run() {
 			time++;
 			step++;
 			today++;
-		}
 	}
 }
+

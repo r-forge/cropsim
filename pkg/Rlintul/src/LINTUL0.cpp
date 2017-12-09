@@ -5,14 +5,24 @@ using namespace std;
 #include "SimUtil.h"
 #include "LINTUL0.h"
 
-
-void Lintul0Model::model_output(int i){
-	out[i][0] = step;
-	out[i][1] = Tsum;
-	out[i][2] = crop.GC;
-	out[i][3] = crop.W;
-	out[i][4] = crop.WSO;
+void Lintul0Model::output_initialize() {
+	out.step.resize(0);
+	out.TSUM.resize(0);
+	out.GC.resize(0);
+	out.W.resize(0);
+	out.WSO.resize(0);
 }
+
+
+void Lintul0Model::model_output(){
+	out.step.push_back(step);
+	out.TSUM.push_back(Tsum);
+	out.GC.push_back(crop.GC);
+	out.W.push_back(crop.W);
+	out.WSO.push_back(crop.WSO);
+}
+
+
 
 
 void Lintul0Model::weather_step() {
@@ -31,11 +41,11 @@ void Lintul0Model::crop_initialize() {
 
 
 
-void Lintul0Model::model_initialize(int run) {
+void Lintul0Model::model_initialize() {
 	Tsum = 0;
 	step = 0;
 	crop_initialize();
-	time = control.emergence[run];	
+	time = control.emergence;	
 }
 
 
@@ -106,24 +116,16 @@ void Lintul0Model::crop_states() {
 	
 void Lintul0Model::model_run() {
   
-	int nruns = control.emergence.size();
-	int maxstep = 250;
-
-	out = matrix(maxstep, 5);
-
-	for (int run=0; run < nruns; run++) {
-
-		model_initialize(run); 
+	model_initialize(); 
 	
 			
-		while ((crop.alive) & (step < maxstep)) {  
+	while ((crop.alive) & (step < control.maxdur)) {  
 			weather_step();
 			crop_rates();
-			model_output(step);
+			model_output();
 			crop_states();
 			time++;
 			step++;		
-		}
 	}
 }
 

@@ -1,9 +1,10 @@
 //#include "SimDate.h"
 #include "LINTUL.h"
 
-struct Lintul2Control {
-  int start, emergence;
-}; 
+struct Lintul2Output {
+	std::vector<unsigned> step;
+	std::vector<double> TSUM, DLV, LAI, WLVD, WLV, WLVG, WST, WRT, WSO, EVAP, TRAN, TRANRF, WA, WC, RWA; 
+};
 
 
 struct Lintul2Soil {
@@ -45,22 +46,21 @@ struct Lintul2Crop {
 
 struct Lintul2Model {
 
-	void model_run();
+	struct LintulControl control;
+	struct LintulWeather wth;
 
 	struct Lintul2Crop crop;
 	struct Lintul2Soil soil;
-	struct Lintul2Control control;
-	struct LintulWeather wth;
-	
-	std::vector<std::vector<double> > out;
-	std::vector<std::string> out_names;
-	
-	double Tavg, Teff, Tsum, RainIntercepted;
-	int time, step, emergence, maxdur;
+	struct Lintul2Output out;
 
-	Lintul2Model(Lintul2Crop c, Lintul2Soil s, Lintul2Control t, LintulWeather w) : crop(c), soil(s), control(t), wth(w) { };
+	double Tavg, Teff, Tsum, RainIntercepted;
+	int time, emergence; 
+	unsigned step;
+
+//	Lintul2Model(Lintul2Crop c, Lintul2Soil s, LintulControl t, LintulWeather w) : crop(c), soil(s), control(t), wth(w) { };
 	
 	void weather_step();
+	void output_initialize();
 	void crop_initialize();
 	void crop_rates();
 	void crop_states();
@@ -68,6 +68,8 @@ struct Lintul2Model {
 	void soil_rates();
 	void soil_states();
 	void model_initialize();	
-	void model_output(int i);
+	void model_output();
+	void model_run();
+	
 };
 

@@ -4,7 +4,8 @@
 
 
 struct Lintul3Control {
-	std::vector<int> start, emergence;
+	long start, emergence;
+	unsigned maxdur;
 	int IOPT;
 	int IDPL, DAYPL;
 	bool PL;
@@ -101,9 +102,9 @@ struct Lintul3Model {
 //	double Teff, Tsum, RainIntercepted;
 	double RAIN, RAIN0, E0, ES0, ETC, TMPA, PAR; 
 	
-	int time, step, emergence, maxdur;
-	int DOY;
-	long today;
+	int time;
+	unsigned step, DOY;
+	long emergence, today;
 
 	Lintul3Model(Lintul3Crop c, Lintul3Soil s, Lintul3Control t, LintulWeather w) : crop(c), soil(s), control(t), wth(w) { };
 	
@@ -118,9 +119,9 @@ struct Lintul3Model {
 	void soil_rates();
 	void soil_states();
 	
-	void model_initialize(int run);	
+	void model_initialize();	
 		
 		
-	void model_output(int i);
+	void model_output();
 };
 

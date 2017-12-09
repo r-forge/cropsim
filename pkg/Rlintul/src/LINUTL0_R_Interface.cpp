@@ -28,25 +28,21 @@ NumericMatrix lintul0(List crop, DataFrame weather, List control) {
 	crp.cthi1 = doubleFromList(crop, "cthi1"); 
 	crp.cthi2 = doubleFromList(crop, "cthi2"); 
        
-	Lintul0Weather wth;
+	LintulWeather wth;
 	wth.tmin = doubleFromDF(weather, "tmin");
 	wth.tmax = doubleFromDF(weather, "tmax");
 	wth.srad = doubleFromDF(weather, "srad");	
-	int nwth = weather.nrows();
 	DateVector wdate = dateFromDF(weather, "date");
 //	wth.startdate = SimDate(wdate[0].getDay(), wdate[0].getMonth(), wdate[0].getYear());
 
+	struct LintulControl ctr;
+	ctr.emergence = intFromList(control, "emergence"); 
+	ctr.maxdur = intFromList(control, "maxdur");
 
-	DateVector emergence = datesFromList(control, "emergence"); 
-	//ctr.MaxDur = intFromList(control, "MaxDur");
-	struct Lintul0Control ctr;
-//	ctr.long_output = boolFromList(control, "long_output"); 
-	int nsim = emergence.size();
+	//	ctr.long_output = boolFromList(control, "long_output"); 
 	
 		
-	for (int s=0; s < nsim; s++) {
-		
-		if (emergence[s] < wdate[0]) {
+/*	if (emergence[s] < wdate[0]) {
 			stop("emergence requested before the beginning of the weather data");
 		} else if (emergence[s] > wdate[nwth-1]) {
 			stop("emergence requested after the end of the weather data");
@@ -54,22 +50,27 @@ NumericMatrix lintul0(List crop, DataFrame weather, List control) {
 	
 		ctr.emergence = { (int)(emergence[s] - wdate[0]) };
 	}
+*/
 
-
-	Lintul0Model m(crp, ctr, wth);
+	Lintul0Model m;
+	m.crop=crp;
+	m.control= ctr;
+	m.wth=wth;
+	
  	m.model_run();
 	
-	int r = m.out.size();
-	int c = m.out[0].size();
-	
-	NumericMatrix mat(r, c);
-	for (int i = 0; i < r; i++) {
-		for (int j = 0; j < c; j++) {
-			mat(i, j) = m.out[i][j];  
-		}
+	size_t nr = m.out.step.size();
+	NumericMatrix out(nr, 5) ;
+	for( size_t i=1; i<nr; i++){
+		out(i,0) = m.out.step[i];
+		out(i,1) = m.out.TSUM[i];
+		out(i,2) = m.out.GC[i];
+		out(i,3) = m.out.W[i];
+		out(i,4) = m.out.WSO[i];	
 	}
-	colnames(mat) = CharacterVector::create("step", "Tsum", "GC", "W", "WSO");		
-	return(mat);
+	colnames(out) = CharacterVector::create("step", "Tsum", "GC", "W", "WSO");		
+	
+	return(out);
 }
 
 

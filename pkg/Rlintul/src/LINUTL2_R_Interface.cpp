@@ -41,7 +41,8 @@ NumericMatrix lintul2(List crop, DataFrame weather, List soil, List control) {
 	wth.srad = doubleFromDF(weather, "srad");	
 	wth.prec = doubleFromDF(weather, "prec");	
 	wth.vapr = doubleFromDF(weather, "vapr");
-	wth.wind = doubleFromDF(weather, "wind");	
+	wth.wind = doubleFromDF(weather, "wind");
+	wth.date = longFromDF(weather, "date");	
 //	DateVector wdate = dateFromDF(weather, "SimDate");
 //	wth.startdate = SimDate(wdate[0].getDay(), wdate[0].getMonth(), wdate[0].getYear());
 
@@ -57,23 +58,12 @@ NumericMatrix lintul2(List crop, DataFrame weather, List soil, List control) {
 	sol.IRRIGF = doubleFromList(soil, "IRRIGF");
 	
 	
-	DateVector start = datesFromList(control, "start"); 
-	DateVector emergence = datesFromList(control, "emergence"); 
-
-	int nsim = start.size();
-	int nem = emergence.size();
-	if (nem != nsim) {
-		stop("start does not have the same length as emergence");
-	}
-	
-	struct Lintul2Control ctr;
-	
-	//ctr.MaxDur = intFromList(control, "MaxDur");
+	struct LintulControl ctr;
+	ctr.maxdur = intFromList(control, "maxdur");
+	ctr.start = intFromList(control, "start");
+	ctr.emergence = intFromList(control, "emergence");
 //	ctr.long_output = boolFromList(control, "long_output"); 
 
-//  Rcpp::Rcout << ctr.long_output << std::endl;
-
-//	int nwth = wth.tmin.size();
 	
 	//for (int s=0; s < nsim; s++) {
 //	int s = 0;
@@ -91,18 +81,35 @@ NumericMatrix lintul2(List crop, DataFrame weather, List soil, List control) {
 	ctr.start = { int(start[s] - wdate[0]) };
 	
 */	
-	Lintul2Model m(crp, sol, ctr, wth);
+	Lintul2Model m;
+	m.crop= crp;
+	m.soil= sol;
+	m.control=ctr;
+	m.wth=wth;
 	
 	m.model_run();
 
-	int nr = m.out.size();
-	int nc = m.out[0].size();
-	NumericMatrix mat(nr, nc);
-	for (int i = 0; i < nr; i++) {
-		for (int j = 0; j < nc; j++) {
-			mat(i, j) = m.out[i][j];  
-		}
+	size_t nr = m.out.step.size();
+	NumericMatrix out(nr, 16) ;
+	for( size_t i=1; i<nr; i++){
+		out(i,0) = m.out.step[i];
+		out(i,1) = m.out.TSUM[i];
+		out(i,2) = m.out.DLV[i];
+		out(i,3) = m.out.LAI[i];
+		out(i,4) = m.out.WLVG[i];
+		out(i,5) = m.out.WLVD[i];
+		out(i,6) = m.out.WLV[i];
+		out(i,7) = m.out.WST[i];
+		out(i,8) = m.out.WRT[i];
+		out(i,9) = m.out.WSO[i];	
+		out(i,10) = m.out.EVAP[i];	
+		out(i,11) = m.out.TRAN[i];	
+		out(i,12) = m.out.TRANRF[i];	
+		out(i,13) = m.out.WA[i];	
+		out(i,14) = m.out.WC[i];	
+		out(i,15) = m.out.RWA[i];	
 	}
-	colnames(mat) = CharacterVector::create("step", "Tsum", "LAI", "WLV", "WST", "WRT", "WSO", "EVAP", "TRAN", "TRANRF", "WA", "WC",  "RWA", "PREC");
-	return(mat);
+	colnames(out) = CharacterVector::create("step", "Tsum", "DLV", "LAI", "WLVG", "WLVD", "WLV", "WST", "WRT", "WSO", "EVAP", "TRAN", "TRANRF", "WA", "WC", "RWA");		
+	return out;
+	
 }

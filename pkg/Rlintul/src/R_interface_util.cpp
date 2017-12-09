@@ -31,9 +31,25 @@ std::vector<double> doubleFromDF(Rcpp::DataFrame d, const char* s) {
     std::string ss = "Variable '" +  std::string(s) + "' not found";
     stop(ss);  
 	// to avoid "warning: control reaches end of non-void function"
-	std::vector<double> v(1);
+	std::vector<double> v;
 	return( v );
 }
+
+std::vector<long> longFromDF(Rcpp::DataFrame d, const char* s) {
+	Rcpp::CharacterVector nms = d.names();
+	for (int i=0; i < nms.size(); i++) {
+		if (nms[i] == s) {
+			std::vector<long> v = d[i];
+			return(v);
+		}     
+	}
+    std::string ss = "Variable '" +  std::string(s) + "' not found";
+    stop(ss);  
+	// to avoid "warning: control reaches end of non-void function"
+	std::vector<long> v;
+	return( v );
+}
+
 
 
 
@@ -50,7 +66,7 @@ Rcpp::DateVector dateFromDF(Rcpp::DataFrame d, const char* s) {
     std::string ss = "Variable '" +  std::string(s) + "' not found";
     stop(ss);
 	// to avoid "warning: control reaches end of non-void function"
-	DateVector v(1);
+	DateVector v(0);
 	return( v );
 }
 
@@ -72,7 +88,7 @@ std::vector<double> vecFromMat(Rcpp::NumericMatrix m, const char* s) {
 	std::string ss = "Variable '" +  std::string(s) + "' not found";
 	stop(ss);
 	// to avoid "warning: control reaches end of non-void function"
-	std::vector<double> v(1);
+	std::vector<double> v;
 	return( v );
 	
 }

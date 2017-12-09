@@ -224,55 +224,74 @@ void Lintul2Model::soil_states() {
 }
 
 
-void Lintul2Model::model_output(int i){
-	out[i][0] = step;
-	out[i][1] = Tsum;
-	out[i][2] = crop.LAI;
-	out[i][3] = crop.WLV;
-	out[i][4] = crop.WST;
-	out[i][5] = crop.WRT;
-	out[i][6] = crop.WSO;
-	out[i][7] = soil.EVAP;
-	out[i][8] = crop.TRAN;
-	out[i][9] = crop.TRANRF;
-	out[i][10] = soil.WA;
-	out[i][11] = soil.WC;
-	out[i][12] = soil.RWA;
-	out[i][13] = wth.prec[time];
+void Lintul2Model::output_initialize() {
+	out.step.resize(0);
+	out.TSUM.resize(0);
+	out.DLV.resize(0);
+	out.LAI.resize(0);
+	out.WLVD.resize(0);
+	out.WLV.resize(0);
+	out.WLVG.resize(0);
+	out.WST.resize(0);
+	out.WRT.resize(0);
+	out.WSO.resize(0);
+	out.EVAP.resize(0);
+	out.TRAN.resize(0);
+	out.TRANRF.resize(0);
+	out.WA.resize(0);
+	out.WC.resize(0);
+	out.RWA.resize(0);
 }
+
+
+void Lintul2Model::model_output(){
+	out.step.push_back(step);
+	out.TSUM.push_back(Tsum);
+	out.DLV.push_back(crop.DLV);
+	out.LAI.push_back(crop.LAI);
+	out.WLVD.push_back(crop.WLVD);
+	out.WLV.push_back(crop.WLV);
+	out.WLVG.push_back(crop.WLVG);
+	out.WST.push_back(crop.WST);
+	out.WRT.push_back(crop.WRT);
+	out.WSO.push_back(crop.WSO);
+	out.EVAP.push_back(soil.EVAP);
+	out.TRAN.push_back(crop.TRAN);
+	out.TRANRF.push_back(crop.TRANRF);
+	out.WA.push_back(soil.WA);
+	out.WC.push_back(soil.WC);
+	out.RWA.push_back(soil.RWA);
+}
+
 
 
 void Lintul2Model::model_run() {
 
-    int maxstep = 365;
 
-
-	out_names = { "step", "Tsum", "LAI", "WLV", "WST", "WRT", "WSO", "EVAP", "TRAN", "TRANRF", "WA", "WC", "RWA", "prec" };
-	out = matrix(maxstep, 14);
-
+	output_initialize();
 	model_initialize(); 
 
 	// --- START SIMULATION --- 
-	while ((crop.alive) & (step < maxstep)) {
+	while ((crop.alive) & (step < control.maxdur)) {
 
-			weather_step();
+		weather_step();
 			
-			if (crop.emerged) {
-				crop_rates();
-			} else {
-				crop.emerged = ((time+1) >= emergence)  & (soil.WC > soil.WCWP);
-			}
-			soil_rates();
+		if (crop.emerged) {
+			crop_rates();
+		} else {
+			crop.emerged = ((time+1) >= emergence)  & (soil.WC > soil.WCWP);
+		}
+		soil_rates();
 			
-			model_output(step);
+		model_output();
 			
-			if (crop.emerged) {
-				crop_states();
-			}
-			soil_states();
+		if (crop.emerged) {
+			crop_states();
+		}
+		soil_states();
 
-			time++;
-			step++;
+		time++;
+		step++;
 						
 	} // while alive
 		

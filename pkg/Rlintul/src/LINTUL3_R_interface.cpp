@@ -7,9 +7,7 @@ using namespace std;
 #include "R_interface_util.h"
 
 
-//Rcpp::compileAttributes('e:/bitbucket/models/lintul/RINTUL')
-
-// [[Rcpp::export]]
+// [[Rcpp::export(name = ".lintul3")]]
 NumericMatrix lintul3(List crop, DataFrame weather, List soil, List control) {
  
 // crop parameters

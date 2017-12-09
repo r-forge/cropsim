@@ -1,15 +1,10 @@
 #include "LINTUL.h"
 
 struct Lintul1Output {
-	std::vector<int> step;
+	std::vector<unsigned> step;
 	std::vector<double> TSUM, DLV, LAI, WLVD, WLV, WLVG, WST, WRT, WSO; 
 };
 
-
-struct Lintul1Control {
-	long emergence;
-	int maxdur = 365;
-};
 
 struct Lintul1Crop {
 // LINTUL1
@@ -52,17 +47,16 @@ struct Lintul1Weather {
 */
 
 struct Lintul1Model {
-	//Lintul1Model(Lintul1Crop c, Lintul1Control t, Lintul1Weather w) : crop(c), control(t), wth(w) { };
+	//Lintul1Model(Lintul1Crop c, LintulControl t, Lintul1Weather w) : crop(c), control(t), wth(w) { };
 
+	struct LintulControl control;
 	struct LintulWeather wth;
-	
 	struct Lintul1Crop crop;
-	struct Lintul1Control control;
 	struct Lintul1Output out;
 
 	double Tavg, Teff;
-	int time, step;
-	int maxstep = 365;
+	int time;
+	unsigned step;
 
 	void weather_step();
 	void output_initialize();
