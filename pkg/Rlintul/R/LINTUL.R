@@ -10,11 +10,6 @@ if (!isGeneric("weather<-")) { setGeneric("weather<-", function(x, value) standa
 if (!isGeneric("run")) { setGeneric("run", function(x, ...) standardGeneric("run")) }	
 
 	
-default_weather <- function() {
-	f <- system.file("extdata/18419.rds", package="meteor")
-	readRDS(f)
-}
-
 
 .trim2 <- function(x) return(gsub("^ *|(?<= ) | *$", "", x, perl=TRUE))
 

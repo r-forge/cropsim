@@ -1,10 +1,9 @@
 \name{lintul1}
 
+\alias{readLIN1output}
+
 \alias{lintul1}
 \alias{lintul1_crop}
-\alias{crop<-}
-\alias{weather<-}
-\alias{control<-}
 \alias{crop<-,Rcpp_Lintul1Model-method}
 \alias{weather<-,Rcpp_Lintul1Model-method}
 \alias{control<-,Rcpp_Lintul1Model-method}
@@ -25,8 +24,7 @@ lintul1_crop()
 \S4method{crop}{Rcpp_Lintul1Model}(x)<-value
 \S4method{control}{Rcpp_Lintul1Model}(x)<-value
 \S4method{weather}{Rcpp_Lintul1Model}(x)<-value
-
-run(x, ...)
+\S4method{run}{Rcpp_Lintul2Model}(x, ...)
 }
 
 
@@ -93,18 +91,19 @@ library(meteor)
 library(Rlintul)
 f1 <- system.file("lintul/test/1/res.dat", package="Rlintul")
 s <- readLIN1output(f1)
-f2 <- system.file("weather/Netherlands_Wageningen.csv", package="meteor")
+f2 <- system.file("extdata/Netherlands_Wageningen.csv", package="meteor")
 wth <- read.csv(f2)
 wth$date <- as.Date(wth$date)
 wth$srad <- wth$srad / 1000
 
 crop <- lintul1_crop()
 sdate <- dateFromDoy(58, 1971)
-contr <- list(emergence=sdate+2, start = sdate, long_output=TRUE)
-x <- lintul1(crop, wth, contr)
+contr <- list(emergence=sdate+2, start = sdate, maxdur=365)
+x <- run(lintul1(crop, contr, wth))
+x$DOY <- doyFromDate(x$date)
 
 plot(s[,'TIME'], s[,'LAI'], type='l')
-points(x[, 'step']+58, x[, 'LAI'])
+points(x[, 'DOY'], x[, 'LAI'])
 
 }
 

@@ -4,13 +4,37 @@ Date: May 2016
 License: GNU General Public License (GNU GPL) v. 2 
 */
 
-
 #include <Rcpp.h>
 using namespace Rcpp;
 using namespace std;
 #include "R_interface_util.h"
 #include "LINTUL1.h"
 #include "LINTUL2.h"
+
+
+void setWeather1(Lintul1Model* m, NumericVector date, NumericVector tmin, NumericVector tmax, NumericVector srad) {
+	LintulWeather wth;
+	wth.tmin = Rcpp::as<std::vector<double>>(tmin);
+	wth.tmax = Rcpp::as<std::vector<double>>(tmax);
+	wth.srad = Rcpp::as<std::vector<double>>(srad);
+	wth.date = Rcpp::as<std::vector<long>>(date);
+	m->wth = wth;
+}
+
+
+void setWeather2(Lintul2Model* m, NumericVector date, NumericVector tmin, NumericVector tmax, NumericVector srad, NumericVector prec, NumericVector wind, NumericVector vapr) {
+	LintulWeather wth;
+	wth.tmin = Rcpp::as<std::vector<double>>(tmin);
+	wth.tmax = Rcpp::as<std::vector<double>>(tmax);
+	wth.srad = Rcpp::as<std::vector<double>>(srad);
+	wth.wind = Rcpp::as<std::vector<double>>(wind);
+	wth.vapr = Rcpp::as<std::vector<double>>(vapr);
+	wth.prec = Rcpp::as<std::vector<double>>(prec);
+	wth.date = Rcpp::as<std::vector<long>>(date);
+//	wth.latitude  = location[1];
+//	wth.elevation = location[2];
+	m->wth = wth;
+}
 
 
 RCPP_EXPOSED_CLASS(LintulWeather)
@@ -35,10 +59,10 @@ RCPP_MODULE(LINTUL2){
 		.field("maxdur", &LintulControl::maxdur) 
 	;
 
-    class_<LintulWeather>("Lintul1Weather")
-//		.field("longitude", &Lintul1Weather::longitude) 
-//		.field("latitude", &Lintul1Weather::latitude) 
-//		.field("elevation", &Lintul1Weather::elevation) 
+    class_<LintulWeather>("LintulWeather")
+//		.field("longitude", &LintulWeather::longitude) 
+//		.field("latitude", &LintulWeather::latitude) 
+//		.field("elevation", &LintulWeather::elevation) 
 		.field("CO2",  &LintulWeather::CO2) 
 		.field("date", &LintulWeather::date) 
 		.field("srad", &LintulWeather::srad) 
@@ -85,17 +109,19 @@ RCPP_MODULE(LINTUL2){
     class_<Lintul2Model>("Lintul2Model")
 		.constructor()
 		.method("run", &Lintul2Model::model_run, "run the model")		
+		.method("setWeather", &setWeather2)
+
 		.field("crop", &Lintul2Model::crop, "crop")
 		.field("soil", &Lintul2Model::soil, "soil")
 		.field("control", &Lintul2Model::control, "control")
 		.field("out", &Lintul2Model::out, "out")
 		.field("weather", &Lintul2Model::wth, "weather")
+		
 	;			
 
     class_<Lintul2Output>("Lintul2Output")
 		.field_readonly("step", &Lintul2Output::step)
 		.field_readonly("TSUM", &Lintul2Output::TSUM)
-		.field_readonly("DLV", &Lintul2Output::DLV)
 		.field_readonly("LAI", &Lintul2Output::LAI)
 		.field_readonly("WLV", &Lintul2Output::WLV)
 		.field_readonly("WLVD", &Lintul2Output::WLVD)
@@ -123,10 +149,7 @@ RCPP_MODULE(LINTUL1){
 		.field("maxdur", &LintulControl::maxdur) 
 	;
 
-    class_<LintulWeather>("Lintul1Weather")
-//		.field("longitude", &Lintul1Weather::longitude) 
-//		.field("latitude", &Lintul1Weather::latitude) 
-//		.field("elevation", &Lintul1Weather::elevation) 
+    class_<LintulWeather>("LintulWeather")
 		.field("CO2",  &LintulWeather::CO2) 
 		.field("date", &LintulWeather::date) 
 		.field("srad", &LintulWeather::srad) 
@@ -155,6 +178,7 @@ RCPP_MODULE(LINTUL1){
     class_<Lintul1Model>("Lintul1Model")
 		.constructor()
 		.method("run", &Lintul1Model::model_run, "run the model")		
+		.method("setWeather", &setWeather1)
 		.field("crop", &Lintul1Model::crop, "crop")
 		.field("control", &Lintul1Model::control, "control")
 		.field("out", &Lintul1Model::out, "out")

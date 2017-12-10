@@ -9,6 +9,7 @@
 \alias{control<-,Rcpp_Lintul2Model-method}
 \alias{run,Rcpp_Lintul2Model-method}
 
+
 \title{
 LINTUL2 crop growth model
 }
@@ -18,7 +19,7 @@ LINTUL is a relatively simple crop growth simulation model
 }
 
 \usage{
-lintul2(crop, weather, soil, control)
+lintul2(crop, soil, control, weather)
 lintul2_crop()
 lintul2_soil()
 \S4method{crop}{Rcpp_Lintul2Model}(x)<-value
@@ -53,13 +54,25 @@ library(Rlintul)
 m <- lintul2()
 emerg <- as.Date('2012-04-01')
 contr <- list(emergence=emerg, start=emerg-1, maxdur=200)
+w <- default_weather()
+acrop <- lintul2_crop()
+asoil <- lintul2_soil()
 
-crop(m) <- lintul2_crop()
-soil(m) <- lintul2_soil()
+crop(m) <- acrop
+soil(m) <- asoil
 control(m) <- contr
-weather(m) <- default_weather()
+weather(m) <- w
 
 m$run()
+
+m$out
+
+# or do 
+
+m2 <- lintul2(acrop, asoil, contr, w)
+r <- run(m2)
+tail(r)
+
 
 # Compare with FORTRAN version results)
 

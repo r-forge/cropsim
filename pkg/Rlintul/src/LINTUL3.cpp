@@ -455,7 +455,7 @@ void Lintul3Model::model_initialize() {
 	time = control.start;
 	//DOY = (wth.startdate + time).dayoftheyear();
 	//ojo because we do not have date + int yet
-	today = wth.startdate;
+	//today = wth.startdate;
 	emergence = control.emergence;
 //	control.DAYPL = emergence;
 //	control.DAYPL = control.planting[run];
@@ -864,7 +864,7 @@ void Lintul3Model::model_run() {
 			}
 			time++;
 			step++;
-			today++;
+			//today++;
 	}
 }
 

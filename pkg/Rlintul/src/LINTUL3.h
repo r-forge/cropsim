@@ -104,7 +104,7 @@ struct Lintul3Model {
 	
 	int time;
 	unsigned step, DOY;
-	long emergence, today;
+	long emergence; //, today;
 
 	Lintul3Model(Lintul3Crop c, Lintul3Soil s, Lintul3Control t, LintulWeather w) : crop(c), soil(s), control(t), wth(w) { };
 	

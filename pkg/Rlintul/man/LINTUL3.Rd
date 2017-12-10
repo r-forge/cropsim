@@ -5,6 +5,9 @@
 \alias{lintul3_soil}
 \alias{lintul3_control}
 
+\alias{readLIN3output}
+
+
 \title{
 LINTUL3 crop growth model
 }
@@ -34,6 +37,8 @@ matrix
 
 
 \examples{
+
+\dontrun{
 w <- default_weather()
 wth <- subset(w, date > as.Date('2012-01-01'))
 crop <- lintul1_crop()
@@ -55,7 +60,7 @@ x = lintul3(crop, wth, soil, contr)
 
 # test LINTUL3
 
-wf <- system.file("weather/Netherlands_Wageningen.csv", package="meteor")
+wf <- system.file("extdata/Netherlands_Wageningen.csv", package="meteor")
 wth <- read.csv(wf)
 wth$date <- as.Date(wth$date)
 wth$srad <- wth$srad / 1000
@@ -98,6 +103,7 @@ s4 <- readLIN3output(f4)
 x4 <- lintul3(crop, wth, soil, contr)
 plot(s4[,'DAY'], s4[,'LAI'], type='l')
 points(x4[, 'step']+1, x4[, 'LAI'])
+}
 }
 
 

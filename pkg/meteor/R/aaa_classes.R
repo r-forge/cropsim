@@ -1,4 +1,10 @@
 
+if (!isGeneric("crop<-")) { setGeneric("crop<-", function(x, value) standardGeneric("crop<-")) }	
+if (!isGeneric("soil<-")) { setGeneric("soil<-", function(x, value) standardGeneric("soil<-")) }	
+if (!isGeneric("control<-")) { setGeneric("control<-", function(x, value) standardGeneric("control<-")) }	
+if (!isGeneric("weather<-")) { setGeneric("weather<-", function(x, value) standardGeneric("weather<-")) }	
+
+
 setClass("Weather",
 	slots = c(data = "data.frame", 
 	

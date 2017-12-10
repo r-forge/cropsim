@@ -18,9 +18,11 @@ setMethod("run", signature('Rcpp_Lintul2Model'),
 		x$run()
 		out <- x$out
 		date <- as.Date(x$control$emergence, origin="1970-01-01") + out$step
-		v <- data.frame(date, out$DLV, out$LAI, out$TSUM, out$WRT, out$WLV, out$WLVD, out$WLVG, out$WST, out$WSO)	
-		colnames(v) <- c("date", "DLV", "LAI", "TSUM", "WRT", "WLV", "WLVD", "WLVG", "WST", "WSO")
-		v$Wtot <- v$WRT + v$WLVD + v$WLVG + v$WST + v$WSO
+		Wtot <- out$WRT + out$WLVD + out$WLVG + out$WST + out$WSO
+		v <- data.frame(date, out$TSUM, out$LAI, out$WRT, out$WLV, out$WLVD, out$WLVG, out$WST, out$WSO, Wtot,
+							  out$EVAP, out$TRAN, out$TRANRF, out$WA, out$WC, out$RWA)
+		colnames(v) <- c("date", "TSUM", "LAI", "WRT", "WLV", "WLVD", "WLVG", "WST", "WSO", "Wtot",
+							"EVAP", "TRAN", "TRANRF", "WA", "WC", "RWA")
 		v
 	}
 )
@@ -51,15 +53,12 @@ setMethod("soil<-", signature('Rcpp_Lintul2Model', 'list'),
 )
 
 
-
 setMethod("weather<-", signature('Rcpp_Lintul2Model', 'list'), 
 	function(x, value) {
 		parameters <- c("date", "srad", "tmin", "tmax", "prec", "wind", "vapr")
 		nms <- names(value)
 		if (!all(parameters %in% nms)) stop(paste("parameters missing:", paste(parameters[!(parameters %in% nms)], collapse=", ")))
-		value <- value[parameters]
-		nms <- names(value)
-		lapply(1:length(value), function(i) eval(parse(text = paste0("x$weather$", nms[i], " <- ", value[i]))))
+		x$setWeather(value$date, value$tmin, value$tmax, value$srad, value$prec, value$wind, value$vapr)
 		return(x)
 	}
 )

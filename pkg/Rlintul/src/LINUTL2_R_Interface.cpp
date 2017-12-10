@@ -94,7 +94,6 @@ NumericMatrix lintul2(List crop, DataFrame weather, List soil, List control) {
 	for( size_t i=1; i<nr; i++){
 		out(i,0) = m.out.step[i];
 		out(i,1) = m.out.TSUM[i];
-		out(i,2) = m.out.DLV[i];
 		out(i,3) = m.out.LAI[i];
 		out(i,4) = m.out.WLVG[i];
 		out(i,5) = m.out.WLVD[i];
@@ -109,7 +108,7 @@ NumericMatrix lintul2(List crop, DataFrame weather, List soil, List control) {
 		out(i,14) = m.out.WC[i];	
 		out(i,15) = m.out.RWA[i];	
 	}
-	colnames(out) = CharacterVector::create("step", "Tsum", "DLV", "LAI", "WLVG", "WLVD", "WLV", "WST", "WRT", "WSO", "EVAP", "TRAN", "TRANRF", "WA", "WC", "RWA");		
+	colnames(out) = CharacterVector::create("step", "Tsum", "LAI", "WLVG", "WLVD", "WLV", "WST", "WRT", "WSO", "EVAP", "TRAN", "TRANRF", "WA", "WC", "RWA");		
 	return out;
 	
 }

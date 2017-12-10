@@ -40,16 +40,23 @@ setMethod("crop<-", signature('Rcpp_Lintul1Model', 'list'),
 )
 
 
+setMethod("weather<-", signature('Rcpp_Lintul1Model', 'list'), 
+	function(x, value) {
+		parameters <- c("date", "srad", "tmin", "tmax")
+		nms <- names(value)
+		if (!all(parameters %in% nms)) stop(paste("parameters missing:", paste(parameters[!(parameters %in% nms)], collapse=", ")))
+		x$setWeather(value$date, value$tmin, value$tmax, value$srad, value$prec, value$wind, value$vapr)
+		return(x)
+	}
+)
+
 
 setMethod("weather<-", signature('Rcpp_Lintul1Model', 'list'), 
 	function(x, value) {
 		parameters <- c("date", "srad", "tmin", "tmax")
-		#parameters <- c("srad", "tmin", "tmax")
 		nms <- names(value)
 		if (!all(parameters %in% nms)) stop(paste("parameters missing:", paste(parameters[!(parameters %in% nms)], collapse=", ")))
-		value <- value[parameters]
-		nms <- names(value)
-		lapply(1:length(value), function(i) eval(parse(text = paste0("x$weather$", nms[i], " <- ", value[i]))))
+		x$setWeather(value$date, value$tmin, value$tmax, value$srad)
 		return(x)
 	}
 )

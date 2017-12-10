@@ -12,7 +12,6 @@ LINTUL is a relatively simple crop growth simulation model
 
 \usage{
 lintul0(crop, weather, control)
-lintul0_crop()
 }
 
 \arguments{
