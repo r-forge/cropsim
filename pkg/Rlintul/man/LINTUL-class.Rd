@@ -1,4 +1,4 @@
-\name{QueftsModel-class}
+\name{LINTUL-classes}
 
 \docType{class}
 

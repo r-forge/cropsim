@@ -24,7 +24,7 @@ lintul1_crop()
 \S4method{crop}{Rcpp_Lintul1Model}(x)<-value
 \S4method{control}{Rcpp_Lintul1Model}(x)<-value
 \S4method{weather}{Rcpp_Lintul1Model}(x)<-value
-\S4method{run}{Rcpp_Lintul2Model}(x, ...)
+\S4method{run}{Rcpp_Lintul1Model}(x, ...)
 }
 
 
