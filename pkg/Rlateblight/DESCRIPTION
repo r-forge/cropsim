@@ -1,0 +1,11 @@
+Package: Rlateblight
+Type: Package
+Title: Potato late blight models
+Version: 0.1-0
+Date: 2017-12-09
+Depends: methods, meteor
+Author: Robert J. Hijmans
+Maintainer: Robert J. Hijmans <r.hijmans@gmail.com>
+Description: Potato late blight is an economically important disease caused by oomycete photophthora infestans. This package provides late blight forecast models a dynamic simulation model of late blight.
+License: GPL-3
+LazyLoad: yes
