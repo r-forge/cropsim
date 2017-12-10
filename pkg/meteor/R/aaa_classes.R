@@ -3,6 +3,7 @@ if (!isGeneric("crop<-")) { setGeneric("crop<-", function(x, value) standardGene
 if (!isGeneric("soil<-")) { setGeneric("soil<-", function(x, value) standardGeneric("soil<-")) }	
 if (!isGeneric("control<-")) { setGeneric("control<-", function(x, value) standardGeneric("control<-")) }	
 if (!isGeneric("weather<-")) { setGeneric("weather<-", function(x, value) standardGeneric("weather<-")) }	
+if (!isGeneric("run")) { setGeneric("run", function(x, ...) standardGeneric("run")) }	
 
 
 setClass("Weather",

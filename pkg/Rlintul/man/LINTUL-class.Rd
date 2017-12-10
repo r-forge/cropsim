@@ -24,6 +24,16 @@
 \alias{Rcpp_Lintul2Output}
 \alias{Rcpp_Lintul2Model}
 
+\alias{Lintul3Crop}
+\alias{Lintul3Soil}
+\alias{Lintul3Control}
+\alias{Lintul3Model}
+\alias{Lintul3Output}
+\alias{Rcpp_Lintul3Crop}
+\alias{Rcpp_Lintul3Soil}
+\alias{Rcpp_Lintul3Control}
+\alias{Rcpp_Lintul3Output}
+\alias{Rcpp_Lintul3Model}
 
 \title{LINTUL model classes}
 

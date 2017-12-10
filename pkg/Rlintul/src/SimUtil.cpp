@@ -6,7 +6,32 @@ License: GNU General Public License (GNU GPL) v. 2
 */
 
 #include <vector>
-#include <algorithm>
+
+
+// based on civil_from_days, with changes by RH to return DOY instead
+// source: http://howardhinnant.github.io/date_algorithms.html#civil_from_days
+// Returns year/month/day triple in civil calendar
+// Preconditions:  z is number of days since 1970-01-01 and is in the range:
+//                   [numeric_limits<Int>::min(), numeric_limits<Int>::max()-719468].
+unsigned doy_from_days(long z) {
+    z += 719468;
+    const long era = (z >= 0 ? z : z - 146096) / 146097;
+    const unsigned doe = static_cast<unsigned>(z - era * 146097);          // [0, 146096]
+    const unsigned yoe = (doe - doe/1460 + doe/36524 - doe/146096) / 365;  // [0, 399]
+    const long y = static_cast<long>(yoe) + era * 400;
+    const unsigned doy = doe - (365*yoe + yoe/4 - yoe/100);                // [0, 365]
+    const unsigned mp = (5*doy + 2)/153;                                   // [0, 11]
+   // const unsigned d = doy - (153*mp+2)/5 + 1;                             // [1, 31]
+    const unsigned m = mp + (mp < 10 ? 3 : -9);                            // [1, 12]
+
+	// return std::tuple<Int, unsigned, unsigned>(y + (m <= 2), m, d);
+	// From here, an addition to also return DOY (by RH)
+	long yy = y + (m <= 2);
+	bool isleap = yy % 4 == 0 && (yy % 100 != 0 || yy % 400 == 0);
+	return (doy + 59 + isleap) % (365 + isleap) + 1;
+}
+
+
 
 double clamp(double min, double max, double v) {
   if (v < min) {
@@ -115,40 +140,8 @@ double oldapprox(std::vector<double> xy, double x) {
 }	
 
 
-
-/*
-std::vector<std::vector<double> > matrix(int nrow, int ncol) {
-  vector<vector<double> > mat;
-  mat.resize(nrow);
-  for (int i = 0; i < nrow; i++)
-    mat[i].resize(ncol);
-  return(mat);
-} */
-
-
 std::vector<std::vector<double> > matrix(int nrow, int ncol) {
 	std::vector<std::vector<double> > m (nrow, std::vector<double>(ncol));
 	return(m);
-}
-
-
-
-double min3(double a, double b, double c) {
-  return( std::min(std::min(a, b), c) );
-}
-
-double min4(double a, double b, double c, double d) {
-	double tmp = std::min(a, b);
-	return( min3(tmp, c, d) );
-}
-
-
-double max3(double a, double b, double c) {
-  return( std::max(std::max(a, b), c) );
-}
-
-double max4(double a, double b, double c, double d) {
-	double tmp = std::max(a, b);
-	return( max3(tmp, c, d) );
 }
 

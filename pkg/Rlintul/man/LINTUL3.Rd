@@ -23,10 +23,15 @@ LINTUL3 simulates the growth of a crop as function of intercepted radiation, tem
 }
 
 \usage{
-lintul3(crop, weather, soil, control)
+lintul3(crop, soil, control, weather)
 lintul3_crop(name)
 lintul3_soil(name='p1')
 lintul3_control()
+\S4method{crop}{Rcpp_Lintul3Model}(x)<-value
+\S4method{soil}{Rcpp_Lintul3Model}(x)<-value
+\S4method{control}{Rcpp_Lintul3Model}(x)<-value
+\S4method{weather}{Rcpp_Lintul3Model}(x)<-value
+\S4method{run}{Rcpp_Lintul3Model}(x, ...)
 }
 
 
@@ -59,6 +64,8 @@ contr$PL <- FALSE
 contr$emergence <- as.Date('2012-04-01')
 contr$start <- contr$emergence - 10
 
+\dontrun{
+
 x <- lintul3(crop, soil, contr, wth)
 z <- run(x)
 
@@ -66,7 +73,6 @@ z <- run(x)
 x$run()
 x$out
 
-\dontrun{
 
 # test LINTUL3
 

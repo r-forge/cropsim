@@ -81,6 +81,8 @@ using namespace std;
 ------------------------------------------------------------------------
 */ 
 
+
+
 void Lintul3Model::crop_rates() {
 
 
@@ -241,7 +243,7 @@ void Lintul3Model::crop_rates() {
 		
 		double RDRSH = std::max(0., crop.RDRSHM * (crop.LAI - crop.LAICR) / crop.LAICR);
 		double RDRDRY = (1 - crop.TRANRF) * crop.RDRL;
-		double RDR  = max3(RDRDV, RDRSH, RDRDRY);
+		double RDR  = maxvalue(std::vector<double> {RDRDV, RDRSH, RDRDRY});
 		
 		double DLAINS, DLVNS;
 		if (crop.NPKI < 1) {
@@ -441,7 +443,7 @@ void Lintul3Model::crop_ratesNPK() {
 		crop.NNI = clamp(TINY, 1.0, ((NFGMR-NRMR)/NOTNUL(NOPTMR-NRMR)));
 		crop.PNI = clamp(TINY, 1.0, ((PFGMR-PRMR)/NOTNUL(POPTMR-PRMR)));
 		crop.KNI = clamp(TINY, 1.0, ((KFGMR-KRMR)/NOTNUL(KOPTMR-KRMR)));
-		crop.NPKI = min3(crop.NNI, crop.PNI, crop.KNI);
+		crop.NPKI = minvalue(std::vector<double> {crop.NNI, crop.PNI, crop.KNI} );
 	} else {
 		crop.NNI = 0.0;
 		crop.PNI = 0.0;

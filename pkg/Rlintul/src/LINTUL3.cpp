@@ -234,11 +234,8 @@ void Lintul3Model::weather_step() {
 	wth.CO2 = 360;
 
 // calculate daylength DAYL,DAYLP,SINLD,COSLD
+	DOY = doy_from_days(control.start + step);
 
-// FIX THIS:
-	//DOY = today.dayofyear();
-    DOY = 1;
-	
 	std::vector<double> astro = ASTRO(DOY, wth.latitude);
 	wth.DAYLP = astro[1];
 
@@ -433,7 +430,7 @@ void Lintul3Model::model_initialize() {
 	step = 0;
 	crop_initialize();
 	soil_initialize();
-
+	
 	for (size_t i=0; i<wth.date.size(); i++) {
 		// need to check for out of bounds times (before of after start)
 		if (wth.date[i] == control.start) {
@@ -579,7 +576,7 @@ void Lintul3Model::soil_rates() {
 	} else {
 		soil.DSLR = soil.DSLR + 1.;
 		double EVMAXT = EVMAX * clamp(0., 1., (sqrt (soil.DSLR) - sqrt(soil.DSLR - 1)) * soil.CFEV);
-		soil.EVA = std::max(0., min3(EVMAX, EVMAXT + PERC, 10 * (soil.SMACT-soil.SMDRY)));
+		soil.EVA = std::max(0., minvalue(std::vector<double> {EVMAX, EVMAXT + PERC, 10 * (soil.SMACT-soil.SMDRY)}));
 	}
 
 // Water capacity of rooted and lower zone, at field capacity and at soil saturation (cm)
