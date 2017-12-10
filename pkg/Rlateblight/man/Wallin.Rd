@@ -43,7 +43,7 @@ Wallin, J. R., and P. E. Waggoner. 1950. The influence of climate on the develop
 
 
 \examples{
-wth <- getWthFile(system.file("weather/daily_weather_28368.nasa", package = "cropsim"))
+wth <- getWthFile(system.file("extdata/daily_weather_28368.nasa", package = "meteor"))
 res <- Wallin(wth)
 
 }

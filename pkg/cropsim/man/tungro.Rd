@@ -36,7 +36,7 @@ Ling, K.C., and Tiongco, E.R., Effect of temperature on the transmission of rice
 
 
 \examples{
-wth <- getWthFile(system.file("weather/daily_weather_28368.nasa", package = "cropsim"))
+wth <- getWthFile(system.file("extdata/daily_weather_28368.nasa", package = "meteor"))
 res <- tungro(wth, duration=120, onset=25)
 plot(res)
 }

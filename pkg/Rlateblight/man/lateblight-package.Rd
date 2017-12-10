@@ -1,6 +1,7 @@
-\name{lateblight-package}
-\alias{lateblight-package}
-\alias{lateblight}
+\name{Rlateblight-package}
+\alias{Rlateblight-package}
+\alias{Rlateblight}
+
 \docType{package}
 
 \title{

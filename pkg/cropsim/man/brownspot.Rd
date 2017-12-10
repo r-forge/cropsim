@@ -39,7 +39,7 @@ Waggoner. P.E., Horsfall, J.G., and Lukens, R.J. 1972. EPIMAY. A Simulator pf So
 
 
 \examples{
-wth <- getWthFile(system.file("weather/daily_weather_28368.nasa", package = "cropsim"))
+wth <- getWthFile(system.file("extdata/daily_weather_28368.nasa", package = "meteor"))
 res <- brownSpot(wth, onset=20, duration=120)
 plot(res, type=2)
 }

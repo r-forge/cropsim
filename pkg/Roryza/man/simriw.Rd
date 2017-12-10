@@ -37,7 +37,7 @@ simriwCultivar: An object of class 'SIMRIWcultivar'
 \author{ Robert J. Hijmans }
 
 \examples{
-wth <- getWthFile(system.file("weather/daily_weather_28368.nasa", package = "cropsim"))
+wth <- getWthFile(system.file("extdata/daily_weather_28368.nasa", package = "meteor"))
 cv <- simriwCultivar('Nipponbare')
 sim <- simriw(wth, cv, startday='2000-05-15')
 

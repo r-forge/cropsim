@@ -42,7 +42,7 @@ Medalla, E. 1992. Characterization of resistance of IR cultivars to tow races of
 
 
 \examples{
-wth <- getWthFile(system.file("weather/daily_weather_28368.nasa", package = "cropsim"))
+wth <- getWthFile(system.file("extdata/daily_weather_28368.nasa", package = "meteor"))
 res <- bactBlight(wth, onset=30, duration=120)
 plot(res)
 }

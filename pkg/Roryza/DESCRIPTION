@@ -1,0 +1,11 @@
+Package: Rice
+Type: Package
+Title: Dynamic simulation models of rice (Oryza sativa)
+Version: 0.1-0
+Date: 2017-12-09
+Depends: methods, meteor
+Author: Robert J. Hijmans
+Maintainer: Robert J. Hijmans <r.hijmans@gmail.com>
+Description: This package implements dynamic simulation models of rice (Oryze sativa).
+License: GPL-3
+LazyLoad: yes

@@ -46,7 +46,7 @@ Gross, M.K., Santini, J.B., Tikhonova, I. and Latin, R. 1998. The influence of t
 \seealso{ \code{\link[cropsim]{brownspot}}, \link[cropsim]{leafblast}  }
 
 \examples{
-wth <- getWthFile(system.file("weather/daily_weather_28368.nasa", package = "cropsim"))
+wth <- getWthFile(system.file("extdata/daily_weather_28368.nasa", package = "meteor"))
 res <- sheathBlight(wth, duration=120, onset=30)
 plot(res)
 }
