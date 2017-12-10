@@ -23,8 +23,7 @@ readFSEwth <- function(f) {
 
 
 
-
-writeFSEwth <- function(w, country='AAA', station=1, lon=0, lat=0, elev=0,  path=getwd(), ... ) {
+.writeFSEwth <- function(w, country='AAA', station=1, lon=0, lat=0, elev=0,  path=getwd(), ... ) {
 	
 	if (isTRUE(list(...)$dotsboundlat)) {
 	  if ( lat > 60) { lat <- 59 }

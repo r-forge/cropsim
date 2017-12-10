@@ -47,8 +47,8 @@
 	#colnames(d) <- cn
 	colnames(d) <- c("year", "doy", "erad", "srad", "lwav", "tavg", "tmin", "tmax", "rhum", "tdew", "prec", "wind")	
 	d <- data.frame(d)
-	rhnx <- rhMinMax2(d)
-	d <- cbind(d, rhnx)
+	#rhnx <- rhMinMax2(d)
+	#d <- cbind(d, rhnx)
 	
 	d$date <- as.Date(d$doy, origin=paste(d$year-1, "-12-31", sep=''))
 	d$vapr <- d$rhum * .SVP(d$tavg) / 1000
@@ -91,7 +91,7 @@
 
 
 
-wthPower <- function(lon, lat, folder=file.path(getwd(), 'power'), ...) {
+.wthPower <- function(lon, lat, folder=file.path(getwd(), 'power'), ...) {
 	cell <- .cellFromLL(lon, lat)
 	if (is.na(cell)) {	stop("invalid coordinates") }
 	xy <- .llFromCell(cell)
@@ -228,12 +228,13 @@ wthPower <- function(lon, lat, folder=file.path(getwd(), 'power'), ...) {
 		colnames(v) <- nicevars
 	}
 	
-	rhnx <- rhMinMax2(v) 
-	vapr <- v$rhum * .SVP(v$tmp) / 1000     # 100 for % and 10 to go from hPa to kPa
-	rh <- cbind(v$rhum, rhnx, vapr)
-	colnames(rh) <- c("rh", "rhmin", "rhmax", "vapr")
-	i <- which(colnames(v) == 'rhum')
-	v <- cbind(v[, -i], rh)
+#	rhnx <- rhMinMax2(v) 
+	v$vapr <- v$rhum * .SVP(v$tmp) / 1000     # 100 for % and 10 to go from hPa to kPa
+#	rh <- cbind(v$rhum, rhnx, vapr)
+#	colnames(rh) <- c("rh", "rhmin", "rhmax", "vapr")
+#	i <- which(colnames(v) == 'rhum')
+#	v <- cbind(v[, -i], rh)
+
 	return(v)
 	
 #date <- dateFromDoy(v[,'doy'], v[,'year'])
