@@ -49,26 +49,24 @@ matrix
 
 \examples{
 
-\dontrun{
-w <- default_weather()
-wth <- subset(w, date > as.Date('2012-01-01'))
-crop <- lintul1_crop()
-str(crop)
-
-contr <- list(emergence=as.Date('2012-04-01'), long_output=FALSE)
-
+library(Rlintul)
+wth <- default_weather()
 crop <- lintul3_crop('POTATO')
 soil <- lintul3_soil(name='p1')
+
 contr <- lintul3_control()
 contr$PL <- FALSE
 contr$emergence <- as.Date('2012-04-01')
 contr$start <- contr$emergence - 10
-#contr$long_output <- TRUE
-x <- lintul3(crop, wth, soil, contr)
+
+x <- lintul3(crop, soil, contr, wth)
 z <- run(x)
 
+#or 
 x$run()
-x
+x$out
+
+\dontrun{
 
 # test LINTUL3
 

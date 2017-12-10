@@ -104,14 +104,14 @@ void Lintul3Model::crop_rates() {
 	if (crop.EMERG) {
 	
 //// Development rate /////
-		crop.DTSUM = std::max(0., LINT(crop.DTSMTB, TMPA));
+		crop.DTSUM = std::max(0., approx(crop.DTSMTB, TMPA));
 		double DTEFF = max(0., TMPA - crop.TBASE);
 
 
 // Reduction of development rate until flowering by  day length
 		double RDAYL;
 		if ((crop.IDSL == 1) & (! crop.FLOW)) {
-			RDAYL = LINT(crop.PHOTTB, wth.DAYLP);
+			RDAYL = approx(crop.PHOTTB, wth.DAYLP);
 		} else {
 			RDAYL = 1;
 		}
@@ -131,22 +131,22 @@ void Lintul3Model::crop_rates() {
 //// Radiation use efficiency ////
 
 // Radiation use efficiency as dependent on development stage (g DM MJ-1)
-		crop.RUE = LINT(crop.RUETB, crop.DVS);
+		crop.RUE = approx(crop.RUETB, crop.DVS);
 
 		
 // Correction of radiation use efficiency for change in atmospheric CO2 concentration (-)
-		double RCO = LINT(crop.COTB, wth.CO2);
+		double RCO = approx(crop.COTB, wth.CO2);
 		
 // Reduction of radiation use efficiency for day-time temperature and for low minimum temperature
 		double DTEMP = wth.tmax[time] - 0.25 * (wth.tmax[time] - wth.tmin[time]);
-		double RTMP = LINT(crop.TMPFTB, DTEMP) * LINT(crop.TMNFTB, wth.tmin[time]);
+		double RTMP = approx(crop.TMPFTB, DTEMP) * approx(crop.TMNFTB, wth.tmin[time]);
 // Correction of RUE for both non-optimal temperatures and atmospheric CO2
 		crop.RUE = crop.RUE * RTMP * RCO;
 
 		
 
 //// GROWTH /// 
-		double KDIF = LINT(crop.KDIFTB, crop.DVS);
+		double KDIF = approx(crop.KDIFTB, crop.DVS);
 		crop.PARINT = PAR * (1- exp(-KDIF * crop.LAI)); 
 
 // Fractional light interception [-] for resp. PAR and total radiation
@@ -169,7 +169,7 @@ void Lintul3Model::crop_rates() {
 	
 
 // Specific Leaf area(ha/kg), as dependent on nutrient stress.
-		double SLA = LINT(crop.SLATB, crop.DVS) * exp(-crop.NSLA * (1. - crop.NPKI));
+		double SLA = approx(crop.SLATB, crop.DVS) * exp(-crop.NSLA * (1. - crop.NPKI));
 	// CALL GLA(DAY,EMERG,DTEFF,LAII,RGRLAI,DELT,SLA,LAI,GLV,NLAI,DVS,TRANRF,NPKI,GLAI);
 	// daily increase of leaf area index (ha leaf area/ ha ground area/ d)                          *
 
@@ -177,8 +177,8 @@ void Lintul3Model::crop_rates() {
 //// Death rates ////	
 		
 // Relative death rate of roots (d-1)
-		double RDRRT = LINT(crop.RDRRTB, crop.DVS);
-		double RDRST = LINT(crop.RDRSTB, crop.DVS);
+		double RDRRT = approx(crop.RDRRTB, crop.DVS);
+		double RDRST = approx(crop.RDRSTB, crop.DVS);
 		
 		if (crop.DVS < crop.DVSDR){
 			crop.DRRT =  0.;
@@ -191,10 +191,10 @@ void Lintul3Model::crop_rates() {
 
 //// Partitioning ////		
 // Biomass partitioning functions under non-stressed situations (-)
-		double FRT = LINT(crop.FRTB, crop.DVS );
-		double FLV   = LINT(crop.FLTB, crop.DVS );
-		double FST   = LINT(crop.FSTB, crop.DVS);
-		double FSO   = LINT(crop.FOTB, crop.DVS );
+		double FRT = approx(crop.FRTB, crop.DVS );
+		double FLV   = approx(crop.FLTB, crop.DVS );
+		double FST   = approx(crop.FSTB, crop.DVS);
+		double FSO   = approx(crop.FOTB, crop.DVS );
 	
 // Root growth (cm d-1)
 		crop.RR = min(crop.RRI * INSW(crop.TRANRF - 0.01, 0., 1.),  soil.RDM - crop.RD);
@@ -227,7 +227,7 @@ void Lintul3Model::crop_rates() {
 //// Death rates ////
 	
 // Relative death rate of leaves due to senescence/ageing as dependent on mean daily temperature (d-1)
-		double RDRTMP = LINT(crop.RDRLTB, TMPA);	
+		double RDRTMP = approx(crop.RDRLTB, TMPA);	
 
 // CALL DEATHL(DAY,EMERG,DVS,DVSDLT,RDRTMP,RDRSHM,RDRL,TRANRF,LAI, LAICR,WLVG,RDRNS,NPKI,SLA,RDRDV,RDRSH,RDR,DLV,DLVS,DLVNS,DLAIS,DLAINS,DLAI)
 // The relative death rate (d-1) of leaves due to age,shading and drought and due to nutrient (NPK) stress and the death rate of leaves in total (kg ha-1 d-1)                   *
@@ -372,9 +372,9 @@ void Lintul3Model::crop_ratesNPK() {
 
 // Maximum N/P/K concentration in the leaves, from which the N/P/K conc. in the
 // stem and roots are derived, as a function of development stage (kg N/P/K kg-1 DM)  
-	double NMAXLV = LINT(crop.NMXLV, crop.DVS);
-	double PMAXLV = LINT(crop.PMXLV, crop.DVS);
-	double KMAXLV = LINT(crop.KMXLV, crop.DVS);
+	double NMAXLV = approx(crop.NMXLV, crop.DVS);
+	double PMAXLV = approx(crop.PMXLV, crop.DVS);
+	double KMAXLV = approx(crop.KMXLV, crop.DVS);
 	
 // N/P/K concentration in above-ground living biomass (kg N/P/K kg-1 DM)
 //	double NTAC = NTAG/ crop.TAGBG;

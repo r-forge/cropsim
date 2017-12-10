@@ -155,7 +155,7 @@ std::vector<double> PENMAN(int DOY, double DAYL, double sinLD, double cosLD, dou
       ET0 = std::max(0.,ET0);
 
 //*---- correction of potential evapo-transpiration for atmospheric CO2 concentration
-      double ETC = ET0 * LINT(FPENMTB, CO2);
+      double ETC = ET0 * approx(FPENMTB, CO2);
 
 	return std::vector<double> {E0, ES0, ETC, AVRAD};
 }
@@ -264,18 +264,18 @@ void Lintul3Model::crop_initialize() {
 	crop.TDW = crop.TDWI;
 	crop.DVS = crop.DVSI;
 	crop.DVR = 0;
-	crop.WRTI =  LINT (crop.FRTB, crop.DVSI) * crop.TDW;
+	crop.WRTI =  approx (crop.FRTB, crop.DVSI) * crop.TDW;
 	crop.WRT = crop.WRTI;
 	crop.TAGB = crop.TDW - crop.WRT;
-	crop.WLVGI = LINT (crop.FLTB, crop.DVSI) * crop.TAGB;
+	crop.WLVGI = approx (crop.FLTB, crop.DVSI) * crop.TAGB;
 	crop.WLVG = crop.WLVGI;
-	crop.LAII = crop.WLVGI * LINT(crop.SLATB, crop.DVSI);
+	crop.LAII = crop.WLVGI * approx(crop.SLATB, crop.DVSI);
 	crop.LAI = crop.LAII;
 	crop.RLAI = 0;
 	crop.WLVD = 0;
-	crop.WSTI =  LINT (crop.FSTB, crop.DVSI) * crop.TAGB;
+	crop.WSTI =  approx (crop.FSTB, crop.DVSI) * crop.TAGB;
 	crop.WST = crop.WSTI;
-	crop.WSOI =  LINT (crop.FOTB, crop.DVSI) * crop.TAGB;
+	crop.WSOI =  approx (crop.FOTB, crop.DVSI) * crop.TAGB;
 	crop.WSO = crop.WSOI;
 	crop.WSTD = 0;
 	crop.WRTD = 0;
@@ -302,7 +302,7 @@ void Lintul3Model::crop_initialize() {
 	crop.ATK = 0;
 	crop.GTSUM = 0;
 	crop.RD = crop.RDI;
-	crop.NMAXLVI = LINT (crop.NMXLV, crop.DVSI);
+	crop.NMAXLVI = approx (crop.NMXLV, crop.DVSI);
 	crop.NMAXSTI = crop.LSNR * crop.NMAXLVI;
 	crop.NMAXRTI = crop.LRNR * crop.NMAXLVI;
 	crop.ANLVI = crop.NMAXLVI * crop.WLVGI;
@@ -318,7 +318,7 @@ void Lintul3Model::crop_initialize() {
 	crop.NLOSSS = 0;
 	crop.NUPTT = 0;
 	crop.NFIXTT = 0;
-	crop.PMAXLVI = LINT (crop.PMXLV, crop.DVSI);
+	crop.PMAXLVI = approx (crop.PMXLV, crop.DVSI);
 	crop.PMAXSTI = crop.LSPR * crop.PMAXLVI;
 	crop.PMAXRTI = crop.LRPR * crop.PMAXLVI;
 	crop.APLVI = crop.PMAXLVI * crop.WLVGI;
@@ -334,7 +334,7 @@ void Lintul3Model::crop_initialize() {
 	crop.PLOSSS = 0;
 	crop.PUPTT = 0;
 
-	crop.KMAXLVI = LINT (crop.KMXLV, crop.DVSI);
+	crop.KMAXLVI = approx (crop.KMXLV, crop.DVSI);
 	crop.KMAXSTI = crop.LSKR * crop.KMAXLVI;
 	crop.KMAXRTI = crop.LRKR * crop.KMAXLVI;
 	crop.AKLVI = crop.KMAXLVI * crop.WLVGI;
@@ -623,7 +623,7 @@ void Lintul3Model::soil_rates() {
 		control.DIRRO = 0.;
 	} else if (control.IRRI == 2) {
 // Actual effective irrigation from table
-		control.DIRR1= LINT (control.IRRTAB, DOY) + control.DIRRO;
+		control.DIRR1= approx (control.IRRTAB, DOY) + control.DIRRO;
 		control.DIRR= std::min(3., control.DIRR1);
 		control.DIRRN = control.DIRR1 - control.DIRR;
 // Irrigation left for the next day

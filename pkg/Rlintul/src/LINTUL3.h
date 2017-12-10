@@ -20,7 +20,7 @@ struct Lintul3Control {
 	int IOPT;
 	int IDPL, DAYPL;
 	bool PL;
-	std::vector<std::vector<double> > IRRTAB, FERNTAB, FERPTAB, FERKTAB;
+	std::vector<double> IRRTAB, FERNTAB, FERPTAB, FERKTAB;
 	int IRRI;
 	double  RDMCR;
 	double DIRROLD, DIRRO, DIRRN, DIRR, DIRR1;  
@@ -35,7 +35,6 @@ struct Lintul3Soil {
 	double PMINS, NMINS, KMINS;
 		//fraction of soil mineral N coming available per day [day-1]
 	double RTNMINS, RTPMINS, RTKMINS;
-	
 	// Recovery fraction of applied fertiliser N, P and K
 	std::vector<double> NRFTAB, KRFTAB, PRFTAB; 
 	
@@ -69,8 +68,8 @@ struct Lintul3Crop {
 	double RPFRT, RPFST, RRI, SPA, TBASE, TBASEM, TCKT, TCNT, TCPT, TDWI, TEFFMX, TSUM1, TSUM2, TSUMEM;
 	double TRA, TRANRF;
 	int RDSINT, IDSL;
-	std::vector<std::vector<double> >  COTB, DTSMTB, FLTB, FOTB, FRTB,  FSTB, KDIFTB, KMXLV, NMXLV; 
-	std::vector<std::vector<double> >  PHOTTB, PMXLV, RDRLTB, RDRRTB, RDRSTB, RUETB, SLATB, SSATB, TMNFTB, TMPFTB;
+	std::vector<double> COTB, DTSMTB, FLTB, FOTB, FRTB,  FSTB, KDIFTB, KMXLV, NMXLV; 
+	std::vector<double> PHOTTB, PMXLV, RDRLTB, RDRRTB, RDRSTB, RUETB, SLATB, SSATB, TMNFTB, TMPFTB;
 
 	double PMAXSO, KMAXSO, NMAXSO;
 
