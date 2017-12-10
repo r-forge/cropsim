@@ -3,20 +3,42 @@
 #include <string>
 
 
+struct Lintul3Output {
+	std::vector<unsigned> step;
+	std::vector<double> TSUM, DVS, LAI, WLVD, WLVG, WLV, WST, WRT, WSO, ES0, ETC, TRANRF, GLAI, 
+						NNI, NPKI, NMINT, NMIN, NUPTT, NLIVT, NLOSST, NFIXTT,  
+									PMINT, PMIN, PUPTT, PLIVT, PLOSST, 
+									KMINT, KMIN, KUPTT, KLIVT, KLOSST;
+};
+
+
+
+
 struct Lintul3Control {
 	long start, emergence;
 	unsigned maxdur;
 	int IOPT;
 	int IDPL, DAYPL;
 	bool PL;
-	std::vector<std::vector<double> > IRRTAB, FERNTAB, FERPTAB, PRFTAB, FERKTAB, KRFTAB, NRFTAB;
+	std::vector<std::vector<double> > IRRTAB, FERNTAB, FERPTAB, FERKTAB;
 	int IRRI;
-	double  RDMCR, NMINS, RTNMINS, PMINS, RTPMINS, KMINS, RTKMINS;
+	double  RDMCR;
 	double DIRROLD, DIRRO, DIRRN, DIRR, DIRR1;  
 }; 
 
 
 struct Lintul3Soil {
+//PARAMETERS
+	double SMDRY, SMW, SMFC, SM0, SMI, SMLOWI, RDMSO, RUNFR, CFEV, KSUB, CRAIRC;
+	// Soil N, P and K mineralization
+		// total mineral soil Npk available at start of growth period [kg/ha]
+	double PMINS, NMINS, KMINS;
+		//fraction of soil mineral N coming available per day [day-1]
+	double RTNMINS, RTPMINS, RTKMINS;
+	
+	// Recovery fraction of applied fertiliser N, P and K
+	std::vector<double> NRFTAB, KRFTAB, PRFTAB; 
+	
 // states	
 	int DSOS;
 	double TDRAIN, TRAIN, TRUNOF, TIRR, TESOIL, TTRANS, WTOT, WTOTL, WTOTN, WTOTLN, WAVT, WAVTL, TWDR, SMACT, SMACTL;
@@ -31,13 +53,9 @@ struct Lintul3Soil {
 	double NMINT, PMINT, KMINT;
 
 	double RKMINS,  RNMINS, RPMINS;
-	double PMINS, NMINS, KMINS;
-
-
 	double NMINI, NMIN, PMINI, PMIN, KMINI, KMIN; 
 
 // params ?	
-	double SMDRY, SMW, SMFC, SM0, SMI, SMLOWI, RDMSO, RUNFR, CFEV, KSUB, CRAIRC;
 
 }; 
 
@@ -89,15 +107,15 @@ struct Lintul3Crop {
 
 struct Lintul3Model {
 
-	void model_run();
 
-	struct Lintul3Crop crop;
-	struct Lintul3Soil soil;
-	struct Lintul3Control control;
-	struct LintulWeather wth;
+	Lintul3Crop crop;
+	Lintul3Soil soil;
+	Lintul3Control control;
+	LintulWeather wth;
+	Lintul3Output out;
 	
-	std::vector<std::vector<double> > out;
-	std::vector<std::string> out_names;
+//	std::vector<std::vector<double> > out;
+//	std::vector<std::string> out_names;
 	
 //	double Teff, Tsum, RainIntercepted;
 	double RAIN, RAIN0, E0, ES0, ETC, TMPA, PAR; 
@@ -106,9 +124,10 @@ struct Lintul3Model {
 	unsigned step, DOY;
 	long emergence; //, today;
 
-	Lintul3Model(Lintul3Crop c, Lintul3Soil s, Lintul3Control t, LintulWeather w) : crop(c), soil(s), control(t), wth(w) { };
+//	Lintul3Model(Lintul3Crop c, Lintul3Soil s, Lintul3Control t, LintulWeather w) : crop(c), soil(s), control(t), wth(w) { };
 	
 	void weather_step();
+	void output_initialize();
 	
 	void crop_initialize();
 	void crop_rates();
@@ -120,8 +139,7 @@ struct Lintul3Model {
 	void soil_states();
 	
 	void model_initialize();	
-		
-		
+	void model_run();
 	void model_output();
 };
 

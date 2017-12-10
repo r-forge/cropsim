@@ -341,14 +341,14 @@ void Lintul3Model::crop_ratesNPK() {
 	double KUPGMR = crop.AKLV + crop.AKST;
 	
 // Fertilizer N/P/K application (kg N/P/K ha-1 d-1) and its recovery fraction (-)--------------*
-	double FERTN  = LINT(control.FERNTAB, DOY);
-	double NRF    = LINT(control.NRFTAB, DOY);
+	double FERTN  = approx(control.FERNTAB, DOY);
+	double NRF    = approx(soil.NRFTAB, DOY);
 	double FERTNS = FERTN * NRF;
-	double FERTP  = LINT(control.FERPTAB, DOY);
-	double PRF    = LINT(control.PRFTAB, DOY);
+	double FERTP  = approx(control.FERPTAB, DOY);
+	double PRF    = approx(soil.PRFTAB, DOY);
 	double FERTPS = FERTP * PRF;
-	double FERTK  = LINT(control.FERKTAB, DOY);
-	double KRF    = LINT(control.KRFTAB, DOY);
+	double FERTK  = approx(control.FERKTAB, DOY);
+	double KRF    = approx(soil.KRFTAB, DOY);
 	double FERTKS = FERTK * KRF;
 	
 // Check on N balance
@@ -559,9 +559,9 @@ void Lintul3Model::crop_ratesNPK() {
 	
 // Soil N/P/K supply (g N m-2 d-1) through mineralization during crop growth
 	if (crop.EMERG) {
-		soil.RNMINS = - std::max(0., std::min(control.RTNMINS * soil.NMINI * NLIMIT, soil.NMIN));
-		soil.RPMINS = - std::max(0., std::min(control.RTPMINS * soil.PMINI * NLIMIT, soil.PMIN));
-		soil.RKMINS = - std::max(0., std::min(control.RTKMINS * soil.KMINI * NLIMIT, soil.KMIN));
+		soil.RNMINS = - std::max(0., std::min(soil.RTNMINS * soil.NMINI * NLIMIT, soil.NMIN));
+		soil.RPMINS = - std::max(0., std::min(soil.RTPMINS * soil.PMINI * NLIMIT, soil.PMIN));
+		soil.RKMINS = - std::max(0., std::min(soil.RTKMINS * soil.KMINI * NLIMIT, soil.KMIN));
 	}
 	
 // Change in total inorganic N/P/K in soil as function of fertilizer input, soil N/P/K mineralization and crop uptake.

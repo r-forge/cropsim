@@ -1,20 +1,11 @@
+/*
+Author Robert Hijmans
+Date: May 2016
+License: GNU General Public License (GNU GPL) v. 2 
 
-/* 
-based on LINTUL5.FOR   by joost wolf . Date of last revision:  August 2011
-This model is the LINTUL-3 fst model but in FORTRAN
-It simulates the growth of a crop as function of intercepted radiation, temperature and
-light use efficiency. Soil water (free drainage) and simple nitrogen, phosphorus and potassium balances
-are simulated and also the effects of water and N, P and K supplies on crop growth.
--------------------------------------------------------------------------
-Copyright 2013. Wageningen University, Plant Production Systems group,
-P.O. Box 430, 6700 AK Wageningen, The Netherlands.
-You may not use this work except in compliance with the Licence.
-You may obtain a copy of the Licence at:
-http://models.pps.wur.nl/content/licence-agreement
-Unless required by applicable law or agreed to in writing, software
-distributed under the Licence is distributed on an "AS IS" basis,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
--------------------------------------------------------------------------*/
+Based on LINTUL5.FOR by Joost Wolf. Date of last revision:  August 2011
+This is the same as the LINTUL-3 FST model
+*/
 
 using namespace std;
 #include <vector>
@@ -166,12 +157,7 @@ std::vector<double> PENMAN(int DOY, double DAYL, double sinLD, double cosLD, dou
 //*---- correction of potential evapo-transpiration for atmospheric CO2 concentration
       double ETC = ET0 * LINT(FPENMTB, CO2);
 
-	std::vector<double> out(4);
-	out[0] = E0;
-	out[1] = ES0;
-	out[2] = ETC;
-	out[3] = AVRAD;
-	return(out);
+	return std::vector<double> {E0, ES0, ETC, AVRAD};
 }
 
 
@@ -212,12 +198,7 @@ std::vector<double> ASTRO(int DOY, double LAT) {
     double DAYL = 12.0*(1.+2. * asin(clamp(-1.,+1.,sinLD/cosLD))/M_PI);
     double DAYLP = 12.0*(1.+2. * asin(clamp(-1.,+1.,(-sin(-4 * RAD) + sinLD ) / cosLD)) / M_PI);
 
-	std::vector<double> out(4);
-	out[0] = DAYL;
-	out[1] = DAYLP;
-	out[2] = sinLD;
-	out[3] = cosLD;
-	return(out);
+	return std::vector<double> {DAYL, DAYLP, sinLD, cosLD};
 }
 
 
@@ -452,19 +433,23 @@ void Lintul3Model::model_initialize() {
 	step = 0;
 	crop_initialize();
 	soil_initialize();
-	time = control.start;
-	//DOY = (wth.startdate + time).dayoftheyear();
-	//ojo because we do not have date + int yet
-	//today = wth.startdate;
-	emergence = control.emergence;
+
+	for (size_t i=0; i<wth.date.size(); i++) {
+		// need to check for out of bounds times (before of after start)
+		if (wth.date[i] == control.start) {
+			time = i;
+			break;
+		}
+	}
+	emergence = time + control.emergence - control.start;
+
+//DOY = (wth.startdate + time).dayoftheyear();
 //	control.DAYPL = emergence;
 //	control.DAYPL = control.planting[run];
-
 //	control.PL = false;
+
 	control.DIRR = 0;
 	control.DIRRO = 0;
-
-
 }
 
 
@@ -819,52 +804,106 @@ void Lintul3Model::soil_states() {
 }
 
 
-void Lintul3Model::model_output(){
-
-	out.push_back( { double(step), crop.TSUM, crop.DVS, crop.LAI, crop.WLVG + crop.WLVD, crop.WST, 
-	     crop.WRT, crop.WSO, ES0, ETC, crop.TRANRF, crop.GLAI, crop.NNI, crop.NPKI, soil.NMINT, soil.NMIN,
-		 crop.NUPTT, crop.NFIXTT, crop.NLIVT, crop.NLOSST, soil.PMINT, soil.PMIN, crop.PUPTT, crop.PLIVT, crop.PLOSST,
-		 soil.KMINT, soil.KMIN, crop.KUPTT, crop.KLIVT, crop.KLOSST } );
-	
-//	out[i][11] = soil.WC;
-//	out[i][12] = DOY;
-//	out[i][13] = wth.prec[time];
+void Lintul3Model::output_initialize() {
+	out.step.resize(0);
+	out.TSUM.resize(0);
+	out.DVS.resize(0);
+	out.LAI.resize(0);
+	out.WLVD.resize(0);
+	out.WLVG.resize(0);
+	out.WLV.resize(0);
+	out.WST.resize(0);
+	out.WRT.resize(0);
+	out.WSO.resize(0);
+	out.ES0.resize(0);
+	out.ETC.resize(0);
+	out.TRANRF.resize(0);
+	out.GLAI.resize(0);
+	out.NNI.resize(0);
+	out.NPKI.resize(0);
+	out.NMINT.resize(0);
+	out.NMIN.resize(0);
+	out.NUPTT.resize(0);
+	out.NFIXTT.resize(0);
+	out.NLIVT.resize(0);
+	out.NLOSST.resize(0);
+	out.PMINT.resize(0);
+	out.PMIN.resize(0);
+	out.PUPTT.resize(0);
+	out.PLIVT.resize(0);
+	out.PLOSST.resize(0);
+	out.KMINT.resize(0);
+	out.KMIN.resize(0);
+	out.KUPTT.resize(0);
+	out.KLIVT.resize(0);
+	out.KLOSST.resize(0);	
 }
 
 
+void Lintul3Model::model_output(){
+	out.step.push_back(step);
+	out.TSUM.push_back(crop.TSUM);
+	out.DVS.push_back(crop.DVS);
+	out.LAI.push_back(crop.LAI);
+	out.WLVD.push_back(crop.WLVD);
+	out.WLVG.push_back(crop.WLVG);
+	out.WST.push_back(crop.WST);
+	out.WRT.push_back(crop.WRT);
+	out.WSO.push_back(crop.WSO);
+	out.ES0.push_back(ES0);
+	out.ETC.push_back(ETC);
+	out.TRANRF.push_back(crop.TRANRF);
+	out.GLAI.push_back(crop.GLAI);
+	out.NNI.push_back(crop.NNI);
+	out.NPKI.push_back(crop.NPKI);
+	out.NMINT.push_back(soil.NMINT);
+	out.NMIN.push_back(soil.NMIN);
+	out.NUPTT.push_back(crop.NUPTT);
+	out.NFIXTT.push_back(crop.NFIXTT);
+	out.NLIVT.push_back(crop.NLIVT);
+	out.NLOSST.push_back(crop.NLOSST);
+
+	out.PMINT.push_back(soil.PMINT);
+	out.PMIN.push_back(soil.PMIN);
+	out.PUPTT.push_back(crop.PUPTT);
+	out.PLIVT.push_back(crop.PLIVT);
+	out.PLOSST.push_back(crop.PLOSST);
+
+	out.KMINT.push_back(soil.KMINT);
+	out.KMIN.push_back(soil.KMIN);
+	out.KUPTT.push_back(crop.KUPTT);
+	out.KLIVT.push_back(crop.KLIVT);
+	out.KLOSST.push_back(crop.KLOSST);
+}
 
 
 void Lintul3Model::model_run() {
-
-
-    out_names =	{ "step", "TSUM", "DVS", "LAI", "WLVG +WLVD", "WST", " WRT", "WSO", " ES0", " ETC", "TRANRF", "GLAI", "NNI", "NPKI", "NMINT", "NMIN", "NUPT", "NFIX", "NLIV", "NLOSS", "PMINT", "PMIN", "PUPT", "PLIV", "PLOSS", "KMINT", "KMIN", "KUPT", "KLIV", "KLOSS"};
 
 	crop.alive =true;
 	model_initialize();
 
 	while ((crop.alive) & (step < control.maxdur)) {
-			weather_step();
-			crop_rates();
+		weather_step();
+		crop_rates();
 
-			if (control.IOPT == 3) {
-				crop_ratesNPK();
-				crop.PNI = 1;
-				crop.KNI = 1;
-			} else if (control.IOPT == 4) {
-				crop_ratesNPK();
-			}
+		if (control.IOPT == 3) {
+			crop_ratesNPK();
+			crop.PNI = 1;
+			crop.KNI = 1;
+		} else if (control.IOPT == 4) {
+			crop_ratesNPK();
+		}
 
-			if (control.IOPT > 1) {
-				soil_rates();
-			}
-			model_output();
-			crop_states();
-			if (control.IOPT > 1) {
-				soil_states();
-			}
-			time++;
-			step++;
-			//today++;
+		if (control.IOPT > 1) {
+			soil_rates();
+		}
+		model_output();
+		crop_states();
+		if (control.IOPT > 1) {
+			soil_states();
+		}
+		time++;
+		step++;
 	}
 }
 

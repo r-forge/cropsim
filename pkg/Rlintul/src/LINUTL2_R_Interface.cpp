@@ -73,40 +73,34 @@ NumericMatrix lintul2(List crop, DataFrame weather, List soil, List control) {
 		stop("emergence requested after the end of the weather data");
 	} else if (emergence[s] < start[s]) {
 		stop("emergence requested before the start of simulation");	
-	}
-		
-
-		
-	ctr.emergence = { int(emergence[s] - wdate[0]) };
-	ctr.start = { int(start[s] - wdate[0]) };
-	
+	}	
 */	
 	Lintul2Model m;
-	m.crop= crp;
-	m.soil= sol;
-	m.control=ctr;
-	m.wth=wth;
+	m.crop = crp;
+	m.soil = sol;
+	m.control = ctr;
+	m.wth = wth;
 	
 	m.model_run();
 
 	size_t nr = m.out.step.size();
-	NumericMatrix out(nr, 16) ;
+	NumericMatrix out(nr, 15) ;
 	for( size_t i=1; i<nr; i++){
 		out(i,0) = m.out.step[i];
 		out(i,1) = m.out.TSUM[i];
-		out(i,3) = m.out.LAI[i];
-		out(i,4) = m.out.WLVG[i];
-		out(i,5) = m.out.WLVD[i];
-		out(i,6) = m.out.WLV[i];
-		out(i,7) = m.out.WST[i];
-		out(i,8) = m.out.WRT[i];
-		out(i,9) = m.out.WSO[i];	
-		out(i,10) = m.out.EVAP[i];	
-		out(i,11) = m.out.TRAN[i];	
-		out(i,12) = m.out.TRANRF[i];	
-		out(i,13) = m.out.WA[i];	
-		out(i,14) = m.out.WC[i];	
-		out(i,15) = m.out.RWA[i];	
+		out(i,2)= m.out.LAI[i];
+		out(i,3) = m.out.WLVG[i];
+		out(i,4) = m.out.WLVD[i];
+		out(i,5) = m.out.WLV[i];
+		out(i,6) = m.out.WST[i];
+		out(i,7) = m.out.WRT[i];
+		out(i,8) = m.out.WSO[i];	
+		out(i,9) = m.out.EVAP[i];	
+		out(i,10) = m.out.TRAN[i];	
+		out(i,11) = m.out.TRANRF[i];	
+		out(i,12) = m.out.WA[i];	
+		out(i,13) = m.out.WC[i];	
+		out(i,14) = m.out.RWA[i];	
 	}
 	colnames(out) = CharacterVector::create("step", "Tsum", "LAI", "WLVG", "WLVD", "WLV", "WST", "WRT", "WSO", "EVAP", "TRAN", "TRANRF", "WA", "WC", "RWA");		
 	return out;

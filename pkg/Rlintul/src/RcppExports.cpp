@@ -60,6 +60,7 @@ BEGIN_RCPP
 END_RCPP
 }
 
+RcppExport SEXP _rcpp_module_boot_LINTUL3();
 RcppExport SEXP _rcpp_module_boot_LINTUL2();
 RcppExport SEXP _rcpp_module_boot_LINTUL1();
 
@@ -68,6 +69,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Rlintul_lintul0", (DL_FUNC) &_Rlintul_lintul0, 3},
     {"_Rlintul_lintul1", (DL_FUNC) &_Rlintul_lintul1, 3},
     {"_Rlintul_lintul2", (DL_FUNC) &_Rlintul_lintul2, 4},
+    {"_rcpp_module_boot_LINTUL3", (DL_FUNC) &_rcpp_module_boot_LINTUL3, 0},
     {"_rcpp_module_boot_LINTUL2", (DL_FUNC) &_rcpp_module_boot_LINTUL2, 0},
     {"_rcpp_module_boot_LINTUL1", (DL_FUNC) &_rcpp_module_boot_LINTUL1, 0},
     {NULL, NULL, 0}

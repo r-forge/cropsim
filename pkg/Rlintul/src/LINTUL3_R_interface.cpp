@@ -6,7 +6,6 @@ using namespace std;
 #include "LINTUL3.h"
 #include "R_interface_util.h"
 
-
 // [[Rcpp::export(name = ".lintul3")]]
 NumericMatrix lintul3(List crop, DataFrame weather, List soil, List control) {
  
@@ -94,7 +93,6 @@ NumericMatrix lintul3(List crop, DataFrame weather, List soil, List control) {
 
     crp.RDI = doubleFromList(crop, "RDI");
 
-	
 	struct LintulWeather wth;
 	wth.tmin = doubleFromDF(weather, "tmin");
 	wth.tmax = doubleFromDF(weather, "tmax");
@@ -102,8 +100,7 @@ NumericMatrix lintul3(List crop, DataFrame weather, List soil, List control) {
 	wth.prec = doubleFromDF(weather, "prec");	
 	wth.vapr = doubleFromDF(weather, "vapr");
 	wth.wind = doubleFromDF(weather, "wind");	
-	DateVector wdate = dateFromDF(weather, "date");	
-//	wth.startdate = SimDate(wdate[0].getDay(), wdate[0].getMonth(), wdate[0].getYear());
+	wth.date = longFromDF(weather, "date");	
 	
 	struct Lintul3Soil sol;
     sol.SMDRY =  doubleFromList(soil, "SMDRY");
@@ -117,45 +114,33 @@ NumericMatrix lintul3(List crop, DataFrame weather, List soil, List control) {
     sol.CFEV = doubleFromList(soil, "CFEV");
 	sol.KSUB = doubleFromList(soil, "KSUB");
     sol.CRAIRC = doubleFromList(soil, "CRAIRC");
+    sol.NRFTAB = TBFromList(soil, "NRFTAB");	  
+    sol.PRFTAB = TBFromList(soil, "PRFTAB");	  
+    sol.KRFTAB = TBFromList(soil, "KRFTAB");	  
+    sol.NMINS = doubleFromList(soil, "NMINS");
+	sol.RTNMINS = doubleFromList(soil, "RTNMINS");
+	sol.PMINS = doubleFromList(soil, "PMINS");
+	sol.RTPMINS = doubleFromList(soil, "RTPMINS");
+	sol.KMINS = doubleFromList(soil, "KMINS");
+	sol.RTKMINS = doubleFromList(soil, "RTKMINS");
 
 	struct Lintul3Control ctr;
 //* actual irrigation data
     ctr.IRRTAB  = matFromList(control, "IRRTAB");
      //ctr.RDMCR = doubleFromList(control, "RDMCR");
     ctr.FERNTAB = matFromList(control, "FERNTAB");
-    ctr.NRFTAB = matFromList(control, "NRFTAB");	  
-    ctr.NMINS = doubleFromList(control, "NMINS");
-	ctr.RTNMINS = doubleFromList(control, "RTNMINS");
     ctr.FERPTAB = matFromList(control, "FERPTAB"); 
-    ctr.PRFTAB = matFromList(control, "PRFTAB");	  
-	ctr.PMINS = doubleFromList(control, "PMINS");
-	ctr.RTPMINS = doubleFromList(control, "RTPMINS");
     ctr.FERKTAB = matFromList(control, "FERKTAB"); 
-    ctr.KRFTAB = matFromList(control, "KRFTAB");	  
-	ctr.KMINS = doubleFromList(control, "KMINS");
-	ctr.RTKMINS = doubleFromList(control, "RTKMINS");
 	ctr.IOPT = intFromList(control, "IOPT");
 	ctr.PL = boolFromList(control, "PL");
 	ctr.IRRI = intFromList(control, "IRRI");
-	
-	 
-	DateVector start = datesFromList(control, "start"); 
-	DateVector emergence = datesFromList(control, "emergence"); 
-
-	int nsim = start.size();
-	int nem = emergence.size();
-	if (nem != nsim) {
-		stop("start does not have the same length as emergence");
-	}
-
+ 
+	ctr.start = intFromList(control, "start"); 
+	ctr.emergence = intFromList(control, "emergence"); 
 //	ctr.long_output = boolFromList(control, "long_output"); 
 
 
-	int nwth = wth.tmin.size();
-	
-//	for (int s=0; s < nsim; s++) {
-	int s = 0;
-	
+/*
 	if (emergence[s] < wdate[0]) {
 		stop("emergence requested before the beginning of the weather data");
 	} else if (emergence[s] > wdate[nwth-1]) {
@@ -163,34 +148,58 @@ NumericMatrix lintul3(List crop, DataFrame weather, List soil, List control) {
 	} else if (emergence[s] < start[s]) {
 		stop("emergence requested before the start of simulation");	
 	}
-		
-	ctr.emergence = { (int)(emergence[s] - wdate[0]) };
-	ctr.start = { (int)(start[s] - wdate[0]) };
-	// temp hack
-	Date sd = start[s];
-//	wth.startdate = SimDate(sd.getDay(), sd.getMonth(), sd.getYear());
-//	}
-	Lintul3Model m(crp, sol, ctr, wth);
+*/
+
+	Lintul3Model m;
+	m.crop = crp;
+	m.soil = sol;
+	m.control = ctr;
+	m.wth = wth;
 	
 	m.model_run();
 
-	int nr = m.out.size();
-	int nc = m.out[0].size();
-	NumericMatrix mat(nr, nc);
-	for (int i = 0; i < nr; i++) {
-		for (int j = 0; j < nc; j++) {
-			mat(i, j) = m.out[i][j];  
-		}
+	size_t nr = m.out.step.size();
+	NumericMatrix out(nr, 32) ;
+	for( size_t i=1; i<nr; i++){
+		out(i,0) = m.out.step[i];
+		out(i,1) = m.out.TSUM[i];
+		out(i,2) = m.out.DVS[i];
+		out(i,3) = m.out.LAI[i];
+		out(i,4) = m.out.WLVG[i];
+		out(i,5) = m.out.WLVD[i];
+		out(i,6) = m.out.WLV[i];
+		out(i,7) = m.out.WST[i];
+		out(i,8) = m.out.WRT[i];
+		out(i,9) = m.out.WSO[i];	
+		out(i,10) = m.out.ES0[i];	
+		out(i,11) = m.out.ETC[i];	
+		out(i,12) = m.out.TRANRF[i];	
+		out(i,13) = m.out.GLAI[i];	
+		out(i,14) = m.out.NNI[i];	
+		out(i,15) = m.out.NPKI[i];	
+		out(i,16) = m.out.NMINT[i];	
+		out(i,17) = m.out.NMIN[i];	
+		out(i,18) = m.out.NUPTT[i];	
+		out(i,19) = m.out.NFIXTT[i];	
+		out(i,20) = m.out.NLIVT[i];	
+		out(i,21) = m.out.NLOSST[i];	
+		
+		out(i,22) = m.out.PMINT[i];	
+		out(i,23) = m.out.PMIN[i];	
+		out(i,24) = m.out.PUPTT[i];	
+		out(i,25) = m.out.PLIVT[i];	
+		out(i,26) = m.out.PLOSST[i];	
+		
+		out(i,27) = m.out.KMINT[i];	
+		out(i,28) = m.out.KMIN[i];	
+		out(i,29) = m.out.KUPTT[i];	
+		out(i,30) = m.out.KLIVT[i];	
+		out(i,31) = m.out.KLOSST[i];	
 	}
 	
-	CharacterVector cnames(nc);
-	for (int j = 0; j < nc; j++) {
-		cnames[j] = m.out_names[j];
-	}
-	colnames(mat) = cnames;
-	
-//    NumericMatrix mat(2, 3);
-	return(mat);
+	CharacterVector nms = {"step", "TSUM", "DVS", "LAI", "WLVG", "WLVD", "WLV", "WST", " WRT", "WSO", " ES0", " ETC", "TRANRF", "GLAI", "NNI", "NPKI", "NMINT", "NMIN", "NUPT", "NFIX", "NLIV", "NLOSS", "PMINT", "PMIN", "PUPT", "PLIV", "PLOSS", "KMINT", "KMIN", "KUPT", "KLIV", "KLOSS"};
+	colnames(out) = nms;
+	return out;	
 }
 
 

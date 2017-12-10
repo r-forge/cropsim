@@ -5,6 +5,12 @@
 \alias{lintul3_soil}
 \alias{lintul3_control}
 
+\alias{crop<-,Rcpp_Lintul3Model-method}
+\alias{soil<-,Rcpp_Lintul3Model-method}
+\alias{weather<-,Rcpp_Lintul3Model-method}
+\alias{control<-,Rcpp_Lintul3Model-method}
+\alias{run,Rcpp_Lintul3Model-method}
+
 \alias{readLIN3output}
 
 
@@ -13,7 +19,7 @@ LINTUL3 crop growth model
 }
 
 \description{
-LINTUL is a relatively simple crop growth simulation model
+LINTUL3 simulates the growth of a crop as function of intercepted radiation, temperature and light use efficiency. Soil water (free drainage) and simple nitrogen, phosphorus and potassium balances are simulated and also the effects of water and N, P and K supplies on crop growth.
 }
 
 \usage{
@@ -23,12 +29,17 @@ lintul3_soil(name='p1')
 lintul3_control()
 }
 
+
 \arguments{
-\item{crop}{list. Crop parameters}
-\item{weather}{data.frame with weather data}
-\item{soil}{list. Soil parameters}
-\item{control}{list. Model control options}
-\item{name}{character}
+ \item{x}{Rcpp_Lintul3Model object}
+ \item{crop}{list with named crop parameters. See Details. An example is returned by \code{lintul3_crop()}} 
+ \item{soil}{list with named soil parameters. See Details. An example is returned by \code{lintul3_soil()}} 
+ \item{control}{list with named control parameters} 
+ \item{weather}{data.frame with daily weather data} 
+ \item{value}{a list with crop, soil, or control parameters, or a data.frame with weather data. As above}
+ \item{...}{additional arguments. None implemented}
+ \item{name}{character}
+ 
 }
 
 \value{
@@ -46,17 +57,18 @@ str(crop)
 
 contr <- list(emergence=as.Date('2012-04-01'), long_output=FALSE)
 
-## LINTUL3
-crop = lintul3_crop('POTATO')
-soil = lintul3_soil(name='p1')
-contr = lintul3_control()
-contr$PL = FALSE
-contr$emergence =as.Date('2012-04-01')
+crop <- lintul3_crop('POTATO')
+soil <- lintul3_soil(name='p1')
+contr <- lintul3_control()
+contr$PL <- FALSE
+contr$emergence <- as.Date('2012-04-01')
 contr$start <- contr$emergence - 10
-contr$long_output=TRUE
-x = lintul3(crop, wth, soil, contr)
+#contr$long_output <- TRUE
+x <- lintul3(crop, wth, soil, contr)
+z <- run(x)
 
-
+x$run()
+x
 
 # test LINTUL3
 

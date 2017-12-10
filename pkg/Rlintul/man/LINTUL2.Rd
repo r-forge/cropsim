@@ -35,7 +35,7 @@ lintul2_soil()
  \item{soil}{list with named soil parameters. See Details. An example is returned by \code{lintul2_soil()}} 
  \item{control}{list with named control parameters} 
  \item{weather}{data.frame with daily weather data} 
- \item{value}{a list with crop or control parameters, or a data.frame with weather data. As above}
+ \item{value}{a list with crop, soil, or control parameters, or a data.frame with weather data. As above}
  \item{...}{additional arguments. None implemented}
 }
 
