@@ -60,13 +60,18 @@ crop <- lintul3_crop('POTATO')
 soil <- lintul3_soil(name='p1')
 
 contr <- lintul3_control()
-contr$PL <- FALSE
 contr$emergence <- as.Date('2012-04-01')
 contr$start <- contr$emergence - 10
+contr$PL <- FALSE
+contr$DAYPL <- contr$emergence
+contr$IOPT <- 2
+# IOPT 1=potential, 2=water limited, 3=water and N limited and 4=water and N, P and K limited
+
+x <- lintul3(crop, soil, contr, wth)
+
 
 \dontrun{
 
-x <- lintul3(crop, soil, contr, wth)
 z <- run(x)
 
 #or 

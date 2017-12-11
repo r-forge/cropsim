@@ -12,8 +12,6 @@ struct Lintul3Output {
 };
 
 
-
-
 struct Lintul3Control {
 	long start, emergence;
 	unsigned maxdur;
@@ -22,8 +20,6 @@ struct Lintul3Control {
 	bool PL;
 	std::vector<double> IRRTAB, FERNTAB, FERPTAB, FERKTAB;
 	int IRRI;
-	double  RDMCR;
-	double DIRROLD, DIRRO, DIRRN, DIRR, DIRR1;  
 }; 
 
 
@@ -122,6 +118,7 @@ struct Lintul3Model {
 	int time;
 	unsigned step, DOY;
 	long emergence; //, today;
+	double DIRROLD, DIRRO, DIRRN, DIRR, DIRR1;  
 
 //	Lintul3Model(Lintul3Crop c, Lintul3Soil s, Lintul3Control t, LintulWeather w) : crop(c), soil(s), control(t), wth(w) { };
 	

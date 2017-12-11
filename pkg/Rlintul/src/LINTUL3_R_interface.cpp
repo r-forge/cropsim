@@ -127,7 +127,6 @@ NumericMatrix lintul3(List crop, DataFrame weather, List soil, List control) {
 	struct Lintul3Control ctr;
 //* actual irrigation data
     ctr.IRRTAB  = TBFromList(control, "IRRTAB");
-     //ctr.RDMCR = doubleFromList(control, "RDMCR");
     ctr.FERNTAB = TBFromList(control, "FERNTAB");
     ctr.FERPTAB = TBFromList(control, "FERPTAB"); 
     ctr.FERKTAB = TBFromList(control, "FERKTAB"); 

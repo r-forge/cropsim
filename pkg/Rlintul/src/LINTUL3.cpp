@@ -445,8 +445,8 @@ void Lintul3Model::model_initialize() {
 //	control.DAYPL = control.planting[run];
 //	control.PL = false;
 
-	control.DIRR = 0;
-	control.DIRRO = 0;
+	DIRR = 0;
+	DIRRO = 0;
 }
 
 
@@ -514,7 +514,7 @@ void Lintul3Model::soil_rates() {
 	double RWET, RDRY;
 
 //----- Infiltration of precipitation (RAIN) and irrigation (RIRR) (cm)
-	double RIRR = control.DIRR;
+	double RIRR = DIRR;
 	double PERC = (1 - soil.RUNFR) * RAIN + RIRR;
 
 //----- Water loss by surface runoff, preliminary
@@ -609,25 +609,25 @@ void Lintul3Model::soil_rates() {
 	}
 
 // Effective irrigation water application on previous day
-	control.DIRROLD = control.DIRR ;
+	DIRROLD = DIRR ;
 
 // Demand for irrigation water
 // Automatic irrigation (cm)
 	double WAVFC = crop.RD * (soil.SMFC - soil.SMW);
 
 	if ((control.IRRI == 1) && (soil.SMACT <= (soil.SMCR + 0.02)) && (RAIN < 1)) {
-		control.DIRR= clamp(0., 3., 0.7 * (WAVFC - soil.WAVT));
-		control.DIRRO = 0.;
+		DIRR= clamp(0., 3., 0.7 * (WAVFC - soil.WAVT));
+		DIRRO = 0.;
 	} else if (control.IRRI == 2) {
 // Actual effective irrigation from table
-		control.DIRR1= approx (control.IRRTAB, DOY) + control.DIRRO;
-		control.DIRR= std::min(3., control.DIRR1);
-		control.DIRRN = control.DIRR1 - control.DIRR;
+		DIRR1= approx (control.IRRTAB, DOY) + DIRRO;
+		DIRR= std::min(3., DIRR1);
+		DIRRN = DIRR1 - DIRR;
 // Irrigation left for the next day
-		control.DIRRO = control.DIRRN;
+		DIRRO = DIRRN;
 	} else {
-		control.DIRR= 0.;
-		control.DIRRO= 0.;
+		DIRR= 0.;
+		DIRRO= 0.;
 	}
 
 

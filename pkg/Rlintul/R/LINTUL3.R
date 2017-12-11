@@ -69,7 +69,7 @@ setMethod("weather<-", signature('Rcpp_Lintul3Model', 'list'),
 
 setMethod("control<-", signature('Rcpp_Lintul3Model', 'list'), 
 	function(x, value) {
-		parameters <- c("start", "emergence","maxdur", "IOPT", "IDPL", "DAYPL", "PL", "IRRI", "RDMCR", "DIRROLD", "DIRRO", "DIRRN", "DIRR", "DIRR1", "IRRTAB", "FERNTAB", "FERPTAB", "FERKTAB")		
+		parameters <- c("start", "emergence","maxdur", "IOPT", "IDPL", "DAYPL", "PL", "IRRI", "IRRTAB", "FERNTAB", "FERPTAB", "FERKTAB")		
 		nms <- names(value)
 		if (!all(parameters %in% nms)) stop(paste("parameters missing:", paste(parameters[!(parameters %in% nms)], collapse=", ")))
 		value <- value[parameters]
@@ -78,9 +78,6 @@ setMethod("control<-", signature('Rcpp_Lintul3Model', 'list'),
 		return(x)
 	}
 )
-
-
-
 
 
 lintul3_control <- function() {
@@ -139,3 +136,10 @@ readLIN3output <- function(f) {
 	ss
 }
 
+
+
+setMethod ('show' , 'Rcpp_Lintul3Model', function(object) { utils::str(object) })	
+setMethod ('show' , 'Rcpp_Lintul3Output', function(object) { utils::str(object) })	
+setMethod ('show' , 'Rcpp_Lintul3Crop', function(object) { utils::str(object) })	
+setMethod ('show' , 'Rcpp_Lintul3Control', function(object) { utils::str(object) })	
+setMethod ('show' , 'Rcpp_Lintul3Weather', function(object) { utils::str(object) })	
