@@ -5,6 +5,7 @@
 \alias{crop<-} 
 \alias{soil<-}
 \alias{weather<-} 
+\alias{run} 
 
 
 \title{Generic functions}
