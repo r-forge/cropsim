@@ -18,6 +18,10 @@ double SUBSOL (double PF, double D, std::vector<double> CONTAB);// flow is outpu
 double SWEAF(double ET0, double CGNR);
 std::vector<double> PENMAN (int DOY, double LAT, double ELEV, double ANGSTA, double ANGSTB, double TMIN, double TMAX, double AVRAD, double VAP, double WIND2, double ATMTR);
 
+struct WofostOutput {
+	double LAI;
+}
+
 
 struct WofostControl {
 	unsigned modelstart;

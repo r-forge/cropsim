@@ -129,7 +129,7 @@ NumericMatrix wofost(List crop, DataFrame weather, List soil, List control) {
 
 	crp.p.IAIRDU = intFromList(crop, "IAIRDU");
 
-	crp.p.KDifTB = TBFromList(crop, "KDifTB");
+	crp.p.KDifTB = TBFromList(crop, "KDIFTB");
 	crp.p.EFFTB = TBFromList(crop, "EFFTB");
 	crp.p.AMAXTB = TBFromList(crop, "AMAXTB");
 	crp.p.TMPFTB = TBFromList(crop, "TMPFTB");
