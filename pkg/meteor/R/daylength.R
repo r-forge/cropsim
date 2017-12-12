@@ -3,7 +3,7 @@
 
 
 photoperiod <- function(doy, latitude) {
-	  d <- cbind(doy, latitude)
+	d <- cbind(doy, latitude)
     .Call('_meteor_Photoperiod', PACKAGE = 'meteor', d[,1], d[,2])
 }
 

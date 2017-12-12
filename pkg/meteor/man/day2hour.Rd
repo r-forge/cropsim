@@ -1,13 +1,14 @@
 \name{daylyToHourly}
 
 \alias{hourlyFromDailyTemp}
-\alias{hourlyFromDailyRelh}
+\alias{hourlyFromDaily}
 
 
 \title{Estimate hourly values from daily values }
 
 \description{
 Estimate hourly temperature from daily minimum and maximum temperature, or hourly relative humidity from average relative humidity and minimum and maximum temperature.
+
 The functions require the day of the year and latitude to compute the photoperiod.
 }
 

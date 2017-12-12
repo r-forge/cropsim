@@ -44,9 +44,13 @@ vector with evaporation values (mm)
 
 \references{
 Allen, R.G., L.S. Pereira, D. Raes and M. Smith, 1998. Crop evapotranspiration. Guidelines for computing crop water requirements. FAO Irrigation and drainage paper 56. FAO - Food and Agriculture Organization of the United Nations, Rome, 1998. (http://www.fao.org/docrep/x0490e/x0490e07.htm)
+
 Thornthwaite, C.W., 1948. An approach toward a rational classification of climate. Geogr. Rev. 38:55-94.
+
 Willmott, C.J., Rowe, C.M. and Mintz, Y., 1985. Climatology of the terrestrial seasonal water cycle. J. Climatol. 5:589-606.
+
 Camargo, A.P., Marin, F.R., Sentelhas, P.C. and Picini, A.G., 1999. Adjust of the Thornthwaite's method to estimate the potential evapotranspiration for arid and superhumid climates, based on daily temperature amplitude. Rev. Bras. Agrometeorol. 7(2):251-257
+
 Pereira, A.R. and W.O. Pruitt, 2004. Adaptation of the Thornthwaite scheme for estimating daily reference evapotranspiration. Agricultural Water Management 66: 251-257
 }
 

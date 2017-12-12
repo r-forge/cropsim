@@ -6,7 +6,7 @@
 \title{Extra-terrestrial Radiation}
 
 \description{
-Compute incoming radiation (J/day) at the top of the atmosphere and photoperiod (daylength, sunshine duration).
+Compute incoming radiation (J day-1 m-2 ) at the top of the atmosphere and photoperiod (daylength, sunshine duration).
 }
 
 \usage{
@@ -40,3 +40,4 @@ Robert Hijmans, based on Python meteolib by Maarten J. Waterloo and J. Delsman \
 ExtraTerrestrialRadiation(50, 60)
 ExtraTerrestrialRadiation(50, 60, FAO=TRUE)
 }
+

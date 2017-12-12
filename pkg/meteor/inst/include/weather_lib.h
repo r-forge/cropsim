@@ -2,28 +2,40 @@ using namespace std;
 #include <cmath>
 #include <vector>
 #include <numeric>
-#include "weather_lib.h"
+
 
 
 /*
 Variable names
 temp: air temperature (degrees C)
 relh: relative humidity (%)
-airpress: air pressure (kPa)  hPa, PA ???
-standardizing on hPa
-
+airpress: air pressure (kPa)  hPa, PA ??? (may vary--- need to standardize)
 Rn: average daily net radiation [J m-2 d-1].
  */
 
 
+double photoperiod(int doy, double latitude) {
+// Forsythe, William C., Edward J. Rykiel Jr., Randal S. Stahl, Hsin-i Wu and Robert M. Schoolfield, 1995.
+// Ecological Modeling 80: 87-95. A Model Comparison for Daylength as a Function of Latitude and Day of the Year.
+	if ((latitude > 90) || (latitude < -90)) { return(-1);}
+	double P = asin(0.39795 * cos(0.2163108 + 2 * atan(0.9671396 * tan(0.00860*(doy-186)))));
+	double pi = 3.141592653589793238462643383279502884197169399375;
+	double torad = pi / 180;
+	latitude = latitude * torad;
+	double a =  (sin(0.8333 * torad) + sin(latitude) * sin(P)) / (cos(latitude) * cos(P));
+	a =  std::min(std::max(a, -1.), 1.);
+	return (  24 - (24 / pi) * acos(a) );
+}
+ 
+
+ 
 //saturated vapor pressure (Pa)
-// simple
+// simple SVP
 double ESimple(double temp) {
 	return( 610.8 * exp(17.27 * temp / (temp + 237.3) ));
 }
 
-// more refined
-
+// more refined SVP (Pa)
 double ES(double temp) {
 /* Derived from python meteolib by Maarten J. Waterloo and J. Delsman
    For T < 0 C the saturation vapour pressure equation for ice is used accoring to Goff and Gratch (1946), whereas for T>=0 C that of Goff (1957) is used.
@@ -66,9 +78,7 @@ double EA(double temp, double relh) {
 double DELTA(double temp){
 /* Derived from python meteolib by Maarten J. Waterloo and J. Delsman
    Compute the slope of the temperature - vapour pressure curve (Delta) from air temperatures.
-
    output: slope of saturated vapour curve (kPa K-1).
-
     References
     ----------
     Technical regulations 49, World Meteorological Organisation, 1984. Appendix A. 1-Ap-A-3.
@@ -104,9 +114,7 @@ double CP(double temp, double relh, double airpress) {
 
 double LAMBDA(double temp){
 /* Compute the latent heat of vapourisation from air temperature: lambda [J kg-1 K-1].
-
     References:   J. Bringfelt. Test of a forest evapotranspiration model. Meteorology and Climatology Reports 52, SMHI, NorrkÃ¶pping, Sweden, 1986.
-
     Examples
     --------
         > lambda(25)
@@ -121,8 +129,8 @@ double GAMMA(double temp, double relh, double airpress ){
 
     Reference: J. Bringfelt. Test of a forest evapotranspiration model. Meteorology and Climatology Reports 52, SMHI, NorrkÃ¶pping, Sweden, 1986.
 
-        > gamma(10,50,101300)
-        66.26343318657227
+    > gamma(10,50,101300)
+    66.26343318657227
 */
     double spec = CP(temp, relh, airpress);
     double L = LAMBDA(temp);
@@ -135,7 +143,7 @@ double pottemp(double temp, double relh, double airpress){
 /* calculate the potential temperature air, theta, from air temperatures, relative humidity
     and air pressure. Reference pressure 1000 hPa.  Ouput: theta: potential air temperature [Celsius].
 
-        > pottemp(5,45,101300)
+    > pottemp(5,45,101300)
         3.977415823848844
 */
     double spec = CP(temp, relh, airpress);
@@ -171,21 +179,21 @@ std::vector<double> potrad_dl(int doy, double latitude, double S) {
 *  ATMTR   Atmospheric transmissivity (on a clear day 0.7)}
 */
 
-    const double PI = 3.141592653589793238463;
+    const double pi = 3.141592653589793238463;
 //	const double TC = 4.0;
 //	const double P = 1.5;
 //	const double ATMTR = 1;
-//	const double RAD = PI/180;
+//	const double RAD = pi/180;
 //	const double SC = 1328;
 
-	latitude = latitude * PI / 180;
+	latitude = latitude * pi / 180;
 
 	double SINLAT = sin(latitude);
     double COSLAT = cos(latitude);
     //Maximal sine of declination
-    double SINDCM = sin(PI/180*23.45);
+    double SINDCM = sin(pi/180*23.45);
     //Sine and cosine of declination (Eqns 3.4, 3.5);
-    double SINDEC = -SINDCM*cos(2*PI*(doy+10)/365);
+    double SINDEC = -SINDCM*cos(2*pi*(doy+10)/365);
     double COSDEC = sqrt(1-SINDEC*SINDEC);
     // The terms A and B according to Eqn 3.3;
     double A = SINLAT*SINDEC;
@@ -199,12 +207,12 @@ std::vector<double> potrad_dl(int doy, double latitude, double S) {
  //  {Daylength according to Eqn 3.6; arcsin(c) = arctan(c/sqrt(c*c+1))}
  	double DAYL;
     if (B != 0) {
-		DAYL = 12 * (1+(2/PI)* asin(C));
+		DAYL = 12 * (1+(2/pi)* asin(C));
 	} else {
 		DAYL = 12;
 	}
 		//  {Integral of sine of solar height (Eqn 3.7)}
-    double SININT = A * DAYL + (24 * B / PI) * cos((PI/2)*((DAYL/12)-1));
+    double SININT = A * DAYL + (24 * B / pi) * cos((pi/2)*((DAYL/12)-1));
     //  { Daily total of radiation under a clear sky The number 3600.
     //  converts SININT from hours to seconds per day
     double RDPOT  = S * SININT * 3600;
@@ -327,17 +335,13 @@ std::vector<double> sun_NR(int doy, double lat, double S) {
 
 
 
-
-
 /*
 From evaplib: Functions for calculation of potential and actual evaporation from meteorological data.
 author = "Maarten J. Waterloo <maarten.waterloo@falw.vu.nl>" version 1.0 (November 2014)
 */
 
-
 double Penman_E0(double temp, double relh, double airpress, double Rs, double Rext, double u, double alpha=0.25, double Z=0) {
 /*  Calculate daily Penman (open) water evaporation estimates.
-
     Parameters:
         - temp: daily average air temperatures [Celsius].
         - relh: daily average relative humidity [%].
@@ -405,7 +409,7 @@ double Penman_E0(double temp, double relh, double airpress, double Rs, double Re
 
 
 double ET0pm(double temp, double relh, double airpress, double Rs, double Rext, double u, double Z=0.0){
-/*  Daily Penman-Monteith reference evaporation
+/*  Daily Penman-Monteith reference evapotranspiration
     Parameters:
         - temp: daily average air temperatures [Celsius].
         - relh: daily average relative humidity values [%].
@@ -721,6 +725,7 @@ double EThornthwaiteWilmott(double temp, int doy, double latitude) {
 	return(ET);
 }
 
+
 double EThornthwaiteWilmottCamargo(double tmin, double tmax, int doy, double latitude, bool Pereira=false) {
 	// Camargo, A.P., Marin, F.R., Sentelhas, P.C. and Picini, A.G., 1999. Adjust of the Thornthwaite�s method to estimate the potential evapotranspiration for arid and superhumid climates, based on daily temperature amplitude. Rev. Bras. Agrometeorol. 7(2):251�257
 	// Pereira, A.R. and W.O. Pruitt, 2004. Adaptation of the Thornthwaite scheme for estimating daily reference evapotranspiration. Agricultural Water Management 66: 251-257
@@ -738,12 +743,10 @@ double EThornthwaiteWilmottCamargo(double tmin, double tmax, int doy, double lat
 
 
 
-
-
 std::vector<double> dailyToHourlyTemperature(double tmin, double tmax, int doy, double latitude) {
 	double TC = 4.0;
     double P = 1.5;
-	double PI = 3.141592653589793238462643383279502884197169399375;
+	double pi = 3.141592653589793238462643383279502884197169399375;
 	double daylength = photoperiod(doy, latitude);
 	double nigthlength = 24 - daylength;
     double sunrise = 12 - 0.5 * daylength;
@@ -753,14 +756,14 @@ std::vector<double> dailyToHourlyTemperature(double tmin, double tmax, int doy, 
 
 	for (int h = 0; h < 24; h++) {
 		if ( h < sunrise)  {  // midnight to sunrise;
-			tsunst = tmin + (tmax-tmin) * sin(PI * (daylength/(daylength + 2 * P)));
+			tsunst = tmin + (tmax-tmin) * sin(pi * (daylength/(daylength + 2 * P)));
 			tmp[h] = (tmin - tsunst * exp(-nigthlength/TC) + (tsunst-tmin) * exp(-(h + 24-sunset)/TC)) / (1-exp(-nigthlength/TC));
 		} else if ( h < (12+P) ) { // between sunrise and time that tmax is reached
-			tmp[h] = tmin + (tmax-tmin) * sin(PI * (h - sunrise)/(daylength + 2 * P));
+			tmp[h] = tmin + (tmax-tmin) * sin(pi * (h - sunrise)/(daylength + 2 * P));
 		} else if (h < sunset) { 	// between time of tmax and sunset;
-			tmp[h] = tmin + (tmax-tmin) * sin(PI * (h - sunrise)/(daylength + 2 * P));
+			tmp[h] = tmin + (tmax-tmin) * sin(pi * (h - sunrise)/(daylength + 2 * P));
 		} else { // sunset to midnight;
-			tsunst = tmin + (tmax - tmin) * sin(PI * (daylength/(daylength + 2 * P)));
+			tsunst = tmin + (tmax - tmin) * sin(pi * (daylength/(daylength + 2 * P)));
 			tmp[h] = (tmin - tsunst * exp(-nigthlength / TC) + (tsunst-tmin) * exp(-(h - sunset)/TC)) / (1-exp(-nigthlength/TC));
 		}
 	}
@@ -780,39 +783,5 @@ std::vector<double> dailyToHourlyRelhum(double relh, double tmin, double tmax, i
 }
 
 
-double daylength(double latitude, int doy) {
-// Robert Hijmans, based on
-// Forsythe, William C., Edward J. Rykiel Jr., Randal S. Stahl, Hsin-i Wu and Robert M. Schoolfield, 1995.
-// A model comparison for daylength as a function of latitude and day of the year. Ecological Modeling 80:87-95.
-	double P, a, DL;
-	const double pi = 3.141592653589793238463;
 
 
-	if ((latitude > 90) | (latitude < -90)) {
-		return(0);
-	}
-	P = asin(0.39795 * cos(0.2163108 + 2 * atan(0.9671396 * tan(0.00860*( doy-186 )))));
-	a = (sin(0.8333 * pi/180) + sin(latitude * pi/180) * sin(P)) / (cos(latitude * pi/180) * cos(P));
-	if (a < -1) {
-		a = -1;
-	} else if (a > 1) {
-		a = 1;
-	}
-	DL = 24 - (24/pi) * acos(a);
-	return(DL);
-}
-
-
-
-
-double photoperiod(int doy, double latitude) {
-// Forsythe, William C., Edward J. Rykiel Jr., Randal S. Stahl, Hsin-i Wu and Robert M. Schoolfield, 1995.
-// Ecological Modeling 80: 87-95. A Model Comparison for Daylength as a Function of Latitude and Day of the Year.
-	double P = asin(0.39795 * cos(0.2163108 + 2 * atan(0.9671396 * tan(0.00860*(doy-186)))));
-	double PI = 3.141592653589793238462643383279502884197169399375;
-	double torad = PI / 180;
-	latitude = latitude * torad;
-	double a =  (sin(0.8333 * torad) + sin(latitude) * sin(P)) / (cos(latitude) * cos(P));
-	a =  std::min(std::max(a, -1.), 1.);
-	return (  24 - (24 / PI) * acos(a) );
-}

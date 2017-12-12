@@ -12,7 +12,7 @@
 \title{ date manipulation }
 
 \description{
-Helper functions for manipulation of dates, includding conversion between day of year number to date and back, and extraction of parts of a date.
+Helper functions for manipulation of dates, includding conversion between (day of year) (DOY) to date and back, and extraction of parts of a date.
 }
 
 \usage{

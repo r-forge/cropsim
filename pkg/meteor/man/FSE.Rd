@@ -2,7 +2,7 @@
 
 \alias{readFSEwth}
 \alias{writeFSEwth}
-\alias{default_weather} 
+\alias{example_weather} 
 
 
 \title{
@@ -15,7 +15,7 @@ Read or write FSE formatted weather data
 
 \usage{
 readFSEwth(f)
-default_weather()
+example_weather()
 }
 
 \arguments{
