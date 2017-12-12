@@ -44,7 +44,7 @@ void WofostModel::model_output(){
     //out.push_back( { double(step), crop.TSUM, crop.DVS, crop.GASS, crop.LAI, crop.WLV, crop.WST, crop.WRT, crop.WSO,
 		//	atm.E0, soil.SM, crop.TRA, soil.WLOW, soil.W, double(i)});
 
-		out.push_back( {double(step), crop.TSUM, crop.DVS, crop.LAI, soil.state.KAVAIL, crop.var.KDEMLV, crop.LASUM, crop.SSA, crop.WST, crop.SPA, crop.WSO } );
+		out.push_back( {double(step), crop.TSUM, crop.DVS, crop.LAI, soil.sn.KAVAIL, crop.vn.KDEMLV, crop.LASUM, crop.SSA, crop.WST, crop.p.SPA, crop.WSO } );
 }
 
 
@@ -96,7 +96,7 @@ void WofostModel::model_initialize() {
     crop.LASUM = 0.;
     crop.LAIEXP = 0.;
     crop.LAI = 0.;
-    crop.RD = crop.RDI;
+    crop.RD = crop.p.RDI;
 	crop.TSUM = 0;
 	crop.TSUME = 0.;
 	crop.DTSUME = 0.;
@@ -104,14 +104,14 @@ void WofostModel::model_initialize() {
 	crop.GASS = 0.;
 
 	// adjusting for CO2 effects
-    double CO2AMAXadj = AFGEN(crop.CO2AMAXTB, wth.CO2);
-    double CO2EFFadj = AFGEN(crop.CO2EFFTB, wth.CO2);
-	double CO2TRAadj = AFGEN(crop.CO2TRATB, wth.CO2);
-	int n = crop.AMAXTB.size();
+    double CO2AMAXadj = AFGEN(crop.p.CO2AMAXTB, wth.CO2);
+    double CO2EFFadj = AFGEN(crop.p.CO2EFFTB, wth.CO2);
+	double CO2TRAadj = AFGEN(crop.p.CO2TRATB, wth.CO2);
+	int n = crop.p.AMAXTB.size();
 	for(int i=1; i<n; i=i+2) {
-		crop.AMAXTB[i] = crop.AMAXTB[i] * CO2AMAXadj;
-		crop.CO2EFFTB[i] = crop.CO2EFFTB[i] * CO2EFFadj;
-		crop.CO2TRATB[i] = crop.CO2TRATB[i] * CO2TRAadj;
+		crop.p.AMAXTB[i] = crop.p.AMAXTB[i] * CO2AMAXadj;
+		crop.p.CO2EFFTB[i] = crop.p.CO2EFFTB[i] * CO2EFFadj;
+		crop.p.CO2TRATB[i] = crop.p.CO2TRATB[i] * CO2TRAadj;
 	}
 }
 
@@ -120,7 +120,7 @@ void WofostModel::model_initialize() {
 void WofostModel::model_run() {
 
 	//out_names = {"step", "Tsum", "DVS", "GASS", "LAI", "WLV", "WST", "WRT", "WSO", "E0", "SM", "TRA", "WLOW", "W", "run"};
-  out_names = {"step", "Tsum", "DVS", "LAI", "KAVAIL", "KDEMLV", "LASUM", "SSA", "WST", "SPA", "WSO"}; //, "KDEMRT", "KDEMSO", "KDEMST", "KNI", "KSOIL", "LAI", "SM", "TAGP", "TRA", "TWLV", "TWRT", "TWSO", "TWST"};
+  out_names = {"step", "Tsum", "DVS", "LAI", "KAVAIL", "KDEMLV", "LASUM", "SSA", "WST", "p.SPA", "WSO"}; //, "KDEMRT", "KDEMSO", "KDEMST", "KNI", "KSOIL", "LAI", "SM", "TAGP", "TRA", "TWLV", "TWRT", "TWSO", "TWST"};
 
 	step = 1;
 	npk_step = 0;
@@ -147,11 +147,11 @@ void WofostModel::model_run() {
 				STDAY();
 			} else if (ISTATE == 1) {	// find day of emergence
 				crop.TSUME = crop.TSUME + crop.DTSUME * DELT;
-				if (crop.TSUME >= crop.TSUMEM) {
+				if (crop.TSUME >= crop.p.TSUMEM) {
 					ISTATE = 3;
 					crop_emerged = true;
 				}
-				crop.DTSUME = LIMIT(0., crop.TEFFMX - crop.TBASEM, atm.TEMP - crop.TBASEM);
+				crop.DTSUME = LIMIT(0., crop.p.TEFFMX - crop.p.TBASEM, atm.TEMP - crop.p.TBASEM);
 			} else {
 				crop_emerged = true;
 			}

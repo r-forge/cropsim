@@ -231,18 +231,18 @@ using namespace std;
 }
 */
 void WofostModel::npk_demand_uptake_initialize() {
-  crop.var.NDEMLV = 0;
-  crop.var.NDEMST = 0;
-  crop.var.NDEMRT = 0;
-  //crop.var.NDEMSO = 0;
-  crop.var.PDEMLV = 0;
-  crop.var.PDEMST = 0;
-  crop.var.PDEMRT = 0;
-  //crop.var.PDEMSO = 0;
-  crop.var.KDEMLV = 0;
-  crop.var.KDEMST = 0;
-  crop.var.KDEMRT = 0;
-  //crop.var.KDEMSO = 0;
+  crop.vn.NDEMLV = 0;
+  crop.vn.NDEMST = 0;
+  crop.vn.NDEMRT = 0;
+  //crop.vn.NDEMSO = 0;
+  crop.vn.PDEMLV = 0;
+  crop.vn.PDEMST = 0;
+  crop.vn.PDEMRT = 0;
+  //crop.vn.PDEMSO = 0;
+  crop.vn.KDEMLV = 0;
+  crop.vn.KDEMST = 0;
+  crop.vn.KDEMRT = 0;
+  //crop.vn.KDEMSO = 0;
 
 }
 
@@ -259,101 +259,101 @@ void WofostModel::npk_demand_uptake_rates() {
 //KTRANSLOCATABLE = K supply to storage organs [kg ha-1]
 
 //       total NPK demand of leaves, stems and roots
-    double NDEMTO = crop.var.NDEMLV + crop.var.NDEMST + crop.var.NDEMRT;
-    double PDEMTO = crop.var.PDEMLV + crop.var.PDEMST + crop.var.PDEMRT;
-    double KDEMTO = crop.var.KDEMLV + crop.var.KDEMST + crop.var.KDEMRT;
+    double NDEMTO = crop.vn.NDEMLV + crop.vn.NDEMST + crop.vn.NDEMRT;
+    double PDEMTO = crop.vn.PDEMLV + crop.vn.PDEMST + crop.vn.PDEMRT;
+    double KDEMTO = crop.vn.KDEMLV + crop.vn.KDEMST + crop.vn.KDEMRT;
 
 //  NPK uptake rate in storage organs (kg N ha-1 d-1)
 //  is the mimimum of supply and demand divided by the
 //  time coefficient for N/P/K translocation
-    crop.rate.RNUSO = min(crop.var.NDEMSO, crop.var.NTRANSLOCATABLE) / crop.par.TCNT;
-    crop.rate.RPUSO = min(crop.var.PDEMSO, crop.var.PTRANSLOCATABLE) / crop.par.TCPT;
-    crop.rate.RKUSO = min(crop.var.KDEMSO, crop.var.KTRANSLOCATABLE) / crop.par.TCKT;
+    crop.rn.RNUSO = min(crop.vn.NDEMSO, crop.vn.NTRANSLOCATABLE) / crop.pn.TCNT;
+    crop.rn.RPUSO = min(crop.vn.PDEMSO, crop.vn.PTRANSLOCATABLE) / crop.pn.TCPT;
+    crop.rn.RKUSO = min(crop.vn.KDEMSO, crop.vn.KTRANSLOCATABLE) / crop.pn.TCKT;
 
 //  No nutrients are absorbed after development stage DVSNPK_STOP or
 //  when severe water shortage occurs i.e. TRANRF <= 0.01
     //TRANRF = TRA / TRAMX;
 	  double NutrientLIMIT;
-    if ((crop.DVS < crop.par.DVSNPK_STOP) & (crop.TRANRF > 0.01)) {
+    if ((crop.DVS < crop.pn.DVSNPK_STOP) & (crop.TRANRF > 0.01)) {
 		  NutrientLIMIT = 1.0;
     } else {
 		  NutrientLIMIT = 0.;
 	  }
 
     // biological nitrogen fixation
-    crop.rate.RNFIX = (max(0., crop.par.NFIX_FR * NDEMTO) * NutrientLIMIT);
+    crop.rn.RNFIX = (max(0., crop.pn.NFIX_FR * NDEMTO) * NutrientLIMIT);
 
-    //std::cout << "NDEMTO: " << NDEMTO << " NAVAIL: " << soil.state.NAVAIL << std::endl;
+    //std::cout << "NDEMTO: " << NDEMTO << " NAVAIL: " << soil.sn.NAVAIL << std::endl;
     // NPK uptake rate from soil
-    crop.rate.RNUPTAKE = (max(0., min(NDEMTO - crop.rate.RNFIX, soil.state.NAVAIL)) * NutrientLIMIT);
-    crop.rate.RPUPTAKE = (max(0., min(PDEMTO, soil.state.PAVAIL)) * NutrientLIMIT);
-    crop.rate.RKUPTAKE = (max(0., min(KDEMTO, soil.state.KAVAIL)) * NutrientLIMIT);
+    crop.rn.RNUPTAKE = (max(0., min(NDEMTO - crop.rn.RNFIX, soil.sn.NAVAIL)) * NutrientLIMIT);
+    crop.rn.RPUPTAKE = (max(0., min(PDEMTO, soil.sn.PAVAIL)) * NutrientLIMIT);
+    crop.rn.RKUPTAKE = (max(0., min(KDEMTO, soil.sn.KAVAIL)) * NutrientLIMIT);
 
     // NPK uptake rate
     // if no demand then uptake rate = 0.
     if (NDEMTO == 0.) {
-        crop.rate.RNULV = crop.rate.RNUST = crop.rate.RNURT = 0.;
+        crop.rn.RNULV = crop.rn.RNUST = crop.rn.RNURT = 0.;
     } else {
-        crop.rate.RNULV = (crop.var.NDEMLV / NDEMTO) * (crop.rate.RNUPTAKE + crop.rate.RNFIX);
-        crop.rate.RNUST = (crop.var.NDEMST / NDEMTO) * (crop.rate.RNUPTAKE + crop.rate.RNFIX);
-        crop.rate.RNURT = (crop.var.NDEMRT / NDEMTO) * (crop.rate.RNUPTAKE + crop.rate.RNFIX);
+        crop.rn.RNULV = (crop.vn.NDEMLV / NDEMTO) * (crop.rn.RNUPTAKE + crop.rn.RNFIX);
+        crop.rn.RNUST = (crop.vn.NDEMST / NDEMTO) * (crop.rn.RNUPTAKE + crop.rn.RNFIX);
+        crop.rn.RNURT = (crop.vn.NDEMRT / NDEMTO) * (crop.rn.RNUPTAKE + crop.rn.RNFIX);
 	  }
     if (PDEMTO == 0.) {
-        crop.rate.RPULV = crop.rate.RPUST = crop.rate.RPURT = 0.;
+        crop.rn.RPULV = crop.rn.RPUST = crop.rn.RPURT = 0.;
     } else {
-        crop.rate.RPULV = (crop.var.PDEMLV / PDEMTO) * crop.rate.RPUPTAKE;
-        crop.rate.RPUST = (crop.var.PDEMST / PDEMTO) * crop.rate.RPUPTAKE;
-        crop.rate.RPURT = (crop.var.PDEMRT / PDEMTO) * crop.rate.RPUPTAKE;
+        crop.rn.RPULV = (crop.vn.PDEMLV / PDEMTO) * crop.rn.RPUPTAKE;
+        crop.rn.RPUST = (crop.vn.PDEMST / PDEMTO) * crop.rn.RPUPTAKE;
+        crop.rn.RPURT = (crop.vn.PDEMRT / PDEMTO) * crop.rn.RPUPTAKE;
 	  }
 
     if (KDEMTO == 0.) {
-          crop.rate.RKULV = crop.rate.RKUST = crop.rate.RKURT = 0.;
+          crop.rn.RKULV = crop.rn.RKUST = crop.rn.RKURT = 0.;
     } else {
-        crop.rate.RKULV = (crop.var.KDEMLV / KDEMTO) * crop.rate.RKUPTAKE;
-        crop.rate.RKUST = (crop.var.KDEMST / KDEMTO) * crop.rate.RKUPTAKE;
-        crop.rate.RKURT = (crop.var.KDEMRT / KDEMTO) * crop.rate.RKUPTAKE;
+        crop.rn.RKULV = (crop.vn.KDEMLV / KDEMTO) * crop.rn.RKUPTAKE;
+        crop.rn.RKUST = (crop.vn.KDEMST / KDEMTO) * crop.rn.RKUPTAKE;
+        crop.rn.RKURT = (crop.vn.KDEMRT / KDEMTO) * crop.rn.RKUPTAKE;
 	  }
 }
 
 void WofostModel::npk_demand_uptake_states() {
 
 //       Maximum NPK concentrations in leaves [kg N kg-1 DM]
-        double NMAXLV = AFGEN(crop.par.NMAXLV_TB, crop.DVS);
-        double PMAXLV = AFGEN(crop.par.PMAXLV_TB, crop.DVS);
-        double KMAXLV = AFGEN(crop.par.KMAXLV_TB, crop.DVS);
+        double NMAXLV = AFGEN(crop.pn.NMAXLV_TB, crop.DVS);
+        double PMAXLV = AFGEN(crop.pn.PMAXLV_TB, crop.DVS);
+        double KMAXLV = AFGEN(crop.pn.KMAXLV_TB, crop.DVS);
         //std::cout << "NMAXLV: " << NMAXLV << std::endl;
 
 //       Maximum NPK concentrations in stems and roots [kg N kg-1 DM]
-        double NMAXST = crop.par.NMAXST_FR * NMAXLV;
-        double NMAXRT = crop.par.NMAXRT_FR * NMAXLV;
-        double NMAXSO = crop.par.NMAXSO;
+        double NMAXST = crop.pn.NMAXST_FR * NMAXLV;
+        double NMAXRT = crop.pn.NMAXRT_FR * NMAXLV;
+        double NMAXSO = crop.pn.NMAXSO;
 
-        double PMAXST = crop.par.PMAXST_FR * PMAXLV;
-        double PMAXRT = crop.par.PMAXRT_FR * PMAXLV;
-        double PMAXSO = crop.par.PMAXSO;
+        double PMAXST = crop.pn.PMAXST_FR * PMAXLV;
+        double PMAXRT = crop.pn.PMAXRT_FR * PMAXLV;
+        double PMAXSO = crop.pn.PMAXSO;
 
-        double KMAXST = crop.par.KMAXST_FR * KMAXLV;
-        double KMAXRT = crop.par.KMAXRT_FR * KMAXLV;
-        double KMAXSO = crop.par.KMAXSO;
+        double KMAXST = crop.pn.KMAXST_FR * KMAXLV;
+        double KMAXRT = crop.pn.KMAXRT_FR * KMAXLV;
+        double KMAXSO = crop.pn.KMAXSO;
 
 //       N demand [kg ha-1]
 
-        crop.var.NDEMLV = max(NMAXLV * crop.WLV - crop.state.ANLV, 0.);
-        //std::cout << "NDEMLV: " << crop.var.NDEMLV << " WLV: " << crop.WLV << " ANLV: " << crop.state.ANLV << std::endl;
+        crop.vn.NDEMLV = max(NMAXLV * crop.WLV - crop.sn.ANLV, 0.);
+        //std::cout << "NDEMLV: " << crop.vn.NDEMLV << " WLV: " << crop.WLV << " ANLV: " << crop.sn.ANLV << std::endl;
 		// maybe should be divided by one day, see equation 5 Shibu et al., 2010
-        crop.var.NDEMST = max(NMAXST * crop.WST - crop.state.ANST, 0.);
-        crop.var.NDEMRT = max(NMAXRT * crop.WRT - crop.state.ANRT, 0.);
-        crop.var.NDEMSO = max(NMAXSO * crop.WSO - crop.state.ANSO, 0.);
+        crop.vn.NDEMST = max(NMAXST * crop.WST - crop.sn.ANST, 0.);
+        crop.vn.NDEMRT = max(NMAXRT * crop.WRT - crop.sn.ANRT, 0.);
+        crop.vn.NDEMSO = max(NMAXSO * crop.WSO - crop.sn.ANSO, 0.);
 
 //       P demand [kg ha-1]
-        crop.var.PDEMLV = max(PMAXLV * crop.WLV - crop.state.APLV, 0.);
-        crop.var.PDEMST = max(PMAXST * crop.WST - crop.state.APST, 0.);
-        crop.var.PDEMRT = max(PMAXRT * crop.WRT - crop.state.APRT, 0.);
-        crop.var.PDEMSO = max(PMAXSO * crop.WSO - crop.state.APSO, 0.);
+        crop.vn.PDEMLV = max(PMAXLV * crop.WLV - crop.sn.APLV, 0.);
+        crop.vn.PDEMST = max(PMAXST * crop.WST - crop.sn.APST, 0.);
+        crop.vn.PDEMRT = max(PMAXRT * crop.WRT - crop.sn.APRT, 0.);
+        crop.vn.PDEMSO = max(PMAXSO * crop.WSO - crop.sn.APSO, 0.);
 
 //       K demand [kg ha-1]
-        crop.var.KDEMLV = max(KMAXLV * crop.WLV - crop.state.AKLV, 0.);
-        crop.var.KDEMST = max(KMAXST * crop.WST - crop.state.AKST, 0.);
-        crop.var.KDEMRT = max(KMAXRT * crop.WRT - crop.state.AKRT, 0.);
-        crop.var.KDEMSO = max(KMAXSO * crop.WSO - crop.state.AKSO, 0.);
+        crop.vn.KDEMLV = max(KMAXLV * crop.WLV - crop.sn.AKLV, 0.);
+        crop.vn.KDEMST = max(KMAXST * crop.WST - crop.sn.AKST, 0.);
+        crop.vn.KDEMRT = max(KMAXRT * crop.WRT - crop.sn.AKRT, 0.);
+        crop.vn.KDEMSO = max(KMAXSO * crop.WSO - crop.sn.AKSO, 0.);
 }

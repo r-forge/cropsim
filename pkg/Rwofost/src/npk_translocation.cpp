@@ -172,9 +172,9 @@ using namespace std;
 */
 
 void WofostModel::npk_translocation_initialize() {
-  crop.state.ATNLV = 0;
-  crop.state.ATNST = 0;
-  crop.state.ATNRT = 0;
+  crop.sn.ATNLV = 0;
+  crop.sn.ATNST = 0;
+  crop.sn.ATNRT = 0;
 
 }
 
@@ -187,30 +187,30 @@ void WofostModel::npk_translocation_rates() {
 //  partionioning of the uptake
 // if max amount of translocatable N = 0 then
 // N translocation rate is 0
-        if (crop.var.NTRANSLOCATABLE > 0) {
-            crop.rate.RNTLV = crop.rate.RNUSO * crop.state.ATNLV / crop.var.NTRANSLOCATABLE;
-            crop.rate.RNTST = crop.rate.RNUSO * crop.state.ATNST / crop.var.NTRANSLOCATABLE;
-            crop.rate.RNTRT = crop.rate.RNUSO * crop.state.ATNRT / crop.var.NTRANSLOCATABLE;
+        if (crop.vn.NTRANSLOCATABLE > 0) {
+            crop.rn.RNTLV = crop.rn.RNUSO * crop.sn.ATNLV / crop.vn.NTRANSLOCATABLE;
+            crop.rn.RNTST = crop.rn.RNUSO * crop.sn.ATNST / crop.vn.NTRANSLOCATABLE;
+            crop.rn.RNTRT = crop.rn.RNUSO * crop.sn.ATNRT / crop.vn.NTRANSLOCATABLE;
         } else {
-            crop.rate.RNTLV = crop.rate.RNTST = crop.rate.RNTRT = 0.;
+            crop.rn.RNTLV = crop.rn.RNTST = crop.rn.RNTRT = 0.;
 		    }
         // if max amount of translocatable P = 0 then
         // P translocation rate is 0
-        if (crop.var.PTRANSLOCATABLE > 0) {
-            crop.rate.RPTLV = crop.rate.RPUSO * crop.state.ATPLV / crop.var.PTRANSLOCATABLE;
-            crop.rate.RPTST = crop.rate.RPUSO * crop.state.ATPST / crop.var.PTRANSLOCATABLE;
-            crop.rate.RPTRT = crop.rate.RPUSO * crop.state.ATPRT / crop.var.PTRANSLOCATABLE;
+        if (crop.vn.PTRANSLOCATABLE > 0) {
+            crop.rn.RPTLV = crop.rn.RPUSO * crop.sn.ATPLV / crop.vn.PTRANSLOCATABLE;
+            crop.rn.RPTST = crop.rn.RPUSO * crop.sn.ATPST / crop.vn.PTRANSLOCATABLE;
+            crop.rn.RPTRT = crop.rn.RPUSO * crop.sn.ATPRT / crop.vn.PTRANSLOCATABLE;
         } else {
-            crop.rate.RPTLV = crop.rate.RPTST = crop.rate.RPTRT = 0.;
+            crop.rn.RPTLV = crop.rn.RPTST = crop.rn.RPTRT = 0.;
 		    }
         // if max amount of translocatable K = 0 then
         // K translocation rate is 0
-        if (crop.var.KTRANSLOCATABLE > 0) {
-            crop.rate.RKTLV = crop.rate.RKUSO * crop.state.ATKLV / crop.var.KTRANSLOCATABLE;
-            crop.rate.RKTST = crop.rate.RKUSO * crop.state.ATKST / crop.var.KTRANSLOCATABLE;
-            crop.rate.RKTRT = crop.rate.RKUSO * crop.state.ATKRT / crop.var.KTRANSLOCATABLE;
+        if (crop.vn.KTRANSLOCATABLE > 0) {
+            crop.rn.RKTLV = crop.rn.RKUSO * crop.sn.ATKLV / crop.vn.KTRANSLOCATABLE;
+            crop.rn.RKTST = crop.rn.RKUSO * crop.sn.ATKST / crop.vn.KTRANSLOCATABLE;
+            crop.rn.RKTRT = crop.rn.RKUSO * crop.sn.ATKRT / crop.vn.KTRANSLOCATABLE;
         } else {
-            crop.rate.RKTLV = crop.rate.RKTST = crop.rate.RKTRT = 0.;
+            crop.rn.RKTLV = crop.rn.RKTST = crop.rn.RKTRT = 0.;
 		}
 }
 
@@ -219,22 +219,22 @@ void WofostModel::npk_translocation_rates() {
 void WofostModel::npk_translocation_states() {
 
 //   translocatable N amount in the organs [kg N ha-1]
-    crop.state.ATNLV = max(0., crop.state.ANLV - crop.WLV * crop.par.NRESIDLV);
-    crop.state.ATNST = max(0., crop.state.ANST - crop.WST * crop.par.NRESIDST);
-    crop.state.ATNRT = max((crop.state.ATNLV + crop.state.ATNST) * crop.par.NPK_TRANSLRT_FR, crop.state.ANRT - crop.WRT * crop.par.NRESIDRT);
+    crop.sn.ATNLV = max(0., crop.sn.ANLV - crop.WLV * crop.pn.NRESIDLV);
+    crop.sn.ATNST = max(0., crop.sn.ANST - crop.WST * crop.pn.NRESIDST);
+    crop.sn.ATNRT = max((crop.sn.ATNLV + crop.sn.ATNST) * crop.pn.NPK_TRANSLRT_FR, crop.sn.ANRT - crop.WRT * crop.pn.NRESIDRT);
 
 //   translocatable P amount in the organs [kg P ha-1]
-    crop.state.ATPLV = max(0., crop.state.APLV - crop.WLV * crop.par.PRESIDLV);
-    crop.state.ATPST = max(0., crop.state.APST - crop.WST * crop.par.PRESIDST);
-    crop.state.ATPRT = max((crop.state.ATPLV + crop.state.ATPST) * crop.par.NPK_TRANSLRT_FR, crop.state.APRT - crop.WRT * crop.par.PRESIDRT);
+    crop.sn.ATPLV = max(0., crop.sn.APLV - crop.WLV * crop.pn.PRESIDLV);
+    crop.sn.ATPST = max(0., crop.sn.APST - crop.WST * crop.pn.PRESIDST);
+    crop.sn.ATPRT = max((crop.sn.ATPLV + crop.sn.ATPST) * crop.pn.NPK_TRANSLRT_FR, crop.sn.APRT - crop.WRT * crop.pn.PRESIDRT);
 
 //   translocatable K amount in the organs [kg K ha-1]
-    crop.state.ATKLV = max(0., crop.state.AKLV - crop.WLV * crop.par.KRESIDLV);
-    crop.state.ATKST = max(0., crop.state.AKST - crop.WST * crop.par.KRESIDST);
-    crop.state.ATKRT = max((crop.state.ATKLV + crop.state.ATKST) * crop.par.NPK_TRANSLRT_FR, crop.state.AKRT - crop.WRT * crop.par.KRESIDRT);
+    crop.sn.ATKLV = max(0., crop.sn.AKLV - crop.WLV * crop.pn.KRESIDLV);
+    crop.sn.ATKST = max(0., crop.sn.AKST - crop.WST * crop.pn.KRESIDST);
+    crop.sn.ATKRT = max((crop.sn.ATKLV + crop.sn.ATKST) * crop.pn.NPK_TRANSLRT_FR, crop.sn.AKRT - crop.WRT * crop.pn.KRESIDRT);
 
 //   total translocatable NPK amount in the organs [kg N ha-1]
-    crop.var.NTRANSLOCATABLE = crop.state.ATNLV + crop.state.ATNST + crop.state.ATNRT;
-    crop.var.PTRANSLOCATABLE = crop.state.ATPLV + crop.state.ATPST + crop.state.ATPRT;
-    crop.var.KTRANSLOCATABLE = crop.state.ATKLV + crop.state.ATKST + crop.state.ATKRT;
+    crop.vn.NTRANSLOCATABLE = crop.sn.ATNLV + crop.sn.ATNST + crop.sn.ATNRT;
+    crop.vn.PTRANSLOCATABLE = crop.sn.ATPLV + crop.sn.ATPST + crop.sn.ATPRT;
+    crop.vn.KTRANSLOCATABLE = crop.sn.ATKLV + crop.sn.ATKST + crop.sn.ATKRT;
 }

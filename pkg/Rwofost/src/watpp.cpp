@@ -18,7 +18,7 @@ Author: C.A. van Diepen, February 1989, revised July 1990
 
 VARIABLE TYPE Description                                      Units   I/O
 
-  IAIRDU  I*4  indicates presence(1) or absence(0) of airducts            I
+  p.IAIRDU  I*4  indicates presence(1) or absence(0) of airducts            I
                in the roots. 1= can tolerate waterlogging
   SM0     R*4  soil porosity                                    cm3 cm-3  O
   SMFCF   R*4  soil moisture content at field capacity          cm3 cm-3  O
@@ -46,7 +46,7 @@ void WofostModel::WATPP_rates() {
 // rates of the water balance for potential production
 
 // evaporation rate from soil EVS (for non-rice crops) or water surface EVW (for rice)
-    if (crop.IAIRDU == 0) {
+    if (crop.p.IAIRDU == 0) {
       soil.EVS = soil.EVSMX * (soil.SMFCF - soil.SMW / 3.) / (soil.SM0 - soil.SMW / 3.);
       soil.EVW  = 0;
     } else {

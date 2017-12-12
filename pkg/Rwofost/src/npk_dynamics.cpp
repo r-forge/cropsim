@@ -1,16 +1,5 @@
 
 /*
-#!/usr/bin/env python
-from .. import exceptions as exc
-from ..traitlets import Float, Int, Instance, AfgenTrait
-from ..decorators import prepare_rates, prepare_states
-from ..base_classes import ParamTemplate, StatesTemplate, RatesTemplate, SimulationObject
-
-from .nutrients import NPK_Translocation
-from .nutrients import NPK_Demand_Uptake
-
-
-
 class NPK_Crop_Dynamics(SimulationObject):
     """Implementation of overall NPK crop dynamics.
 
@@ -247,41 +236,28 @@ using namespace std;
 
 void WofostModel::npk_crop_dynamics_initialize() {
 
-   // self.ANLVI = WLV * AFGEN(NMAXLV_TB, DVS);
-   // self.ANSTI = WST * AFGEN(NMAXLV_TB, DVS) * NMAXST_FR;
-   // self.ANRTI = WRT * AFGEN(NMAXLV_TB, DVS) * NMAXRT_FR;
-   // self.ANSOI = 0.;
+   crop.sn.ANLV = crop.WLV * AFGEN(crop.pn.NMAXLV_TB, crop.DVS);
+   crop.sn.ANST = crop.WST * AFGEN(crop.pn.NMAXLV_TB, crop.DVS) * crop.pn.NMAXST_FR;
+   crop.sn.ANRT = crop.WRT * AFGEN(crop.pn.NMAXLV_TB, crop.DVS) * crop.pn.NMAXRT_FR;
+   crop.sn.ANSO = 0.;
 
-   crop.state.ANLV = crop.WLV * AFGEN(crop.par.NMAXLV_TB, crop.DVS);
-   crop.state.ANST = crop.WST * AFGEN(crop.par.NMAXLV_TB, crop.DVS) * crop.par.NMAXST_FR;
-   crop.state.ANRT = crop.WRT * AFGEN(crop.par.NMAXLV_TB, crop.DVS) * crop.par.NMAXRT_FR;
-   crop.state.ANSO = 0.;
+   crop.sn.APLV = crop.WLV * AFGEN(crop.pn.PMAXLV_TB, crop.DVS);
+   crop.sn.APST = crop.WST * AFGEN(crop.pn.PMAXLV_TB, crop.DVS) * crop.pn.PMAXST_FR;
+   crop.sn.APRT = crop.WRT * AFGEN(crop.pn.PMAXLV_TB, crop.DVS) * crop.pn.PMAXRT_FR;
+   crop.sn.APSO = 0.;
 
-   // self.APLVI = WLV * AFGEN(PMAXLV_TB, DVS);
-   // self.APSTI = WST * AFGEN(PMAXLV_TB, DVS) * PMAXST_FR;
-    //self.APRTI = WRT * AFGEN(PMAXLV_TB, DVS) * PMAXRT_FR;
-   // self.APSOI = 0.;
-   crop.state.APLV = crop.WLV * AFGEN(crop.par.PMAXLV_TB, crop.DVS);
-   crop.state.APST = crop.WST * AFGEN(crop.par.PMAXLV_TB, crop.DVS) * crop.par.PMAXST_FR;
-   crop.state.APRT = crop.WRT * AFGEN(crop.par.PMAXLV_TB, crop.DVS) * crop.par.PMAXRT_FR;
-   crop.state.APSO = 0.;
+   crop.sn.AKLV = crop.WLV * AFGEN(crop.pn.KMAXLV_TB, crop.DVS);
+   crop.sn.AKST = crop.WST * AFGEN(crop.pn.KMAXLV_TB, crop.DVS) * crop.pn.KMAXRT_FR;
+   crop.sn.AKRT = crop.WRT * AFGEN(crop.pn.KMAXLV_TB, crop.DVS) * crop.pn.KMAXRT_FR;
+   crop.sn.AKSO = 0.;
 
-    //self.AKLVI = WLV * AFGEN(KMAXLV_TB, DVS);
-   // self.AKSTI = WST * AFGEN(KMAXLV_TB, DVS) * KMAXST_FR;
-   // self.AKRTI = WRT * AFGEN(KMAXLV_TB, DVS) * KMAXRT_FR;
-   // self.AKSOI = 0.;
-   crop.state.AKLV = crop.WLV * AFGEN(crop.par.KMAXLV_TB, crop.DVS);
-   crop.state.AKST = crop.WST * AFGEN(crop.par.KMAXLV_TB, crop.DVS) * crop.par.KMAXRT_FR;
-   crop.state.AKRT = crop.WRT * AFGEN(crop.par.KMAXLV_TB, crop.DVS) * crop.par.KMAXRT_FR;
-   crop.state.AKSO = 0.;
-
-   crop.var.NUPTAKE_T = 0;
-   crop.var.PUPTAKE_T = 0;
-   crop.var.KUPTAKE_T = 0;
-   crop.var.NFIX_T = 0;
-   crop.var.NLOSSES_T = 0;
-   crop.var.PLOSSES_T = 0;
-   crop.var.KLOSSES_T = 0;
+   crop.vn.NUPTAKE_T = 0;
+   crop.vn.PUPTAKE_T = 0;
+   crop.vn.KUPTAKE_T = 0;
+   crop.vn.NFIX_T = 0;
+   crop.vn.NLOSSES_T = 0;
+   crop.vn.PLOSSES_T = 0;
+   crop.vn.KLOSSES_T = 0;
 
    // NUPTAKE_T = 0;
 //	PUPTAKE_T = 0.;
@@ -297,48 +273,48 @@ void WofostModel::npk_crop_dynamics_initialize() {
 void WofostModel::npk_crop_dynamics_rates() {
 
     npk_demand_uptake_rates();
-	  npk_translocation_rates();
+	npk_translocation_rates();
 
     // Compute loss of NPK due to death of plant material
     //DRLV = death rate leaves [kg dry matter ha-1 d-1]
     //DRST = death rate stems [kg dry matter ha-1 d-1]
     //DRRT = death rate roots [kg dry matter ha-1 d-1]
 
-  double RNDLV = crop.par.NRESIDLV * crop.DRLV;
-	double RNDST = crop.par.NRESIDST * crop.DRST;
-	double RNDRT = crop.par.NRESIDRT * crop.DRRT;
+	double RNDLV = crop.pn.NRESIDLV * crop.DRLV;
+	double RNDST = crop.pn.NRESIDST * crop.DRST;
+	double RNDRT = crop.pn.NRESIDRT * crop.DRRT;
 
-	double RPDLV = crop.par.PRESIDLV * crop.DRLV;
-	double RPDST = crop.par.PRESIDST * crop.DRST;
-	double RPDRT = crop.par.PRESIDRT * crop.DRRT;
+	double RPDLV = crop.pn.PRESIDLV * crop.DRLV;
+	double RPDST = crop.pn.PRESIDST * crop.DRST;
+	double RPDRT = crop.pn.PRESIDRT * crop.DRRT;
 
-	double RKDLV = crop.par.KRESIDLV * crop.DRLV;
-	double RKDST = crop.par.KRESIDST * crop.DRST;
-	double RKDRT = crop.par.KRESIDRT * crop.DRRT;
+	double RKDLV = crop.pn.KRESIDLV * crop.DRLV;
+	double RKDST = crop.pn.KRESIDST * crop.DRST;
+	double RKDRT = crop.pn.KRESIDRT * crop.DRRT;
 
    // N rates in leaves, stems, root and storage organs computed as
    // uptake - translocation - death.
    // except for storage organs which only take up as a result of translocation.
-	crop.rate.RNLV = crop.rate.RNULV - crop.rate.RNTLV - RNDLV;
-	crop.rate.RNST = crop.rate.RNUST - crop.rate.RNTST - RNDST;
-	crop.rate.RNRT = crop.rate.RNURT - crop.rate.RNTRT - RNDRT;
-	crop.rate.RNSO = crop.rate.RNUSO;
+	crop.rn.RNLV = crop.rn.RNULV - crop.rn.RNTLV - RNDLV;
+	crop.rn.RNST = crop.rn.RNUST - crop.rn.RNTST - RNDST;
+	crop.rn.RNRT = crop.rn.RNURT - crop.rn.RNTRT - RNDRT;
+	crop.rn.RNSO = crop.rn.RNUSO;
 
    // P rates in leaves, stems, root and storage organs
-	crop.rate.RPLV = crop.rate.RPULV - crop.rate.RPTLV - RPDLV;
-	crop.rate.RPST = crop.rate.RPUST - crop.rate.RPTST - RPDST;
-	crop.rate.RPRT = crop.rate.RPURT - crop.rate.RPTRT - RPDRT;
-	crop.rate.RPSO = crop.rate.RPUSO;
+	crop.rn.RPLV = crop.rn.RPULV - crop.rn.RPTLV - RPDLV;
+	crop.rn.RPST = crop.rn.RPUST - crop.rn.RPTST - RPDST;
+	crop.rn.RPRT = crop.rn.RPURT - crop.rn.RPTRT - RPDRT;
+	crop.rn.RPSO = crop.rn.RPUSO;
 
    // K rates in leaves, stems, root and storage organs
-	crop.rate.RKLV = crop.rate.RKULV - crop.rate.RKTLV - RKDLV;
-	crop.rate.RKST = crop.rate.RKUST - crop.rate.RKTST - RKDST;
-	crop.rate.RKRT = crop.rate.RKURT - crop.rate.RKTRT - RKDRT;
-	crop.rate.RKSO = crop.rate.RKUSO;
+	crop.rn.RKLV = crop.rn.RKULV - crop.rn.RKTLV - RKDLV;
+	crop.rn.RKST = crop.rn.RKUST - crop.rn.RKTST - RKDST;
+	crop.rn.RKRT = crop.rn.RKURT - crop.rn.RKTRT - RKDRT;
+	crop.rn.RKSO = crop.rn.RKUSO;
 
-	crop.rate.RNLOSS = RNDLV + RNDST + RNDRT;
-	crop.rate.RPLOSS = RPDLV + RPDST + RPDRT;
-	crop.rate.RKLOSS = RKDLV + RKDST + RKDRT;
+	crop.rn.RNLOSS = RNDLV + RNDST + RNDRT;
+	crop.rn.RPLOSS = RPDLV + RPDST + RPDRT;
+	crop.rn.RKLOSS = RKDLV + RKDST + RKDRT;
 
 /*
    self._check_N_balance(day)
@@ -350,35 +326,35 @@ void WofostModel::npk_crop_dynamics_rates() {
 void WofostModel::npk_crop_dynamics_states() {
 
 // N amount in leaves, stems, root and storage organs
-    crop.state.ANLV += crop.rate.RNLV;
-    crop.state.ANST += crop.rate.RNST;
-    crop.state.ANRT += crop.rate.RNRT;
-    crop.state.ANSO += crop.rate.RNSO;
+    crop.sn.ANLV += crop.rn.RNLV;
+    crop.sn.ANST += crop.rn.RNST;
+    crop.sn.ANRT += crop.rn.RNRT;
+    crop.sn.ANSO += crop.rn.RNSO;
 
 // P amount in leaves, stems, root and storage organs
-    crop.state.APLV += crop.rate.RPLV;
-    crop.state.APST += crop.rate.RPST;
-    crop.state.APRT += crop.rate.RPRT;
-    crop.state.APSO += crop.rate.RPSO;
+    crop.sn.APLV += crop.rn.RPLV;
+    crop.sn.APST += crop.rn.RPST;
+    crop.sn.APRT += crop.rn.RPRT;
+    crop.sn.APSO += crop.rn.RPSO;
 
 // K amount in leaves, stems, root and storage organs
-    crop.state.AKLV += crop.rate.RKLV;
-    crop.state.AKST += crop.rate.RKST;
-    crop.state.AKRT += crop.rate.RKRT;
-    crop.state.AKSO += crop.rate.RKSO;
+    crop.sn.AKLV += crop.rn.RKLV;
+    crop.sn.AKST += crop.rn.RKST;
+    crop.sn.AKRT += crop.rn.RKRT;
+    crop.sn.AKSO += crop.rn.RKSO;
 
     npk_translocation_states();
     npk_demand_uptake_states();
 
 // total NPK uptake from soil
-    crop.var.NUPTAKE_T += crop.rate.RNUPTAKE;
-    crop.var.PUPTAKE_T += crop.rate.RPUPTAKE;
-    crop.var.KUPTAKE_T += crop.rate.RKUPTAKE;
-    crop.var.NFIX_T += crop.rate.RNFIX;
+    crop.vn.NUPTAKE_T += crop.rn.RNUPTAKE;
+    crop.vn.PUPTAKE_T += crop.rn.RPUPTAKE;
+    crop.vn.KUPTAKE_T += crop.rn.RKUPTAKE;
+    crop.vn.NFIX_T += crop.rn.RNFIX;
 
-    crop.var.NLOSSES_T += crop.rate.RNLOSS;
-    crop.var.PLOSSES_T += crop.rate.RPLOSS;
-    crop.var.KLOSSES_T += crop.rate.RKLOSS;
+    crop.vn.NLOSSES_T += crop.rn.RNLOSS;
+    crop.vn.PLOSSES_T += crop.rn.RPLOSS;
+    crop.vn.KLOSSES_T += crop.rn.RKLOSS;
 }
 
 

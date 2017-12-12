@@ -42,113 +42,102 @@ NumericMatrix wofost(List crop, DataFrame weather, List soil, List control) {
 	cntr.npk_model = OptionalintFromList(control, "npk_model");
 	if(cntr.npk_model){
 		cntr.NPKdates = longFromList(control, "NPKdates");
-		//DateVector npkdate = datesFromList(control, "NPKdates");
-		//cntr.NPKdates.resize(npkdate.size());
-		//for (int i = 0; i < npkdate.size(); i++) {
-		// cntr.NPKdates[i] = date(npkdate[i].getYear(), npkdate[i].getMonth(),  npkdate[i].getDay());
-		//}
 		cntr.N_amount = vecFromList(control, "N");
 		cntr.P_amount = vecFromList(control, "P");
 		cntr.K_amount = vecFromList(control, "K");
 
-		crp.par.TCNT = doubleFromList(crop, "TCNT");
-		crp.par.TCPT = doubleFromList(crop, "TCPT");
-		crp.par.TCKT = doubleFromList(crop, "TCKT");
-		crp.par.DVSNPK_STOP = doubleFromList(crop, "DVSNPK_STOP");
-		crp.par.NFIX_FR = doubleFromList(crop, "NFIX_FR");
-		crp.par.NPART = doubleFromList(crop, "NPART");
-		crp.par.RMR = doubleFromList(crop, "RMR");
-		crp.par.RML = doubleFromList(crop, "RML");
-		crp.par.RMS = doubleFromList(crop, "RMS");
-		crp.par.RMO = doubleFromList(crop, "RMO");
-		crp.par.Q10 = doubleFromList(crop, "Q10");
-		crp.par.NMAXSO = doubleFromList(crop, "NMAXSO");
-		crp.par.PMAXSO = doubleFromList(crop, "PMAXSO");
-		crp.par.KMAXSO = doubleFromList(crop, "KMAXSO");
-		crp.par.NMAXRT_FR = doubleFromList(crop, "NMAXRT_FR");
-		crp.par.PMAXRT_FR = doubleFromList(crop, "PMAXRT_FR");
-		crp.par.KMAXRT_FR = doubleFromList(crop, "KMAXRT_FR");
-		crp.par.NMAXST_FR = doubleFromList(crop, "NMAXST_FR");
-		crp.par.PMAXST_FR = doubleFromList(crop, "PMAXST_FR");
-		crp.par.KMAXST_FR = doubleFromList(crop, "KMAXST_FR");
-		crp.par.NRESIDLV = doubleFromList(crop, "NRESIDLV");
-		crp.par.NRESIDST = doubleFromList(crop, "NRESIDST");
-		crp.par.NRESIDRT = doubleFromList(crop, "NRESIDRT");
-		crp.par.PRESIDLV = doubleFromList(crop, "PRESIDLV");
-		crp.par.PRESIDST = doubleFromList(crop, "PRESIDST");
-		crp.par.PRESIDRT = doubleFromList(crop, "PRESIDRT");
-		crp.par.KRESIDLV = doubleFromList(crop, "KRESIDLV");
-		crp.par.KRESIDST = doubleFromList(crop, "KRESIDST");
-		crp.par.KRESIDRT = doubleFromList(crop, "KRESIDRT");
-		crp.par.NCRIT_FR = doubleFromList(crop, "NCRIT_FR");
-		crp.par.PCRIT_FR = doubleFromList(crop, "PCRIT_FR");
-		crp.par.KCRIT_FR = doubleFromList(crop, "KCRIT_FR");
-		crp.par.NLUE_NPK = doubleFromList(crop, "NLUE_NPK");
-		crp.par.NPK_TRANSLRT_FR = doubleFromList(crop, "NPK_TRANSLRT_FR");
-		crp.par.RFSETB = TBFromList(crop, "RFSETB");
-		crp.par.NMAXLV_TB = TBFromList(crop, "NMAXLV_TB");
-		crp.par.PMAXLV_TB = TBFromList(crop, "PMAXLV_TB");
-		crp.par.KMAXLV_TB = TBFromList(crop, "KMAXLV_TB");
+		crp.pn.TCNT = doubleFromList(crop, "TCNT");
+		crp.pn.TCPT = doubleFromList(crop, "TCPT");
+		crp.pn.TCKT = doubleFromList(crop, "TCKT");
+		crp.pn.DVSNPK_STOP = doubleFromList(crop, "DVSNPK_STOP");
+		crp.pn.NFIX_FR = doubleFromList(crop, "NFIX_FR");
+		crp.pn.NPART = doubleFromList(crop, "NPART");
+		crp.pn.NMAXSO = doubleFromList(crop, "NMAXSO");
+		crp.pn.PMAXSO = doubleFromList(crop, "PMAXSO");
+		crp.pn.KMAXSO = doubleFromList(crop, "KMAXSO");
+		crp.pn.NMAXRT_FR = doubleFromList(crop, "NMAXRT_FR");
+		crp.pn.PMAXRT_FR = doubleFromList(crop, "PMAXRT_FR");
+		crp.pn.KMAXRT_FR = doubleFromList(crop, "KMAXRT_FR");
+		crp.pn.NMAXST_FR = doubleFromList(crop, "NMAXST_FR");
+		crp.pn.PMAXST_FR = doubleFromList(crop, "PMAXST_FR");
+		crp.pn.KMAXST_FR = doubleFromList(crop, "KMAXST_FR");
+		crp.pn.NRESIDLV = doubleFromList(crop, "NRESIDLV");
+		crp.pn.NRESIDST = doubleFromList(crop, "NRESIDST");
+		crp.pn.NRESIDRT = doubleFromList(crop, "NRESIDRT");
+		crp.pn.PRESIDLV = doubleFromList(crop, "PRESIDLV");
+		crp.pn.PRESIDST = doubleFromList(crop, "PRESIDST");
+		crp.pn.PRESIDRT = doubleFromList(crop, "PRESIDRT");
+		crp.pn.KRESIDLV = doubleFromList(crop, "KRESIDLV");
+		crp.pn.KRESIDST = doubleFromList(crop, "KRESIDST");
+		crp.pn.KRESIDRT = doubleFromList(crop, "KRESIDRT");
+		crp.pn.NCRIT_FR = doubleFromList(crop, "NCRIT_FR");
+		crp.pn.PCRIT_FR = doubleFromList(crop, "PCRIT_FR");
+		crp.pn.KCRIT_FR = doubleFromList(crop, "KCRIT_FR");
+		crp.pn.NLUE_NPK = doubleFromList(crop, "NLUE_NPK");
+		crp.pn.NPK_TRANSLRT_FR = doubleFromList(crop, "NPK_TRANSLRT_FR");
+		crp.pn.NMAXLV_TB = TBFromList(crop, "NMAXLV_TB");
+		crp.pn.PMAXLV_TB = TBFromList(crop, "PMAXLV_TB");
+		crp.pn.KMAXLV_TB = TBFromList(crop, "KMAXLV_TB");
 
   }
 
 
 
 
-	crp.TBASEM = doubleFromList(crop, "TBASEM");
-	crp.TEFFMX = doubleFromList(crop, "TEFFMX");
-	crp.TSUMEM = doubleFromList(crop, "TSUMEM");
-	crp.IDSL = intFromList(crop, "IDSL");
-	crp.DLO = doubleFromList(crop, "DLO");
-	crp.DLC = doubleFromList(crop, "DLC");
-	crp.TSUM1 = doubleFromList(crop, "TSUM1");
-	crp.TSUM2 = doubleFromList(crop, "TSUM2");
-	crp.DTSMTB = TBFromList(crop, "DTSMTB");
+	crp.p.TBASEM = doubleFromList(crop, "p.TBASEM");
+	crp.p.TEFFMX = doubleFromList(crop, "p.TEFFMX");
+	crp.p.TSUMEM = doubleFromList(crop, "p.TSUMEM");
+	crp.p.IDSL = intFromList(crop, "p.IDSL");
+	crp.p.DLO = doubleFromList(crop, "p.DLO");
+	crp.p.DLC = doubleFromList(crop, "p.DLC");
+	crp.p.TSUM1 = doubleFromList(crop, "p.TSUM1");
+	crp.p.TSUM2 = doubleFromList(crop, "p.TSUM2");
+	crp.p.DTSMTB = TBFromList(crop, "p.DTSMTB");
 
-	crp.DVSI = doubleFromList(crop, "DVSI");
-	crp.DVSEND = doubleFromList(crop, "DVSEND");
-	crp.TDWI = doubleFromList(crop, "TDWI");
-	crp.LAIEM = doubleFromList(crop, "LAIEM");
-	crp.RGRLAI = doubleFromList(crop, "RGRLAI");
-	crp.SLATB = TBFromList(crop, "SLATB");
-	crp.SPA = doubleFromList(crop, "SPA");
-	crp.SSATB = TBFromList(crop, "SSATB");
-	crp.SPAN = doubleFromList(crop, "SPAN");
-	crp.TBASE = doubleFromList(crop, "TBASE");
-	crp.CVL = doubleFromList(crop, "CVL");
-	crp.CVO = doubleFromList(crop, "CVO");
-	crp.CVR = doubleFromList(crop, "CVR");
-	crp.CVS = doubleFromList(crop, "CVS");
-	crp.Q10 = doubleFromList(crop, "Q10");
-	crp.RML = doubleFromList(crop, "RML");
-	crp.RMO = doubleFromList(crop, "RMO");
-	crp.RMR = doubleFromList(crop, "RMR");
-	crp.RMS = doubleFromList(crop, "RMS");
-	crp.RFSETB = TBFromList(crop, "RFSETB");
-	crp.FRTB = TBFromList(crop, "FRTB");
-	crp.FLTB = TBFromList(crop, "FLTB");
-	crp.FSTB = TBFromList(crop, "FSTB");
-	crp.FOTB = TBFromList(crop, "FOTB");
-	crp.PERDL = doubleFromList(crop, "PERDL");
-	crp.RDRRTB = TBFromList(crop, "RDRRTB");
-	crp.RDRSTB = TBFromList(crop, "RDRSTB");
-	crp.CFET = doubleFromList(crop, "CFET");
-	crp.DEPNR = doubleFromList(crop, "DEPNR");
-	crp.RDI = doubleFromList(crop, "RDI");
-	crp.RRI = doubleFromList(crop, "RRI");
-	crp.RDMCR = doubleFromList(crop, "RDMCR");
+	crp.p.DVSI = doubleFromList(crop, "p.DVSI");
+	crp.p.DVSEND = doubleFromList(crop, "p.DVSEND");
+	crp.p.TDWI = doubleFromList(crop, "p.TDWI");
+	crp.p.LAIEM = doubleFromList(crop, "p.LAIEM");
+	crp.p.RGRLAI = doubleFromList(crop, "p.RGRLAI");
+	crp.p.SLATB = TBFromList(crop, "p.SLATB");
+	crp.p.SPA = doubleFromList(crop, "p.SPA");
+	crp.p.SSATB = TBFromList(crop, "p.SSATB");
+	crp.p.SPAN = doubleFromList(crop, "p.SPAN");
+	crp.p.TBASE = doubleFromList(crop, "p.TBASE");
+	crp.p.CVL = doubleFromList(crop, "p.CVL");
+	crp.p.CVO = doubleFromList(crop, "p.CVO");
+	crp.p.CVR = doubleFromList(crop, "p.CVR");
+	crp.p.CVS = doubleFromList(crop, "p.CVS");
+	crp.p.Q10 = doubleFromList(crop, "p.Q10");
+	crp.p.RML = doubleFromList(crop, "p.RML");
+	crp.p.RMO = doubleFromList(crop, "p.RMO");
+	crp.p.RMR = doubleFromList(crop, "p.RMR");
+	crp.p.RMS = doubleFromList(crop, "p.RMS");
+	crp.p.RFSETB = TBFromList(crop, "p.RFSETB");
+	crp.p.FRTB = TBFromList(crop, "p.FRTB");
+	crp.p.FLTB = TBFromList(crop, "p.FLTB");
+	crp.p.FSTB = TBFromList(crop, "p.FSTB");
+	crp.p.FOTB = TBFromList(crop, "p.FOTB");
+	crp.p.PERDL = doubleFromList(crop, "p.PERDL");
+	crp.p.RDRRTB = TBFromList(crop, "p.RDRRTB");
+	crp.p.RDRSTB = TBFromList(crop, "p.RDRSTB");
+	crp.p.CFET = doubleFromList(crop, "p.CFET");
+	crp.p.DEPNR = doubleFromList(crop, "p.DEPNR");
+	crp.p.RDI = doubleFromList(crop, "p.RDI");
+	crp.p.RRI = doubleFromList(crop, "p.RRI");
+	crp.p.RDMCR = doubleFromList(crop, "p.RDMCR");
 
-	crp.IAIRDU = intFromList(crop, "IAIRDU");
+	crp.p.IAIRDU = intFromList(crop, "p.IAIRDU");
 
-	crp.KDifTB = TBFromList(crop, "KDIFTB");
-	crp.EFFTB = TBFromList(crop, "EFFTB");
-	crp.AMAXTB = TBFromList(crop, "AMAXTB");
-	crp.TMPFTB = TBFromList(crop, "TMPFTB");
-	crp.TMNFTB = TBFromList(crop, "TMNFTB");
+	crp.p.KDifTB = TBFromList(crop, "p.KDifTB");
+	crp.p.EFFTB = TBFromList(crop, "p.EFFTB");
+	crp.p.AMAXTB = TBFromList(crop, "p.AMAXTB");
+	crp.p.TMPFTB = TBFromList(crop, "p.TMPFTB");
+	crp.p.TMNFTB = TBFromList(crop, "p.TMNFTB");
 
-	crp.CO2AMAXTB = TBFromList(crop, "CO2AMAXTB");
-	crp.CO2EFFTB = TBFromList(crop, "CO2EFFTB");
-	crp.CO2TRATB = TBFromList(crop, "CO2TRATB");
+	crp.p.CO2AMAXTB = TBFromList(crop, "p.CO2AMAXTB");
+	crp.p.CO2EFFTB = TBFromList(crop, "p.CO2EFFTB");
+	crp.p.CO2TRATB = TBFromList(crop, "p.CO2TRATB");
 
 
 // soil parameters
@@ -189,18 +178,18 @@ NumericMatrix wofost(List crop, DataFrame weather, List soil, List control) {
 	sol.SSI = doubleFromList(soil, "SSI");
 
 	if(cntr.npk_model){
-		sol.par.N_recovery = vecFromList(control, "Nrecovery");
-		sol.par.P_recovery = vecFromList(control, "Precovery");
-		sol.par.K_recovery = vecFromList(control, "Krecovery");
-		sol.par.BG_N_SUPPLY = doubleFromList(soil, "BG_N_SUPPLY");
-		sol.par.BG_P_SUPPLY = doubleFromList(soil, "BG_P_SUPPLY");
-		sol.par.BG_K_SUPPLY = doubleFromList(soil, "BG_K_SUPPLY");
-		sol.par.NSOILBASE = doubleFromList(soil, "NSOILBASE");
-		sol.par.PSOILBASE = doubleFromList(soil, "PSOILBASE");
-		sol.par.KSOILBASE = doubleFromList(soil, "KSOILBASE");
-		sol.par.NSOILBASE_FR = doubleFromList(soil, "NSOILBASE_FR");
-		sol.par.PSOILBASE_FR = doubleFromList(soil, "PSOILBASE_FR");
-		sol.par.KSOILBASE_FR = doubleFromList(soil, "KSOILBASE_FR");
+		sol.pn.N_recovery = vecFromList(control, "Nrecovery");
+		sol.pn.P_recovery = vecFromList(control, "Precovery");
+		sol.pn.K_recovery = vecFromList(control, "Krecovery");
+		sol.pn.BG_N_SUPPLY = doubleFromList(soil, "BG_N_SUPPLY");
+		sol.pn.BG_P_SUPPLY = doubleFromList(soil, "BG_P_SUPPLY");
+		sol.pn.BG_K_SUPPLY = doubleFromList(soil, "BG_K_SUPPLY");
+		sol.pn.NSOILBASE = doubleFromList(soil, "NSOILBASE");
+		sol.pn.PSOILBASE = doubleFromList(soil, "PSOILBASE");
+		sol.pn.KSOILBASE = doubleFromList(soil, "KSOILBASE");
+		sol.pn.NSOILBASE_FR = doubleFromList(soil, "NSOILBASE_FR");
+		sol.pn.PSOILBASE_FR = doubleFromList(soil, "PSOILBASE_FR");
+		sol.pn.KSOILBASE_FR = doubleFromList(soil, "KSOILBASE_FR");
 
 	}
 

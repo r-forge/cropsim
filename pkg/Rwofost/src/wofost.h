@@ -35,63 +35,27 @@ struct WofostControl {
 };
 
 
-struct WofostCropParameters {
-		double TCNT, TCPT, TCKT;
-		double DVSNPK_STOP, NFIX_FR, NPART;
-		double RMR, RML, RMS, RMO;
-		std::vector<double> RFSETB;
-		double Q10;
-		double NMAXSO, PMAXSO, KMAXSO;
-		double NMAXRT_FR, PMAXRT_FR, KMAXRT_FR;
-		double NMAXST_FR, PMAXST_FR, KMAXST_FR;
-		std::vector<double> NMAXLV_TB, PMAXLV_TB, KMAXLV_TB;
-		double NRESIDLV, NRESIDST, NRESIDRT, PRESIDLV, PRESIDST, PRESIDRT, KRESIDLV, KRESIDST, KRESIDRT;
-		double NCRIT_FR, PCRIT_FR, KCRIT_FR;
-		double NLUE_NPK, NPK_TRANSLRT_FR;
+struct WofostCropParametersNPK {
+	double TCNT, TCPT, TCKT;
+	double DVSNPK_STOP, NFIX_FR, NPART;
+	//double p.RMR, p.RML, p.RMS, p.RMO;
+	//double p.Q10;
+	// std::vector<double> RFSETB;
+	double NMAXSO, PMAXSO, KMAXSO;
+	double NMAXRT_FR, PMAXRT_FR, KMAXRT_FR;
+	double NMAXST_FR, PMAXST_FR, KMAXST_FR;
+	std::vector<double> NMAXLV_TB, PMAXLV_TB, KMAXLV_TB;
+	double NRESIDLV, NRESIDST, NRESIDRT, PRESIDLV, PRESIDST, PRESIDRT, KRESIDLV, KRESIDST, KRESIDRT;
+	double NCRIT_FR, PCRIT_FR, KCRIT_FR;
+	double NLUE_NPK, NPK_TRANSLRT_FR;
 };
 
 
-struct WofostCrop {
-
-	WofostCropParameters par;
-
-	struct rates {
-       double RNUSO, RPUSO, RKUSO;
-	   double RNUPTAKE, RPUPTAKE, RKUPTAKE;
-	   double RNULV, RNUST, RNURT, RPULV, RPUST, RPURT, RKULV, RKUST, RKURT;
-	   double RNLV, RNST, RNRT, RNSO, RPLV, RPST, RPRT, RPSO, RKLV, RKST, RKRT, RKSO;
-	   double RNTLV, RNTST, RNTRT, RNTSO, RPTLV, RPTST, RPTRT, RPTSO, RKTLV, RKTST, RKTRT, RKTSO;
-	   double RNLOSS, RPLOSS, RKLOSS;
-	 double RNFIX;
-
-	};
-	rates rate;
-	struct states {
-		double ANLV, ANST, ANRT, ANSO;
-		double APLV, APST, APRT, APSO;
-		double AKLV, AKST, AKRT, AKSO;
-		double ATNLV, ATNST, ATNRT;
-		double ATPLV, ATPST, ATPRT;
-		double ATKLV, ATKST, ATKRT;
-	};
-	states state;
-
-	struct variables {
-		double NNI, PNI, KNI, NPKI, NPKREF;
-		double PMRES;
-		double NTRANSLOCATABLE, PTRANSLOCATABLE, KTRANSLOCATABLE;
-		double NDEMLV, NDEMST, NDEMRT, NDEMSO, PDEMLV, PDEMST, PDEMRT, PDEMSO, KDEMLV, KDEMST, KDEMRT, KDEMSO;
-		double NUPTAKE_T, KUPTAKE_T, PUPTAKE_T, NFIX_T;
-		double NLOSSES_T, KLOSSES_T, PLOSSES_T;
-
-	};
-	variables var;
-
-
-
-// parameters
+struct WofostCropParameters {
+	// parameters
     int IAIRDU, IDSL;
-	double DLO, DLC, TSUM1, TSUM2, DVSI, DVSEND, TDWI, RGRLAI, SPA, SPAN, TBASE, CVL, CVO, CVR, CVS, Q10, RML, RMO, RMR, RMS, PERDL, CFET, DEPNR, RDMCR, RRI, RDI, LAIEM;
+	double DLO, DLC, TSUM1, TSUM2, DVSI, DVSEND, TDWI, RGRLAI, SPA, SPAN, TBASE;
+	double CVL, CVO, CVR, CVS, Q10, RML, RMO, RMR, RMS, PERDL, CFET, DEPNR, RDMCR, RRI, RDI, LAIEM;
 	//emergence parameters
 	double TBASEM, TEFFMX, TSUMEM;
 	//tables
@@ -99,16 +63,13 @@ struct WofostCrop {
 	std::vector<double> CO2AMAXTB, CO2EFFTB, CO2TRATB;
 
 	double PGASS;
+} ;
 
-// variables
-	double TRA, TRANRF;
-	double LASUM, KDif, SSA, TRAMX ;
-	std::vector<double> SLA = vector<double>(366), LV = vector<double>(366), LVAGE = vector<double>(366), TMNSAV = vector<double>(7);
-	double FR, FL, FS, FO;
-	bool alive;
-	int emergence;
-	double ASRC;
 
+struct WofostCrop {
+
+	WofostCropParameters p;
+	
 // rates
 	double GASS, GWST, GWSO;
 	double DRST, DRLV, DRRT, DRSO; // dead rates
@@ -123,8 +84,16 @@ struct WofostCrop {
 	double TWRT, TWLV, TWST, TWSO, TAGP;
 	double TSUM, TSUME;
 
-//04/2017 npk
-	double GASST, MREST, CTRAT, HI;
+// variables
+	double TRA, TRANRF;
+	double LASUM, KDif, SSA, TRAMX ;
+	std::vector<double> SLA = vector<double>(366), LV = vector<double>(366), LVAGE = vector<double>(366), TMNSAV = vector<double>(7);
+	double FR, FL, FS, FO;
+	bool alive;
+	int emergence;
+	double ASRC;
+
+
 
 // ???
 	int ILDTSM, ILVOLD, IDANTH, IDWS;
@@ -134,10 +103,51 @@ struct WofostCrop {
 	//ROOTD
 	double RDMSOL, RR; //RDMO,
 
+	
+//04/2017 npk
+	double GASST, MREST, CTRAT, HI;
+
+	
+	WofostCropParametersNPK pn; // nutrient parameters
+
+	struct ratesNPK {
+		double RNUSO, RPUSO, RKUSO;
+		double RNUPTAKE, RPUPTAKE, RKUPTAKE;
+		double RNULV, RNUST, RNURT, RPULV, RPUST, RPURT, RKULV, RKUST, RKURT;
+		double RNLV, RNST, RNRT, RNSO, RPLV, RPST, RPRT, RPSO, RKLV, RKST, RKRT, RKSO;
+		double RNTLV, RNTST, RNTRT, RNTSO, RPTLV, RPTST, RPTRT, RPTSO, RKTLV, RKTST, RKTRT, RKTSO;
+		double RNLOSS, RPLOSS, RKLOSS;
+		double RNFIX;
+
+	};
+	ratesNPK rn;
+	
+	struct statesNPK {
+		double ANLV, ANST, ANRT, ANSO;
+		double APLV, APST, APRT, APSO;
+		double AKLV, AKST, AKRT, AKSO;
+		double ATNLV, ATNST, ATNRT;
+		double ATPLV, ATPST, ATPRT;
+		double ATKLV, ATKST, ATKRT;
+	};
+	statesNPK sn;
+
+	struct variables {
+		double NNI, PNI, KNI, NPKI, NPKREF;
+		double NTRANSLOCATABLE, PTRANSLOCATABLE, KTRANSLOCATABLE;
+		double NDEMLV, NDEMST, NDEMRT, NDEMSO, PDEMLV, PDEMST, PDEMRT, PDEMSO, KDEMLV, KDEMST, KDEMRT, KDEMSO;
+		double NUPTAKE_T, KUPTAKE_T, PUPTAKE_T, NFIX_T;
+		double NLOSSES_T, KLOSSES_T, PLOSSES_T;
+
+	};
+	variables vn;
+
+
+
 };
 
 
-struct WofostSoilParameters {
+struct WofostSoilParametersNPK {
 	double BG_N_SUPPLY, BG_P_SUPPLY, BG_K_SUPPLY;
 	std::vector<double> N_recovery, P_recovery, K_recovery;
 	double NSOILBASE_FR, PSOILBASE_FR, KSOILBASE_FR;
@@ -148,19 +158,19 @@ struct WofostSoilParameters {
 
 struct WofostSoil {
 
-	WofostSoilParameters par;
+	WofostSoilParametersNPK pn;
 	
-	struct rates {
+	struct ratesNPK {
 		double RNSOIL, RPSOIL, RKSOIL;
 		double RNAVAIL, RPAVAIL, RKAVAIL;
 	};
-	rates rate;
+	ratesNPK rn;
 
-	struct states {
+	struct statesNPK {
 		double NSOIL, PSOIL, KSOIL;
 		double NAVAIL, PAVAIL, KAVAIL;
 	};
-	states state;
+	statesNPK sn;
 
 
 // parameters
@@ -248,22 +258,22 @@ struct WofostModel {
 	void npk_demand_uptake_rates();
 	void npk_demand_uptake_states();
 
-  void npk_soil_dynamics_initialize();
-  void npk_soil_dynamics_states();
-  void npk_soil_dynamics_rates();
+	void npk_soil_dynamics_initialize();
+	void npk_soil_dynamics_states();
+	void npk_soil_dynamics_rates();
 
 	void npk_crop_dynamics_initialize();
 	void npk_crop_dynamics_rates();
 	void npk_crop_dynamics_states();
 
-  void npk_translocation_initialize();
+	void npk_translocation_initialize();
 	void npk_translocation_rates();
 	void npk_translocation_states();
 
 	void npk_stress();
 	void npk_apply();
 
-	void maintanance_respiration();
+	//void maintanance_respiration();
 
 	void soil_initialize();
 	void soil_rates();

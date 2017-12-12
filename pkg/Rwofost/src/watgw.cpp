@@ -55,7 +55,7 @@ VARIABLE TYPE Description                                      Units   I/O
 DELT    R*4  time step (= 1 day)                                d       I
 IDRAIN  I*4  indicates presence (1) or absence (0) of drains            I
 RD      R*4  rooting depth                                      cm      I
-IAIRDU  I*4  indicates presence(1) or absence(0) of airducts            I
+p.IAIRDU  I*4  indicates presence(1) or absence(0) of airducts            I
              in the roots. 1= can tolerate waterlogging
 ifUNRN  I*4  flag indicating the way to calculate the                   I
              non-infiltrating fraction of rainfall:
@@ -283,7 +283,7 @@ void WofostModel::WATGW_rates() {
             soil.PERC = -1. * max(FLOW, min(soil.WE - soil.W, 0.) / DELT);
         }
         //           hypothesis : for rice percolation is limited to K0/20
-        if(crop.IAIRDU == 1){
+        if(crop.p.IAIRDU == 1){
             soil.PERC = min(soil.PERC, 0.05 * soil.K0);
         }
     }
@@ -423,7 +423,7 @@ void WofostModel::WATGW_states(){
     //------------------------------
     //        finish conditions due to lasting lack of oxygen in root zone
     //        (non-rice crops only)
-    if(crop.IAIRDU == 0 && soil.RTDF >= 10.){
+    if(crop.p.IAIRDU == 0 && soil.RTDF >= 10.){
         string m ("Crop failure due to waterlogging");
         messages.push_back(m);
         fatalError = true;

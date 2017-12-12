@@ -31,10 +31,10 @@ void setWeather(WofostModel* m, NumericVector date, NumericVector tmin, NumericV
 RCPP_EXPOSED_CLASS(DailyWeather)
 
 RCPP_EXPOSED_CLASS(WofostCrop)
-RCPP_EXPOSED_CLASS(WofostCropParameters);
+RCPP_EXPOSED_CLASS(WofostCropParametersNPK);
 
 RCPP_EXPOSED_CLASS(WofostSoil)
-RCPP_EXPOSED_CLASS(WofostSoilParameters);
+RCPP_EXPOSED_CLASS(WofostSoilParametersNPK);
 
 RCPP_EXPOSED_CLASS(WofostControl)
 RCPP_EXPOSED_CLASS(WofostModel)
@@ -60,25 +60,25 @@ RCPP_MODULE(wofost){
 		.field("vapr", &DailyWeather::vapr) 
 	;
 	
-    class_<WofostCropParameters>("WofostCropParameters")
-		.field("TCNT", &WofostCropParameters::TCNT)
-		.field("TCPT", &WofostCropParameters::TCPT)
-		.field("TCKT", &WofostCropParameters::TCKT)
+    class_<WofostCropParametersNPK>("WofostCropParametersNPK")
+		.field("TCNT", &WofostCropParametersNPK::TCNT)
+		.field("TCPT", &WofostCropParametersNPK::TCPT)
+		.field("TCKT", &WofostCropParametersNPK::TCKT)
 	;
 
 
-    class_<WofostSoilParameters>("WofostSoilParameters")
-		.field("BG_N_SUPPLY", &WofostSoilParameters::BG_N_SUPPLY)
+    class_<WofostSoilParametersNPK>("WofostSoilParametersNPK")
+		.field("BG_N_SUPPLY", &WofostSoilParametersNPK::BG_N_SUPPLY)
 	;
 
 	
 	
     class_<WofostCrop>("WofostCrop")
-		.field("par", &WofostCrop::par, "crop parameters")
+		.field("pn", &WofostCrop::pn, "crop nutrient parameters")
 	;
 	
     class_<WofostSoil>("WofostSoil")
-		.field("par", &WofostSoil::par, "soil parameters")
+		.field("pn", &WofostSoil::pn, "soil nutrient parameters")
 	;
 	
     class_<WofostModel>("WofostModel")

@@ -178,13 +178,13 @@ class NPK_Soil_Dynamics(SimulationObject):
 
 void WofostModel::npk_soil_dynamics_initialize() {
   soil_initialize();
-  soil.state.NSOIL = 0;
-  soil.state.PSOIL = 0;
-  soil.state.KSOIL = 0;
+  soil.sn.NSOIL = 0;
+  soil.sn.PSOIL = 0;
+  soil.sn.KSOIL = 0;
 
-  soil.state.NAVAIL = 0;
-  soil.state.PAVAIL = 0;
-  soil.state.KAVAIL = 0;
+  soil.sn.NAVAIL = 0;
+  soil.sn.PAVAIL = 0;
+  soil.sn.KAVAIL = 0;
 }
 
 
@@ -194,15 +194,15 @@ void WofostModel::npk_soil_dynamics_rates() {
     soil_rates();
 
     double NutrientLIMIT;
-    if ((crop.DVS < crop.par.DVSNPK_STOP) && (crop.TRANRF > 0.01)) {
+    if ((crop.DVS < crop.pn.DVSNPK_STOP) && (crop.TRANRF > 0.01)) {
         NutrientLIMIT = 1.0;
     } else {
         NutrientLIMIT = 0;
 		}
 
-    soil.rate.RNSOIL = -max(0., min(soil.par.NSOILBASE_FR * soil.par.NSOILBASE * NutrientLIMIT, soil.state.NSOIL));
-    soil.rate.RPSOIL = -max(0., min(soil.par.PSOILBASE_FR * soil.par.PSOILBASE * NutrientLIMIT, soil.state.PSOIL));
-    soil.rate.RKSOIL = -max(0., min(soil.par.KSOILBASE_FR * soil.par.KSOILBASE * NutrientLIMIT, soil.state.KSOIL));
+    soil.rn.RNSOIL = -max(0., min(soil.pn.NSOILBASE_FR * soil.pn.NSOILBASE * NutrientLIMIT, soil.sn.NSOIL));
+    soil.rn.RPSOIL = -max(0., min(soil.pn.PSOILBASE_FR * soil.pn.PSOILBASE * NutrientLIMIT, soil.sn.PSOIL));
+    soil.rn.RKSOIL = -max(0., min(soil.pn.KSOILBASE_FR * soil.pn.KSOILBASE * NutrientLIMIT, soil.sn.KSOIL));
 
 
 	double FERT_N_SUPPLY, FERT_P_SUPPLY, FERT_K_SUPPLY;
@@ -217,17 +217,17 @@ void WofostModel::npk_soil_dynamics_rates() {
 
   if ( npk_step < control.NPKdates.size() ){
     if ( wth.date[step-1] == control.NPKdates[npk_step] ){
-      FERT_N_SUPPLY = control.N_amount[npk_step] * soil.par.N_recovery[npk_step];
-  		FERT_P_SUPPLY = control.P_amount[npk_step] * soil.par.P_recovery[npk_step];
-  		FERT_K_SUPPLY = control.K_amount[npk_step] * soil.par.K_recovery[npk_step];
+      FERT_N_SUPPLY = control.N_amount[npk_step] * soil.pn.N_recovery[npk_step];
+  		FERT_P_SUPPLY = control.P_amount[npk_step] * soil.pn.P_recovery[npk_step];
+  		FERT_K_SUPPLY = control.K_amount[npk_step] * soil.pn.K_recovery[npk_step];
       npk_step++;
     }
   }
 
-    //std::cout << "RNUPTAKE: " << crop.rate.RNUPTAKE << std::endl;
-    soil.rate.RNAVAIL = FERT_N_SUPPLY + soil.par.BG_N_SUPPLY - crop.rate.RNUPTAKE - soil.rate.RNSOIL;
-    soil.rate.RPAVAIL = FERT_P_SUPPLY + soil.par.BG_P_SUPPLY - crop.rate.RPUPTAKE - soil.rate.RPSOIL;
-    soil.rate.RKAVAIL = FERT_K_SUPPLY + soil.par.BG_K_SUPPLY - crop.rate.RKUPTAKE - soil.rate.RKSOIL;
+    //std::cout << "RNUPTAKE: " << crop.rn.RNUPTAKE << std::endl;
+    soil.rn.RNAVAIL = FERT_N_SUPPLY + soil.pn.BG_N_SUPPLY - crop.rn.RNUPTAKE - soil.rn.RNSOIL;
+    soil.rn.RPAVAIL = FERT_P_SUPPLY + soil.pn.BG_P_SUPPLY - crop.rn.RPUPTAKE - soil.rn.RPSOIL;
+    soil.rn.RKAVAIL = FERT_K_SUPPLY + soil.pn.BG_K_SUPPLY - crop.rn.RKUPTAKE - soil.rn.RKSOIL;
 }
 
 
@@ -236,12 +236,12 @@ void WofostModel::npk_soil_dynamics_states() {
 
     soil_states();
     // mineral NPK amount in the soil
-    soil.state.NSOIL += soil.rate.RNSOIL;
-    soil.state.PSOIL += soil.rate.RPSOIL;
-    soil.state.KSOIL += soil.rate.RKSOIL;
+    soil.sn.NSOIL += soil.rn.RNSOIL;
+    soil.sn.PSOIL += soil.rn.RPSOIL;
+    soil.sn.KSOIL += soil.rn.RKSOIL;
 
     // total (soil + fertilizer) NPK amount in soil
-    soil.state.NAVAIL += soil.rate.RNAVAIL;
-    soil.state.PAVAIL += soil.rate.RPAVAIL;
-    soil.state.KAVAIL += soil.rate.RKAVAIL;
+    soil.sn.NAVAIL += soil.rn.RNAVAIL;
+    soil.sn.PAVAIL += soil.rn.RPAVAIL;
+    soil.sn.KAVAIL += soil.rn.RKAVAIL;
 }

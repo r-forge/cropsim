@@ -32,7 +32,7 @@ VARIABLE TYPE Description                                      Units   I/O
 DELT    R*4  time step = 1 day                                  d       I
 RDM     R*4  maximum rooting depth                              cm      I
 RD      R*4  rooting depth                                      cm      I
-IAIRDU  I*4  indicates presence(1) or absence(0) of airducts            I
+p.IAIRDU  I*4  indicates presence(1) or absence(0) of airducts            I
              in the roots. 1= can tolerate waterlogging
 ifUNRN  I*4  flag indicating the way to calculate the                   I
              non-infiltrating fraction of rainfall:
@@ -83,7 +83,7 @@ void WofostModel::WATFD_initialize() {
   //!!  original: SMLIM = SMFCF
   //!!  now SMLIM is input variable in SITE.DAT  (TvdW, 24-jul-97)
 
-   if (crop.IAIRDU == 1) soil.SMLIM = soil.SM0;
+   if (crop.p.IAIRDU == 1) soil.SMLIM = soil.SM0;
    soil.SM = LIMIT (soil.SMW, soil.SMLIM, soil.SMW + soil.WAV / crop.RD);
 // initial amount of moisture in rooted zone
    soil.W  = soil.SM * crop.RD;
@@ -186,7 +186,7 @@ void WofostModel::WATFD_rates() {
   double WELOW = soil.SMFCF * (soil.RDM - crop.RD);
   soil.LOSS  = LIMIT (0., soil.KSUB, (soil.WLOW - WELOW)/DELT + PERC1 );
 // for rice water losses are limited to K0/20
-  if (crop.IAIRDU == 1) soil.LOSS = min (soil.LOSS, 0.05 * soil.K0);
+  if (crop.p.IAIRDU == 1) soil.LOSS = min (soil.LOSS, 0.05 * soil.K0);
 
 // percolation not to exceed uptake capacity of subsoil
    double PERC2 = ((soil.RDM - crop.RD) * soil.SM0 - soil.WLOW) / DELT + soil.LOSS;

@@ -151,14 +151,14 @@ Class to calculate various nutrient relates stress factors:
 void WofostModel::npk_stress() {
 
 // Maximum NPK concentrations in leaves (kg N kg-1 DM)
-    double NMAXLV = AFGEN(crop.par.NMAXLV_TB, crop.DVS);
-    double PMAXLV = AFGEN(crop.par.PMAXLV_TB, crop.DVS);
-    double KMAXLV = AFGEN(crop.par.KMAXLV_TB, crop.DVS);
+    double NMAXLV = AFGEN(crop.pn.NMAXLV_TB, crop.DVS);
+    double PMAXLV = AFGEN(crop.pn.PMAXLV_TB, crop.DVS);
+    double KMAXLV = AFGEN(crop.pn.KMAXLV_TB, crop.DVS);
 
 // Maximum NPK concentrations in stems (kg N kg-1 DM)
-    double NMAXST = crop.par.NMAXST_FR * NMAXLV;
-    double PMAXST = crop.par.PMAXRT_FR * PMAXLV;
-    double KMAXST = crop.par.KMAXST_FR * KMAXLV;
+    double NMAXST = crop.pn.NMAXST_FR * NMAXLV;
+    double PMAXST = crop.pn.PMAXRT_FR * PMAXLV;
+    double KMAXST = crop.pn.KMAXST_FR * KMAXLV;
 
 
 // Total vegetative living above-ground biomass (kg DM ha-1)
@@ -166,14 +166,14 @@ void WofostModel::npk_stress() {
 
 // Critical (Optimal) NPK amount in vegetative above-ground living biomass
 // and its NPK concentration
-    double NCRITLV  = crop.par.NCRIT_FR * NMAXLV * crop.WLV;
-    double NCRITST  = crop.par.NCRIT_FR * NMAXST * crop.WST;
+    double NCRITLV  = crop.pn.NCRIT_FR * NMAXLV * crop.WLV;
+    double NCRITST  = crop.pn.NCRIT_FR * NMAXST * crop.WST;
 
-    double PCRITLV = crop.par.PCRIT_FR * PMAXLV * crop.WLV;
-    double PCRITST = crop.par.PCRIT_FR * PMAXST * crop.WST;
+    double PCRITLV = crop.pn.PCRIT_FR * PMAXLV * crop.WLV;
+    double PCRITST = crop.pn.PCRIT_FR * PMAXST * crop.WST;
 
-    double KCRITLV = crop.par.KCRIT_FR * KMAXLV * crop.WLV;
-    double KCRITST = crop.par.KCRIT_FR * KMAXST * crop.WST;
+    double KCRITLV = crop.pn.KCRIT_FR * KMAXLV * crop.WLV;
+    double KCRITST = crop.pn.KCRIT_FR * KMAXST * crop.WST;
 
 // if above-ground living biomass = 0 then optimum = 0
 	double NCRITMR, PCRITMR, KCRITMR;
@@ -191,9 +191,9 @@ void WofostModel::npk_stress() {
 // if above-ground living biomass = 0 then concentration = 0
 	double NFGMR, PFGMR, KFGMR;
     if (TBGMR > 0) {
-        NFGMR  = (crop.state.ANLV + crop.state.ANST)/TBGMR;
-        PFGMR  = (crop.state.APLV + crop.state.APST)/TBGMR;
-        KFGMR  = (crop.state.AKLV + crop.state.AKST)/TBGMR;
+        NFGMR  = (crop.sn.ANLV + crop.sn.ANST)/TBGMR;
+        PFGMR  = (crop.sn.APLV + crop.sn.APST)/TBGMR;
+        KFGMR  = (crop.sn.AKLV + crop.sn.AKST)/TBGMR;
     } else {
         NFGMR = PFGMR = KFGMR = 0.;
 	}
@@ -203,9 +203,9 @@ void WofostModel::npk_stress() {
     // if above-ground living biomass = 0 then residual concentration = 0
 	double NRMR, PRMR, KRMR;
     if (TBGMR > 0.) {
-        NRMR = (crop.WLV * crop.par.NRESIDLV + crop.WST * crop.par.NRESIDST)/TBGMR;
-        PRMR = (crop.WLV * crop.par.PRESIDLV + crop.WST * crop.par.PRESIDST)/TBGMR;
-        KRMR = (crop.WLV * crop.par.KRESIDLV + crop.WST * crop.par.KRESIDST)/TBGMR;
+        NRMR = (crop.WLV * crop.pn.NRESIDLV + crop.WST * crop.pn.NRESIDST)/TBGMR;
+        PRMR = (crop.WLV * crop.pn.PRESIDLV + crop.WST * crop.pn.PRESIDST)/TBGMR;
+        KRMR = (crop.WLV * crop.pn.KRESIDLV + crop.WST * crop.pn.KRESIDST)/TBGMR;
     } else {
         NRMR = 0.;
 				PRMR = 0.;
@@ -214,27 +214,27 @@ void WofostModel::npk_stress() {
 
 
     if ((NCRITMR - NRMR) > 0.) {
-        crop.var.NNI = LIMIT(0.001, 1.0, (NFGMR-NRMR)/(NCRITMR-NRMR));
+        crop.vn.NNI = LIMIT(0.001, 1.0, (NFGMR-NRMR)/(NCRITMR-NRMR));
     } else {
-        crop.var.NNI = 0.001;
+        crop.vn.NNI = 0.001;
     }
 
     if ((PCRITMR - PRMR) > 0.) {
-        crop.var.PNI = LIMIT(0.001, 1.0, (PFGMR-PRMR)/(PCRITMR-PRMR));
+        crop.vn.PNI = LIMIT(0.001, 1.0, (PFGMR-PRMR)/(PCRITMR-PRMR));
     } else {
-       crop.var.PNI = 0.001;
+       crop.vn.PNI = 0.001;
     }
 
     if ((KCRITMR-KRMR) > 0) {
-        crop.var.KNI = LIMIT(0.001, 1.0, (KFGMR-KRMR)/(KCRITMR-KRMR));
+        crop.vn.KNI = LIMIT(0.001, 1.0, (KFGMR-KRMR)/(KCRITMR-KRMR));
     } else {
-        crop.var.KNI = 0.001;
+        crop.vn.KNI = 0.001;
 	}
 
-    crop.var.NPKI = min(min(crop.var.NNI, crop.var.PNI), crop.var.KNI);
+    crop.vn.NPKI = min(min(crop.vn.NNI, crop.vn.PNI), crop.vn.KNI);
 
     // Nutrient reduction factor for assimilation
-    crop.var.NPKREF = LIMIT(0., 1.0, 1. - (crop.par.NLUE_NPK * pow((1.0001-crop.var.NPKI), 2)));
+    crop.vn.NPKREF = LIMIT(0., 1.0, 1. - (crop.pn.NLUE_NPK * pow((1.0001-crop.vn.NPKI), 2)));
 
-//    return crop.rate.NNI, crop.rate.NPKI, crop.rate.NPKREF;
+//    return crop.rn.NNI, crop.rn.NPKI, crop.rn.NPKREF;
 }
