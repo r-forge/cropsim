@@ -2,7 +2,7 @@
 using namespace Rcpp;
 using namespace std;
 #include <vector>
-#include "SimUtil.h"
+#include <SimUtil.h>
 #include "LINTUL2.h"
 #include "R_interface_util.h"
 

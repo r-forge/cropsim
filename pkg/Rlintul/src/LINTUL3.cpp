@@ -11,7 +11,7 @@ using namespace std;
 #include <vector>
 #include <math.h>
 
-#include "SimUtil.h"
+#include <SimUtil.h>
 #include "LINTUL3.h"
 
 #ifndef M_PI
