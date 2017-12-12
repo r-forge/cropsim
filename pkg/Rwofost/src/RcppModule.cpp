@@ -61,7 +61,9 @@ RCPP_MODULE(wofost){
 	;
 	
     class_<WofostCropParameters>("WofostCropParameters")
-		.field("par", &WofostCropParameters::TCNT)
+		.field("TCNT", &WofostCropParameters::TCNT)
+		.field("TCPT", &WofostCropParameters::TCPT)
+		.field("TCKT", &WofostCropParameters::TCKT)
 	;
 
 
