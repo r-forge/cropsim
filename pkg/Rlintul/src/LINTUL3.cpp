@@ -11,7 +11,7 @@ using namespace std;
 #include <vector>
 #include <math.h>
 
-#include <SimUtil.h>
+#include "SimUtil.h"
 #include "LINTUL3.h"
 
 #ifndef M_PI
@@ -237,7 +237,7 @@ void Lintul3Model::weather_step() {
 	DOY = doy_from_days(control.start + step);
 
 	std::vector<double> astro = ASTRO(DOY, wth.latitude);
-	wth.DAYLP = astro[1];
+	DAYLP = astro[1];
 
 // calculate potential soil evaporation and crop transpiration E0,ES0,ETC,AVRAD
 	std::vector<double> penman = PENMAN (DOY, astro[0] ,astro[2], astro[3], wth.elevation, wth.tmin[time], wth.tmax[time], wth.srad[time], wth.wind[time], wth.vapr[time], wth.CO2);

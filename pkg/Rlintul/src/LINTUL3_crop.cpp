@@ -2,7 +2,7 @@ using namespace std;
 #include <vector>
 #include <algorithm>
 #include <iostream>
-#include <SimUtil.h>
+#include "SimUtil.h"
 #include "LINTUL3.h"
 #include <cmath>
 
@@ -113,7 +113,7 @@ void Lintul3Model::crop_rates() {
 // Reduction of development rate until flowering by  day length
 		double RDAYL;
 		if ((crop.IDSL == 1) & (! crop.FLOW)) {
-			RDAYL = approx(crop.PHOTTB, wth.DAYLP);
+			RDAYL = approx(crop.PHOTTB, DAYLP);
 		} else {
 			RDAYL = 1;
 		}

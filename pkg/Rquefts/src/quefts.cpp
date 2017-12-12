@@ -58,60 +58,12 @@ store_lim		nutrient-limited mass of storage organs	kg ha-1
 
 */
 
-
 using namespace std;
 #include <vector>
 #include <algorithm>
 #include <cmath>
+#include "SimUtil.h"
 #include "quefts.h"
-
-
-// get y given x, for a function defined by a table xy of x and y values
-// (i.e. AFGEN in Wageningen models)
-double approx(std::vector<std::vector<double> > xy, double x) {
-	int n = xy.size();
-	double y = 0;
-	if (x < xy[0][0] ) {
-		y = xy[0][1];
-	} else if (x > xy[n-1][0]) {
-		y = xy[n-1][1];
-	} else {
-		for(int i=1; i<n; i++) {
-			if (xy[i][0] > x) {
-				double slope = (xy[i][1] - xy[i-1][1]) / (xy[i][0] - xy[i-1][0]);
-				y = xy[i-1][1] + (x - xy[i-1][0]) * slope;
-				break;
-			}
-		}
-	}
-	return(y);
-}	
-
-
-double approx(std::vector<double> xy, double x) {
-
-	int s = xy.size() / 2;
-	std::vector<double> X(xy.begin(), xy.begin() + s - 1);
-	std::vector<double> Y(xy.begin()+s, xy.end());
-
-	int n = X.size();
-	
-	double y = 0;
-	if (x < X[0] ) {
-		y = Y[0];
-	} else if (x > X[n-1]) {
-		y = Y[n-1];
-	} else {
-		for(int i=1; i<n; i++) {
-			if (X[i] > x) {
-				double slope = (Y[i] - Y[i-1]) / (X[i] - X[i-1]);
-				y = Y[i-1] + (x - X[i-1]) * slope;
-				break;
-			}
-		}
-	}
-	return(y);
-}	
 
 
 // QUEFTS functions

@@ -4,7 +4,7 @@ Date: May 2016
 License: GNU General Public License (GNU GPL) v. 2 
 */
 
-#include <SimUtil.h>
+#include "SimUtil.h"
 
 struct Lintul2Output {
 	std::vector<unsigned> step;

@@ -9,7 +9,7 @@ using namespace std;
 #include <algorithm>
 #include <cmath>
 
-#include <SimUtil.h>
+#include "SimUtil.h"
 #include "LINTUL1.h"
 
 void Lintul1Model::output_initialize() {

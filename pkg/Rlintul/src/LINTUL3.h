@@ -1,5 +1,5 @@
 //#include "SimDate.h"
-#include <SimUtil.h>
+#include "SimUtil.h"
 #include <string>
 
 
@@ -113,7 +113,7 @@ struct Lintul3Model {
 //	std::vector<std::string> out_names;
 	
 //	double Teff, Tsum, RainIntercepted;
-	double RAIN, RAIN0, E0, ES0, ETC, TMPA, PAR; 
+	double RAIN, RAIN0, E0, ES0, ETC, TMPA, PAR, DAYLP; 
 	
 	int time;
 	unsigned step, DOY;

@@ -9,7 +9,7 @@ License: GNU General Public License (GNU GPL) v. 2
 using namespace Rcpp;
 using namespace std;
 #include <vector>
-#include <SimUtil.h>  //weather struct
+#include "SimUtil.h"  //weather struct
 #include "R_interface_util.h"
 #include "LINTUL1.h"
 
