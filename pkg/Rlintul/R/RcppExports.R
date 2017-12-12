@@ -5,10 +5,6 @@
     .Call('_Rlintul_lintul3', PACKAGE = 'Rlintul', crop, weather, soil, control)
 }
 
-lintul0 <- function(crop, weather, control) {
-    .Call('_Rlintul_lintul0', PACKAGE = 'Rlintul', crop, weather, control)
-}
-
 .lintul1 <- function(crop, weather, control) {
     .Call('_Rlintul_lintul1', PACKAGE = 'Rlintul', crop, weather, control)
 }

@@ -19,19 +19,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// lintul0
-NumericMatrix lintul0(List crop, DataFrame weather, List control);
-RcppExport SEXP _Rlintul_lintul0(SEXP cropSEXP, SEXP weatherSEXP, SEXP controlSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type crop(cropSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type weather(weatherSEXP);
-    Rcpp::traits::input_parameter< List >::type control(controlSEXP);
-    rcpp_result_gen = Rcpp::wrap(lintul0(crop, weather, control));
-    return rcpp_result_gen;
-END_RCPP
-}
 // lintul1
 NumericMatrix lintul1(List crop, DataFrame weather, List control);
 RcppExport SEXP _Rlintul_lintul1(SEXP cropSEXP, SEXP weatherSEXP, SEXP controlSEXP) {
@@ -66,7 +53,6 @@ RcppExport SEXP _rcpp_module_boot_LINTUL1();
 
 static const R_CallMethodDef CallEntries[] = {
     {"_Rlintul_lintul3", (DL_FUNC) &_Rlintul_lintul3, 4},
-    {"_Rlintul_lintul0", (DL_FUNC) &_Rlintul_lintul0, 3},
     {"_Rlintul_lintul1", (DL_FUNC) &_Rlintul_lintul1, 3},
     {"_Rlintul_lintul2", (DL_FUNC) &_Rlintul_lintul2, 4},
     {"_rcpp_module_boot_LINTUL3", (DL_FUNC) &_rcpp_module_boot_LINTUL3, 0},

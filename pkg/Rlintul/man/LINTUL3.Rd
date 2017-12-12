@@ -19,7 +19,9 @@ LINTUL3 crop growth model
 }
 
 \description{
-LINTUL3 simulates the growth of a crop as function of intercepted radiation, temperature and light use efficiency. Soil water (free drainage) and simple nitrogen, phosphorus and potassium balances are simulated and also the effects of water and N, P and K supplies on crop growth.
+LINTUL3 simulates the growth of a crop as function of intercepted radiation, temperature and light use efficiency. Soil water (free drainage) and simple nitrogen, phosphorus and potassium balances are simulated and also the effects of water and N, P and K supplies on crop growth. 
+
+LINTUL3 was developed by Joost Wolf at Wageningen University.
 }
 
 \usage{
@@ -55,7 +57,7 @@ matrix
 \examples{
 
 library(Rlintul)
-wth <- default_weather()
+wth <- example_weather()
 crop <- lintul3_crop('POTATO')
 soil <- lintul3_soil(name='p1')
 

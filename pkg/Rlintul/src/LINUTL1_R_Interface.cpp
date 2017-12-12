@@ -36,7 +36,7 @@ NumericMatrix lintul1(List crop, DataFrame weather, List control) {
 	crp.FSTTB = TBFromList(crop, "FSTTB");
 	crp.FSOTB = TBFromList(crop, "FSOTB");
        
-	LintulWeather wth;
+	DailyWeather wth;
 	wth.tmin = doubleFromDF(weather, "tmin");
 	wth.tmax = doubleFromDF(weather, "tmax");
 	wth.srad = doubleFromDF(weather, "srad");	
@@ -44,7 +44,7 @@ NumericMatrix lintul1(List crop, DataFrame weather, List control) {
 	DateVector wdate = dateFromDF(weather, "date");
 //	wth.startdate = SimDate(wdate[0].getDay(), wdate[0].getMonth(), wdate[0].getYear());
 
-	struct LintulControl ctr;
+	Lintul1Control ctr;
 	ctr.maxdur = intFromList(control, "maxdur");
 	ctr.emergence = intFromList(control, "emergence"); 
 

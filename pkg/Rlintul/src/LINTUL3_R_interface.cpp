@@ -93,7 +93,7 @@ NumericMatrix lintul3(List crop, DataFrame weather, List soil, List control) {
 
     crp.RDI = doubleFromList(crop, "RDI");
 
-	struct LintulWeather wth;
+	DailyWeather wth;
 	wth.tmin = doubleFromDF(weather, "tmin");
 	wth.tmax = doubleFromDF(weather, "tmax");
 	wth.srad = doubleFromDF(weather, "srad");	

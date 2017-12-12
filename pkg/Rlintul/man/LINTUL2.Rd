@@ -18,6 +18,12 @@ LINTUL2 crop growth model
 LINTUL is a relatively simple crop growth simulation model
 }
 
+\references{
+Spitters, C.J.T. and A.H.C.M. Schapendonk, 1990. Evaluation of breeding strategies for drought tolerance in potato by means of crop growth simulation. Plant and Soil 123: 193-203.
+}
+
+
+
 \usage{
 lintul2(crop, soil, control, weather)
 lintul2_crop()
@@ -43,18 +49,13 @@ lintul2_soil()
 matrix
 }
 
-\references{
-???
-}
-
-
 \examples{
 
 library(Rlintul)
 m <- lintul2()
 emerg <- as.Date('2012-04-01')
 contr <- list(emergence=emerg, start=emerg-1, maxdur=200)
-w <- default_weather()
+w <- example_weather()
 acrop <- lintul2_crop()
 asoil <- lintul2_soil()
 

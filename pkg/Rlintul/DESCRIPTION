@@ -1,9 +1,9 @@
 Package: Rlintul
 Type: Package
 Title: R implementation of LINTUL crop growth simulation models
-Version: 0.1-3
-Date: 2017-12-7
-LinkingTo: Rcpp
+Version: 0.1-4
+Date: 2017-12-11
+LinkingTo: Rcpp, meteor
 SystemRequirements: C++11
 Imports: methods, Rcpp (>= 0.12.4)
 Depends: meteor

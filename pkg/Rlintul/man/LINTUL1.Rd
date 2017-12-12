@@ -41,11 +41,15 @@ lintul1_crop()
 matrix
 }
 
+\references{
+Spitters, C.J.T. and A.H.C.M. Schapendonk, 1990. Evaluation of breeding strategies for drought tolerance in potato by means of crop growth simulation. Plant and Soil 123: 193-203.
+}
+
 
 \examples{
 
 library(Rlintul)
-w <- default_weather()
+w <- example_weather()
 crop <- lintul1_crop()
 contr <- list(emergence=as.Date('2012-04-01'), maxdur=200)
 

@@ -4,7 +4,7 @@ Date: May 2016
 License: GNU General Public License (GNU GPL) v. 2 
 */
 
-#include "LINTUL.h"
+#include "SimUtil.h"
 
 struct Lintul2Output {
 	std::vector<unsigned> step;
@@ -48,21 +48,26 @@ struct Lintul2Crop {
 };
 
 
+struct Lintul2Control {
+  long start, emergence;
+  unsigned maxdur = 365;
+}; 
+
 
 struct Lintul2Model {
 
-	struct LintulControl control;
-	struct LintulWeather wth;
+	DailyWeather wth;
 
-	struct Lintul2Crop crop;
-	struct Lintul2Soil soil;
-	struct Lintul2Output out;
+	Lintul2Control control;
+	Lintul2Crop crop;
+	Lintul2Soil soil;
+	Lintul2Output out;
 
 	double Tavg, Teff, Tsum, RainIntercepted;
 	int time, emergence; 
 	unsigned step;
 
-//	Lintul2Model(Lintul2Crop c, Lintul2Soil s, LintulControl t, LintulWeather w) : crop(c), soil(s), control(t), wth(w) { };
+//	Lintul2Model(Lintul2Crop c, Lintul2Soil s, LintulControl t, DailyWeather w) : crop(c), soil(s), control(t), wth(w) { };
 	
 	void weather_step();
 	void output_initialize();

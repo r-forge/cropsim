@@ -1,4 +1,4 @@
-#include "LINTUL.h"
+#include "SimUtil.h"
 
 struct Lintul1Output {
 	std::vector<unsigned> step;
@@ -46,13 +46,19 @@ struct Lintul1Weather {
 };
 */
 
+struct Lintul1Control {
+  long start, emergence;
+  unsigned maxdur = 365;
+}; 
+
 struct Lintul1Model {
 	//Lintul1Model(Lintul1Crop c, LintulControl t, Lintul1Weather w) : crop(c), control(t), wth(w) { };
 
-	struct LintulControl control;
-	struct LintulWeather wth;
-	struct Lintul1Crop crop;
-	struct Lintul1Output out;
+	DailyWeather wth;
+
+	Lintul1Control control;
+	Lintul1Crop crop;
+	Lintul1Output out;
 
 	double Tavg, Teff;
 	int time;

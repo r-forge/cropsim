@@ -1,5 +1,5 @@
 //#include "SimDate.h"
-#include "LINTUL.h"
+#include "SimUtil.h"
 #include <string>
 
 
@@ -106,7 +106,7 @@ struct Lintul3Model {
 	Lintul3Crop crop;
 	Lintul3Soil soil;
 	Lintul3Control control;
-	LintulWeather wth;
+	DailyWeather wth;
 	Lintul3Output out;
 	
 //	std::vector<std::vector<double> > out;
@@ -120,7 +120,7 @@ struct Lintul3Model {
 	long emergence; //, today;
 	double DIRROLD, DIRRO, DIRRN, DIRR, DIRR1;  
 
-//	Lintul3Model(Lintul3Crop c, Lintul3Soil s, Lintul3Control t, LintulWeather w) : crop(c), soil(s), control(t), wth(w) { };
+//	Lintul3Model(Lintul3Crop c, Lintul3Soil s, Lintul3Control t, DailyWeather w) : crop(c), soil(s), control(t), wth(w) { };
 	
 	void weather_step();
 	void output_initialize();

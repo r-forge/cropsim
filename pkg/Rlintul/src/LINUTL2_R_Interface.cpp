@@ -35,7 +35,7 @@ NumericMatrix lintul2(List crop, DataFrame weather, List soil, List control) {
 	crp.ROOTDM = doubleFromList(crop, "ROOTDM");
 	crp.RRDMAX = doubleFromList(crop, "RRDMAX");
 	  
-	struct LintulWeather wth;
+	struct DailyWeather wth;
 	wth.tmin = doubleFromDF(weather, "tmin");
 	wth.tmax = doubleFromDF(weather, "tmax");
 	wth.srad = doubleFromDF(weather, "srad");	
@@ -58,7 +58,7 @@ NumericMatrix lintul2(List crop, DataFrame weather, List soil, List control) {
 	sol.IRRIGF = doubleFromList(soil, "IRRIGF");
 	
 	
-	struct LintulControl ctr;
+	Lintul2Control ctr;
 	ctr.maxdur = intFromList(control, "maxdur");
 	ctr.start = intFromList(control, "start");
 	ctr.emergence = intFromList(control, "emergence");
