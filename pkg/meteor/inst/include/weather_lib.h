@@ -3,6 +3,9 @@ using namespace std;
 #include <vector>
 #include <numeric>
 
+#ifndef WEATHERLIB_H_
+#define WEATHERLIB_H_
+
 
 
 /*
@@ -785,3 +788,4 @@ std::vector<double> dailyToHourlyRelhum(double relh, double tmin, double tmax, i
 
 
 
+#endif

@@ -66,13 +66,9 @@ void Lintul1Model::model_initialize() {
 	crop_initialize();
 	output_initialize();
 	crop.emergday = true;	
-	for (size_t i=0; i<wth.date.size(); i++) {
-		// need to check for out of bounds times (before of after start)
-		if (wth.date[i] == control.emergence) {
-			time = i;
-			break;
-		}
-	}
+	time = control.emergence - wth.date[0];
+	// need to check for out of bounds times (before of after start)
+	// stop if time < 0 || time > wth.date.size();
 }
 
 

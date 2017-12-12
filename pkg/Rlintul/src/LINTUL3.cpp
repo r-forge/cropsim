@@ -431,16 +431,11 @@ void Lintul3Model::model_initialize() {
 	crop_initialize();
 	soil_initialize();
 	
-	for (size_t i=0; i<wth.date.size(); i++) {
-		// need to check for out of bounds times (before of after start)
-		if (wth.date[i] == control.start) {
-			time = i;
-			break;
-		}
-	}
+	time = control.emergence - wth.date[0];
 	emergence = time + control.emergence - control.start;
 
-//DOY = (wth.startdate + time).dayoftheyear();
+	DOY = doy_from_days(control.start);
+
 //	control.DAYPL = emergence;
 //	control.DAYPL = control.planting[run];
 //	control.PL = false;

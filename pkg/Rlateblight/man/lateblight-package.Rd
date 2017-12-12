@@ -5,7 +5,7 @@
 \docType{package}
 
 \title{
-Forecasters of potato late blight and potato late blight dynamic simulation model
+Forecasters of potato late blight and potato late blight dynamic simulation model (coming soon)
 }
 
 \description{

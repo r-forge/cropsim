@@ -5,6 +5,10 @@ Date: May 2016
 License: GNU General Public License (GNU GPL) v. 2
 */
 
+#ifndef R_INTERFACE_UTIL_H_
+#define R_INTERFACE_UTIL_H_
+
+
 #include <Rcpp.h>
 using namespace Rcpp;
 using namespace std;
@@ -201,3 +205,4 @@ inline std::vector<double> vecFromList(List lst, const char* s){
 	return result;
 }
 
+#endif

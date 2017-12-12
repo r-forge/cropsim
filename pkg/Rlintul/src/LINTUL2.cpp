@@ -118,16 +118,7 @@ void Lintul2Model::model_initialize() {
 	Teff = 0;
 	crop_initialize();
 	soil_initialize();
-//	time = control.start;	
-//	emergence = control.emergence - control.start;
-	
-	for (size_t i=0; i<wth.date.size(); i++) {
-		// need to check for out of bounds times (before of after start)
-		if (wth.date[i] == control.start) {
-			time = i;
-			break;
-		}
-	}
+	time = control.start - wth.date[0];
 	emergence = time + control.emergence - control.start;
 
 }
