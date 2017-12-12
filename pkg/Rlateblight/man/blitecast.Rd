@@ -41,7 +41,7 @@ MacKenzie, D. R. 1984. Blitecast in retrospect. A look at what we learned. FAO P
 \author{Robert J. Hijmans}
 
 
-\seealso{ \code{\link[cropsim]{Wallin}}, \code{\link[cropsim]{Hyre}} }
+\seealso{ \code{\link{Wallin}}, \code{\link{Hyre}} }
 
 \examples{
 wth <- getWthFile(system.file("weather/daily_weather_28368.nasa", package = "cropsim"))

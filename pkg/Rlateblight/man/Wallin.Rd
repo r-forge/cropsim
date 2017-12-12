@@ -39,7 +39,7 @@ Wallin, J. R., and P. E. Waggoner. 1950. The influence of climate on the develop
 
 \author{Robert J. Hijmans}
 
-\seealso{ \code{\link[cropsim]{Hyre}}, \code{\link[cropsim]{blitecast}} }
+\seealso{ \code{\link{Hyre}}, \code{\link{blitecast}} }
 
 
 \examples{

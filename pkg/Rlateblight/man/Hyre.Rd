@@ -37,7 +37,7 @@ Hyre, R. A. 1954. Progress in forecasting late blight of potato and tomato. Plan
 
 \author{Robert J. Hijmans}
 
-\seealso{ \code{\link[cropsim]{Wallin}}, \code{\link[cropsim]{blitecast}} }
+\seealso{ \code{\link{Wallin}}, \code{\link{blitecast}} }
 
 \examples{
 wth <- getWthFile(system.file("extdata/daily_weather_28368.nasa", package = "meteor"))
