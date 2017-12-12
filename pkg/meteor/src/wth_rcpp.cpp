@@ -135,39 +135,35 @@ NumericVector E_Penman(NumericVector temp, NumericVector relh, NumericVector atm
 /////// vapor pressure
 
 // [[Rcpp::export(name =".SVP")]]
-NumericVector SVP(NumericVector temp, bool simple=false) {
+NumericVector SVP(NumericVector temp) {
 //saturated vapor pressure (Pa)
 	NumericVector out(temp.size());
-	if (simple) {
-		for (int i=0; i < out.size(); i++) {
-			out[i] = ESimple(temp[i]) ;
-		}
-	} else {
-		for (int i=0; i < out.size(); i++) {
-			out[i] = ES(temp[i]) ;
-		}
+	for (int i=0; i < out.size(); i++) {
+		out[i] = ES(temp[i]) ;
 	}
 	return(out);
 }
 
 // [[Rcpp::export(name =".VP")]]
-NumericVector VP(NumericVector temp, NumericVector relh, bool simple=false) {
+NumericVector VP(NumericVector temp, NumericVector relh) {
 // actual vapor pressure (Pa)
 	NumericVector out(temp.size());
-	NumericVector svp = SVP(temp, simple);
+	double svp;
 	for (int i=0; i < out.size(); i++) {
-		out[i] = svp[i] * relh[i] / 100;
+		svp = ES(temp[i]);
+		out[i] = svp * relh[i] / 100;
 	}
 	return(out);
 }
 
 // [[Rcpp::export(name =".VPD")]]
-NumericVector VPD(NumericVector temp, NumericVector relh, bool simple=false){
+NumericVector VPD(NumericVector temp, NumericVector relh){
 // vapor pressure deficit (Pa)
 	NumericVector out(temp.size());
-	NumericVector svp = SVP(temp, simple);
+	double svp;
 	for (int i=0; i < out.size(); i++) {
-		out[i] = svp[i] - ( svp[i] * relh[i] / 100 );
+		svp = ES(temp[i]);
+		out[i] = svp - ( svp * relh[i] / 100 );
 	}
 	return(out);
 }

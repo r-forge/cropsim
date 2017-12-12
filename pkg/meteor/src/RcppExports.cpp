@@ -154,40 +154,37 @@ BEGIN_RCPP
 END_RCPP
 }
 // SVP
-NumericVector SVP(NumericVector temp, bool simple);
-RcppExport SEXP _meteor_SVP(SEXP tempSEXP, SEXP simpleSEXP) {
+NumericVector SVP(NumericVector temp);
+RcppExport SEXP _meteor_SVP(SEXP tempSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type temp(tempSEXP);
-    Rcpp::traits::input_parameter< bool >::type simple(simpleSEXP);
-    rcpp_result_gen = Rcpp::wrap(SVP(temp, simple));
+    rcpp_result_gen = Rcpp::wrap(SVP(temp));
     return rcpp_result_gen;
 END_RCPP
 }
 // VP
-NumericVector VP(NumericVector temp, NumericVector relh, bool simple);
-RcppExport SEXP _meteor_VP(SEXP tempSEXP, SEXP relhSEXP, SEXP simpleSEXP) {
+NumericVector VP(NumericVector temp, NumericVector relh);
+RcppExport SEXP _meteor_VP(SEXP tempSEXP, SEXP relhSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type temp(tempSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type relh(relhSEXP);
-    Rcpp::traits::input_parameter< bool >::type simple(simpleSEXP);
-    rcpp_result_gen = Rcpp::wrap(VP(temp, relh, simple));
+    rcpp_result_gen = Rcpp::wrap(VP(temp, relh));
     return rcpp_result_gen;
 END_RCPP
 }
 // VPD
-NumericVector VPD(NumericVector temp, NumericVector relh, bool simple);
-RcppExport SEXP _meteor_VPD(SEXP tempSEXP, SEXP relhSEXP, SEXP simpleSEXP) {
+NumericVector VPD(NumericVector temp, NumericVector relh);
+RcppExport SEXP _meteor_VPD(SEXP tempSEXP, SEXP relhSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type temp(tempSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type relh(relhSEXP);
-    Rcpp::traits::input_parameter< bool >::type simple(simpleSEXP);
-    rcpp_result_gen = Rcpp::wrap(VPD(temp, relh, simple));
+    rcpp_result_gen = Rcpp::wrap(VPD(temp, relh));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -217,9 +214,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_meteor_ET0_PriestleyTaylor", (DL_FUNC) &_meteor_ET0_PriestleyTaylor, 5},
     {"_meteor_ET0_Makkink", (DL_FUNC) &_meteor_ET0_Makkink, 4},
     {"_meteor_E_Penman", (DL_FUNC) &_meteor_E_Penman, 8},
-    {"_meteor_SVP", (DL_FUNC) &_meteor_SVP, 2},
-    {"_meteor_VP", (DL_FUNC) &_meteor_VP, 3},
-    {"_meteor_VPD", (DL_FUNC) &_meteor_VPD, 3},
+    {"_meteor_SVP", (DL_FUNC) &_meteor_SVP, 1},
+    {"_meteor_VP", (DL_FUNC) &_meteor_VP, 2},
+    {"_meteor_VPD", (DL_FUNC) &_meteor_VPD, 2},
     {"_meteor_ExtraTerrestrialRadiation", (DL_FUNC) &_meteor_ExtraTerrestrialRadiation, 4},
     {NULL, NULL, 0}
 };

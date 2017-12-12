@@ -1,7 +1,7 @@
 \name{daylyToHourly}
 
 \alias{hourlyFromDailyTemp}
-\alias{hourlyFromDaily}
+\alias{hourlyFromDailyRelh}
 
 
 \title{Estimate hourly values from daily values }

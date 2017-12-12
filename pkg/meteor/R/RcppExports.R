@@ -41,16 +41,16 @@
     .Call(`_meteor_E_Penman`, temp, relh, atmp, Rs, Rext, u, alpha, Z)
 }
 
-.SVP <- function(temp, simple = FALSE) {
-    .Call(`_meteor_SVP`, temp, simple)
+.SVP <- function(temp) {
+    .Call(`_meteor_SVP`, temp)
 }
 
-.VP <- function(temp, relh, simple = FALSE) {
-    .Call(`_meteor_VP`, temp, relh, simple)
+.VP <- function(temp, relh) {
+    .Call(`_meteor_VP`, temp, relh)
 }
 
-.VPD <- function(temp, relh, simple = FALSE) {
-    .Call(`_meteor_VPD`, temp, relh, simple)
+.VPD <- function(temp, relh) {
+    .Call(`_meteor_VPD`, temp, relh)
 }
 
 .ExtraTerrestrialRadiation <- function(doy, latitude, sc = 1367.7, FAO = FALSE) {

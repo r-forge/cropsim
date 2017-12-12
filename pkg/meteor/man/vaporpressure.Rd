@@ -41,8 +41,8 @@ Robert Hijmans, based on Python meteolib by Maarten J. Waterloo and J. Delsman \
 }
 
 \examples{
-SVP(30, FALSE)
-SVP(30, TRUE)
-VP(30, 60)
-VPD(30, 60)
+temperature <- seq(-10,30,10)
+SVP(temperature)
+VP(temperature, 60)
+VPD(temperature, 60)
 }

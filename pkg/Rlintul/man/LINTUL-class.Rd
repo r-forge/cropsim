@@ -39,6 +39,7 @@
 
 
 \alias{DailyWeather-class}
+\alias{Rcpp_DailyWeather-class}
 
 \alias{Lintul1Control-class}
 \alias{Lintul1Crop-class}

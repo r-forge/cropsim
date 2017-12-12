@@ -1,12 +1,14 @@
 
-SVP <- function(temp, simple = FALSE) {
-    .Call(`_meteor_SVP`, temp, simple)
+SVP <- function(temp) {
+    .Call(`_meteor_SVP`, temp)
 }
 
-VP <- function(temp, relh, simple = FALSE) {
-    .Call(`_meteor_VP`, temp, relh, simple)
+VP <- function(temp, relh) {
+	x <- cbind(temp, relh)
+    .Call(`_meteor_VP`, x[,1], x[,2])
 }
 
-VPD <- function(temp, relh, simple = FALSE) {
-    .Call(`_meteor_VPD`, temp, relh, simple)
+VPD <- function(temp, relh) {
+	x <- cbind(temp, relh)
+    .Call(`_meteor_VPD`, x[,1], x[,2])
 }
