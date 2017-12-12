@@ -38,9 +38,6 @@ struct WofostControl {
 struct WofostCropParametersNPK {
 	double TCNT, TCPT, TCKT;
 	double DVSNPK_STOP, NFIX_FR, NPART;
-	//double p.RMR, p.RML, p.RMS, p.RMO;
-	//double p.Q10;
-	// std::vector<double> RFSETB;
 	double NMAXSO, PMAXSO, KMAXSO;
 	double NMAXRT_FR, PMAXRT_FR, KMAXRT_FR;
 	double NMAXST_FR, PMAXST_FR, KMAXST_FR;
@@ -52,17 +49,14 @@ struct WofostCropParametersNPK {
 
 
 struct WofostCropParameters {
-	// parameters
     int IAIRDU, IDSL;
-	double DLO, DLC, TSUM1, TSUM2, DVSI, DVSEND, TDWI, RGRLAI, SPA, SPAN, TBASE;
+	double DLO, DLC, TSUM1, TSUM2, DVSI, DVSEND, TDWI, RGRLAI, SPA, SPAN, TBASE, PGASS;
 	double CVL, CVO, CVR, CVS, Q10, RML, RMO, RMR, RMS, PERDL, CFET, DEPNR, RDMCR, RRI, RDI, LAIEM;
 	//emergence parameters
 	double TBASEM, TEFFMX, TSUMEM;
 	//tables
 	std::vector<double> DTSMTB, AMAXTB, TMPFTB, KDifTB, EFFTB, TMNFTB, RFSETB, SLATB, FRTB, FLTB, FSTB, FOTB, RDRSTB, RDRRTB, SSATB;
 	std::vector<double> CO2AMAXTB, CO2EFFTB, CO2TRATB;
-
-	double PGASS;
 } ;
 
 
@@ -71,19 +65,24 @@ struct WofostCrop {
 	WofostCropParameters p;
 	
 // rates
-	double GASS, GWST, GWSO;
-	double DRST, DRLV, DRRT, DRSO; // dead rates
-	double DVR; // developement rate
-	double DTSUME, DTSUM, GWRT, GLAIEX, MRES;
-
-// states
-	double RD, RDOLD, GRLV;
-	double DWRT, DWLV, DWST, DWSO;
-	double DVS, LAI, LAIEXP;
-	double WRT, WLV, WST, WSO;
-	double TWRT, TWLV, TWST, TWSO, TAGP;
-	double TSUM, TSUME;
-
+	//struct rates {
+		double GASS, GWST, GWSO;
+		double DRST, DRLV, DRRT, DRSO; // dead rates
+		double DVR; // developement rate
+		double DTSUME, DTSUM, GWRT, GLAIEX, MRES;
+	//}
+	//rates r;
+	
+	//struct states {
+		double RD, RDOLD, GRLV;
+		double DWRT, DWLV, DWST, DWSO;
+		double DVS, LAI, LAIEXP;
+		double WRT, WLV, WST, WSO;
+		double TWRT, TWLV, TWST, TWSO, TAGP;
+		double TSUM, TSUME;
+	//}
+	//states s;
+	
 // variables
 	double TRA, TRANRF;
 	double LASUM, KDif, SSA, TRAMX ;
@@ -92,7 +91,6 @@ struct WofostCrop {
 	bool alive;
 	int emergence;
 	double ASRC;
-
 
 
 // ???
