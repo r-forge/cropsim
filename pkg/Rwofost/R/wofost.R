@@ -1,6 +1,5 @@
 #Rcpp::compileAttributes('e:/bitbucket/cropsim/Rwofost')
 
-
 .trim2 <- function(x) return(gsub("^ *|(?<= ) | *$", "", x, perl=TRUE))
 
 readWofostOutput <- function(f, wlim=FALSE) {
@@ -155,11 +154,3 @@ wofost_crop <- function(name='') {
 		}
 }
 
-
-wofost_weather <- function(lon, lat, folder=file.path(getwd(), 'power'), ...) {
-	if (missing(lon)) {
-		f <- system.file("weather/test.rds", package="Rwofost")
-		return(readRDS(f))
-	}
-	.wthPower(lon=lon, lat=lat, folder=folder, ...)
-}

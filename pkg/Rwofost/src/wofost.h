@@ -7,7 +7,8 @@ License: GNU General Public License (GNU GPL) v. 2
 
 #include <vector>
 #include <string>
-#include "date.h"
+//#include "date.h"
+#include "SimUtil.h"
 
 using namespace std;
 
@@ -19,7 +20,7 @@ std::vector<double> PENMAN (int DOY, double LAT, double ELEV, double ANGSTA, dou
 
 
 struct WofostControl {
-	std::vector<int> modelstart;
+	unsigned modelstart;
 	unsigned cropstart; // sowing, emergence, ...;
 	bool long_output;
 	bool npk_model = false;  //if model is npk, default false
@@ -30,8 +31,7 @@ struct WofostControl {
 	int	IWB; // water limited (1) or potential (0)
 
 	std::vector<double> N_amount, P_amount, K_amount;
-	std::vector<date> NPKdates;
-
+	std::vector<long> NPKdates;
 };
 
 
@@ -215,13 +215,6 @@ struct WofostAtmosphere {
 };
 
 
-struct Weather {
-	double longitude, latitude, elevation, CO2, ANGSTA, ANGSTB;
-	std::vector<date> simdate;
-	std::vector<double> srad, tmin, tmax, prec, wind, vapr;
-};
-
-
 
 struct WofostModel {
 
@@ -232,12 +225,12 @@ struct WofostModel {
 	std::vector<std::string>  messages;
 	bool fatalError;
 
-	struct WofostSoil soil;
-	struct WofostCrop crop;
-	struct WofostControl control;
+	WofostSoil soil;
+	WofostCrop crop;
+	WofostControl control;
 
-	struct WofostAtmosphere atm;
-	struct Weather wth;
+	WofostAtmosphere atm;
+	DailyWeather wth;
 
 	std::vector<std::vector<double> > out;
 	std::vector<std::string> out_names;
@@ -297,7 +290,7 @@ struct WofostModel {
 	void ASTRO();
 	void EVTRA();
 
-	void model_output(int i);
+	void model_output();
 
 	void model_initialize();
 	void model_run();

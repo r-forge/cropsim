@@ -10,10 +10,10 @@ License: GNU General Public License (GNU GPL) v. 2
 using namespace Rcpp;
 using namespace std;
 #include <vector>
-#include "wofostUtil.h"
+#include "SimUtil.h"
 #include "wofost.h"
 #include "R_interface_util.h"
-#include <iostream>
+//#include <iostream>
 
 // [[Rcpp::export]]
 NumericMatrix wofost(List crop, DataFrame weather, List soil, List control) {
@@ -23,7 +23,8 @@ NumericMatrix wofost(List crop, DataFrame weather, List soil, List control) {
 	struct WofostControl cntr;
 	struct WofostCrop crp;
 
-	DateVector start = datesFromList(control, "modelstart");
+	std::vector<long> startvec = longFromList(control, "modelstart");
+	long start = startvec[0];
 	cntr.cropstart = intFromList(control, "cropstart");
 	cntr.long_output = boolFromList(control, "long_output");
 
@@ -39,12 +40,13 @@ NumericMatrix wofost(List crop, DataFrame weather, List soil, List control) {
 	cntr.IDURMX = intFromList(control, "IDURMX");
 	//npk
 	cntr.npk_model = OptionalintFromList(control, "npk_model");
-  if(cntr.npk_model){
-		DateVector npkdate = datesFromList(control, "NPKdates");
-	  cntr.NPKdates.resize(npkdate.size());
-	  for (int i = 0; i < npkdate.size(); i++) {
-		  cntr.NPKdates[i] = date(npkdate[i].getYear(), npkdate[i].getMonth(),  npkdate[i].getDay());
-	  }
+	if(cntr.npk_model){
+		cntr.NPKdates = longFromList(control, "NPKdates");
+		//DateVector npkdate = datesFromList(control, "NPKdates");
+		//cntr.NPKdates.resize(npkdate.size());
+		//for (int i = 0; i < npkdate.size(); i++) {
+		// cntr.NPKdates[i] = date(npkdate[i].getYear(), npkdate[i].getMonth(),  npkdate[i].getDay());
+		//}
 		cntr.N_amount = vecFromList(control, "N");
 		cntr.P_amount = vecFromList(control, "P");
 		cntr.K_amount = vecFromList(control, "K");
@@ -204,49 +206,43 @@ NumericMatrix wofost(List crop, DataFrame weather, List soil, List control) {
 
 
 // weather
-	struct Weather wth;
+	DailyWeather wth;
 	wth.tmin = doubleFromDF(weather, "tmin");
 	wth.tmax = doubleFromDF(weather, "tmax");
 	wth.srad = doubleFromDF(weather, "srad");
 	wth.prec = doubleFromDF(weather, "prec");
 	wth.vapr = doubleFromDF(weather, "vapr");
 	wth.wind = doubleFromDF(weather, "wind");
-	DateVector wdate = dateFromDF(weather, "date");
-	wth.simdate.resize(wdate.size());
-	for (int i = 0; i < wdate.size(); i++) {
-		wth.simdate[i] = date(wdate[i].getYear(), wdate[i].getMonth(),  wdate[i].getDay());
-	}
+	wth.date = longFromDF(weather, "date");
+//	DateVector wdate = dateFromDF(weather, "date");
+//	wth.date.resize(wdate.size());
+//	for (int i = 0; i < wdate.size(); i++) {
+//		wth.date[i] = date(wdate[i].getYear(), wdate[i].getMonth(),  wdate[i].getDay());
+//	}
 
 	wth.latitude = doubleFromList(control, "latitude");
 	wth.elevation = doubleFromList(control, "elevation");
-	wth.ANGSTA = doubleFromList(control, "ANGSTA");
-	wth.ANGSTB = doubleFromList(control, "ANGSTB");
+	wth.AngstromA = doubleFromList(control, "ANGSTA");
+	wth.AngstromB = doubleFromList(control, "ANGSTB");
 	wth.CO2 = doubleFromList(control, "CO2");
 
 
 	//stop( "complete reading data" );
 
-	int nsim = start.size();
-//	if (nsim > 1) {	cntr.long_output = false;}
-
-	int nwth = wth.tmin.size();
-
-	for (int s=0; s < nsim; s++) {
-
 //		Rcout << "start " << start[s].getYear() << " " << start[s].getYearday() << endl;
 //		Rcout << "weather " << wdate[0].getYear() << " " << wdate[0].getYearday() << endl;
 
-		if (start[s] < wdate[0]) {
+/*		if (start[s] < wdate[0]) {
 			stop("start requested before the beginning of the weather data");
 		} else if (start[s] > wdate[nwth-1]) {
 			stop("start requested after the end of the weather data");
 		}
-
+*/
 		// absolute to relative time
 //		Rcout << "offset: " << int(start[s] - wdate[0]) << endl;
 
-		cntr.modelstart.push_back(int(start[s] - wdate[0]));
-	}
+	cntr.modelstart = start - wth.date[0];
+	
 
 	WofostModel m;
 	m.crop = crp;

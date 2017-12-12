@@ -23,7 +23,7 @@ The integration goes at most over four intervals : [0,45],[45,170], [170,330] an
 #include <cmath>
 #include <vector>
 #include "wofost.h"
-#include "wofostUtil.h"
+#include "SimUtil.h"
 
 
 double SUBSOL(double PF, double D, std::vector<double> CONTAB) { // flow is output

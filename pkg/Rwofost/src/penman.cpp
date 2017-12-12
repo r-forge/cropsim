@@ -48,7 +48,7 @@ ET0     R4  Penman potential transpiration from a crop
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
-#include "wofostUtil.h"
+#include "SimUtil.h"
 #include <iostream>
 using namespace std;
 

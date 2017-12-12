@@ -21,7 +21,7 @@ form by Doorenbos and  Kassam (1979) and by Van Keulen and Wolf (1986; p.108, ta
 
 using namespace std;
 #include <vector>
-#include "wofostUtil.h"
+#include "SimUtil.h"
 
 
 double SWEAF(double ET0, double CGNR){

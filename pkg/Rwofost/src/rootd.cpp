@@ -13,7 +13,7 @@ In this routine the depth of the root zone is calculated for each day of the cro
 */
 
 #include "wofost.h"
-#include "wofostUtil.h"
+#include "SimUtil.h"
 #include <iostream>
 using namespace std;
 

@@ -10,7 +10,7 @@ Copyright 1988, 2013 Alterra, Wageningen-UR, Licensed under the EUPL, Version 1.
 
 using namespace std;
 #include <vector>
-#include "wofostUtil.h"
+#include "SimUtil.h"
 #include "wofost.h"
 
 

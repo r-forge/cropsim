@@ -47,7 +47,7 @@ corresponds with Wind's loam with a drain  depth of 150 cm.
 
 
 #include "wofost.h"
-#include "wofostUtil.h"
+#include "SimUtil.h"
 using namespace std;
 
 void WofostModel::STDAY_initialize() {

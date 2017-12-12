@@ -85,7 +85,7 @@ SMFCF   R*4  soil moisture content at field capacity          cm3 cm-3  O
 
 
 #include "wofost.h"
-#include "wofostUtil.h"
+#include "SimUtil.h"
 #include <math.h>
 #include <iostream>
 using namespace std;

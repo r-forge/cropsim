@@ -19,7 +19,7 @@ using namespace std;
 #include <vector>
 #include <math.h>
 #include "wofost.h"
-#include "wofostUtil.h"
+#include "SimUtil.h"
 #include <iostream>
 
 

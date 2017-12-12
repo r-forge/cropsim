@@ -7,11 +7,11 @@
 .strSplitOnFirstToken <- function(s, token="=") {
 	pos <- which(strsplit(s, '')[[1]]==token)[1]
 	if (is.na(pos)) {
-		return(c(.trim(s), NA)) 
+		return(c(trimws(s), NA)) 
 	} else {
 		first <- substr(s, 1, (pos-1))
 		second <- substr(s, (pos+1), nchar(s))
-		return(.trim(c(first, second)))
+		return(trimws(c(first, second)))
 	}
 }
 
@@ -25,7 +25,7 @@
 	} else {
 		first <- substr(s, 1, (pos-1))
 		second <- substr(s, (pos+1), nchar(s))
-		return(.trim(c(first, second)))
+		return(trimws(c(first, second)))
 	}
 }
 
@@ -34,7 +34,7 @@
 
   stopifnot(file.exists(filename))
 	
-	Lines <- .trim(readLines(filename,  warn = FALSE))
+	Lines <- trimws(readLines(filename,  warn = FALSE))
 	
 	# remove comments
 	i <- substring(Lines, 1, 1) == '#'

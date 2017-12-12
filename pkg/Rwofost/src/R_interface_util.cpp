@@ -35,6 +35,21 @@ std::vector<double> doubleFromDF(DataFrame d, const char* s) {
 }
 
 
+std::vector<long> longFromDF(Rcpp::DataFrame d, const char* s) {
+	Rcpp::CharacterVector nms = d.names();
+	for (int i=0; i < nms.size(); i++) {
+		if (nms[i] == s) {
+			std::vector<long> v = d[i];
+			return(v);
+		}     
+	}
+    std::string ss = "Variable '" +  std::string(s) + "' not found";
+    stop(ss);  
+	// to avoid "warning: control reaches end of non-void function"
+	std::vector<long> v;
+	return( v );
+}
+
 
 DateVector dateFromDF(DataFrame d, const char* s) {
 
@@ -114,6 +129,8 @@ int intFromList(List lst, const char* s) {
 	return(v);
 }
 
+
+
 int OptionalintFromList(List lst, const char* s) {
 	if (!lst.containsElementNamed(s) ) {
 		return(0);
@@ -144,6 +161,18 @@ DateVector datesFromList(List lst, const char* s) {
   DateVector v = lst[s];
   return(v);
 }
+
+
+std::vector<long> longFromList(List lst, const char* s) {
+	if (!lst.containsElementNamed(s) ) {
+		std::string ss = "parameter '" +  std::string(s) + "' not found";
+		stop(ss);
+	}
+// todo: check if this is a single number ?
+	std::vector<long> v = lst[s];
+	return(v);
+}
+
 
 std::vector<std::vector<double> > matFromList(List lst, const char* s) {
 

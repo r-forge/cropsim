@@ -172,7 +172,7 @@ class NPK_Soil_Dynamics(SimulationObject):
 #include <math.h>
 #include <vector>
 #include "wofost.h"
-#include "wofostUtil.h"
+#include "SimUtil.h"
 #include <string.h>
 #include <iostream>
 
@@ -208,7 +208,7 @@ void WofostModel::npk_soil_dynamics_rates() {
 	double FERT_N_SUPPLY, FERT_P_SUPPLY, FERT_K_SUPPLY;
 	// this should be by date
   //std::cout << "npk_step: " << npk_step << std::endl;
-  //std::cout << "simdate: " << wth.simdate[step-1] << std::endl;
+  //std::cout << "simdate: " << wth.date[step-1] << std::endl;
   //std::cout << "npkdates: " << control.NPKdates[npk_step] << std::endl;
 
   FERT_N_SUPPLY = 0;
@@ -216,7 +216,7 @@ void WofostModel::npk_soil_dynamics_rates() {
   FERT_K_SUPPLY = 0;
 
   if ( npk_step < control.NPKdates.size() ){
-    if ( wth.simdate[step-1] == control.NPKdates[npk_step] ){
+    if ( wth.date[step-1] == control.NPKdates[npk_step] ){
       FERT_N_SUPPLY = control.N_amount[npk_step] * soil.par.N_recovery[npk_step];
   		FERT_P_SUPPLY = control.P_amount[npk_step] * soil.par.P_recovery[npk_step];
   		FERT_K_SUPPLY = control.K_amount[npk_step] * soil.par.K_recovery[npk_step];

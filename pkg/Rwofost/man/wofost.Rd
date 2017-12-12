@@ -34,7 +34,7 @@ Van Keulen, H. and J. Wolf, 1986. Modelling of agricultural production : weather
 
 \examples{
 # input data
-w <- wofost_weather()
+w <- example_weather()
 w$srad <- w$srad * 1000
 crop <- wofost_crop('barley')
 soil <- wofost_soil('ec1')
@@ -54,7 +54,7 @@ plot(d[,'step'], d[, 'LAI'])
 ## 1
 library(Rwofost)
 crop <- wofost_crop("rapeseed_1001")
-f <- system.file("weather/Netherlands_Swifterbant.csv", package="Rwofost")
+f <- system.file("extdata/Netherlands_Swifterbant.csv", package="meteor")
 wth_n <- read.csv(f)
 wth_n$date <- as.Date(wth_n$date)
 
@@ -73,7 +73,7 @@ plot(d[,'DAY'], d[,'LAI'], type='l')
 points(rp[,'step'], rp[, 'LAI'])
 
 # yield
-plot(d[,'DAY'], d[,'WSO'])
+plot(d[,'DAY'], d[,'WSO'], type='l')
 points(rp[, 1], rp[,'WSO'])
 
 
@@ -91,7 +91,7 @@ points(rp[,'step'], rp[, 'LAI'])
 ## 3 water limited
 library(Rwofost)
 crop <- wofost_crop("maize_1")
-f <- system.file("weather/Philippines_IRRI.csv", package="Rwofost")
+f <- system.file("extdata/Philippines_IRRI.csv", package="meteor")
 wth_n <- read.csv(f)
 wth_n$date <- as.Date(wth_n$date)
 cont <- wofost_control()
@@ -115,7 +115,7 @@ points(rp[,'step'], rp[, 'LAI'])
 ## 4 water limited with groundwater
 library(Rwofost)
 crop <- wofost_crop("maize_1")
-f <- system.file("weather/Philippines_IRRI.csv", package="Rwofost")
+f <- system.file("extdata/Philippines_IRRI.csv", package="meteor")
 wth_n <- read.csv(f)
 wth_n$date <- as.Date(wth_n$date)
 cont <- wofost_control()
@@ -144,7 +144,7 @@ soil <- wofost_soil("ec4")
 crop <- wofost_crop("winterwheat_102")
 cont <- wofost_control()
 cont$IPRODL <- 0
-f <- system.file("weather/Netherlands_Wageningen.csv", package="Rwofost")
+f <- system.file("extdata/Netherlands_Wageningen.csv", package="meteor")
 wth <- read.csv(f)
 wth$date = as.Date(wth$date)
 wth = wth[wth$date >= "1976-01-01", ]

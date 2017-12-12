@@ -147,7 +147,7 @@ using namespace std;
 #include <math.h>
 #include <vector>
 #include "wofost.h"
-#include "wofostUtil.h"
+#include "SimUtil.h"
 #include <string.h>
 
 
