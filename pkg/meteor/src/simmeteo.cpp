@@ -1,5 +1,7 @@
-
 /*
+C++ code by Robert Hijmans, 2016
+
+
 Derived from FORTRAN code in WOFOST model
 Author: C. Rappoldt, October 1986, revised April 1991
 Copyright 1988, 2013 Alterra, Wageningen-UR
@@ -121,3 +123,4 @@ std::vector<double> simmeteo_rain(std::vector<double> rain, std::vector<double> 
       } // months
       return(simRain);
 }
+
