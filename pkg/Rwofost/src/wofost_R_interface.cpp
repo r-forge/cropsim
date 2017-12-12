@@ -84,60 +84,60 @@ NumericMatrix wofost(List crop, DataFrame weather, List soil, List control) {
 
 
 
-	crp.p.TBASEM = doubleFromList(crop, "p.TBASEM");
-	crp.p.TEFFMX = doubleFromList(crop, "p.TEFFMX");
-	crp.p.TSUMEM = doubleFromList(crop, "p.TSUMEM");
-	crp.p.IDSL = intFromList(crop, "p.IDSL");
-	crp.p.DLO = doubleFromList(crop, "p.DLO");
-	crp.p.DLC = doubleFromList(crop, "p.DLC");
-	crp.p.TSUM1 = doubleFromList(crop, "p.TSUM1");
-	crp.p.TSUM2 = doubleFromList(crop, "p.TSUM2");
-	crp.p.DTSMTB = TBFromList(crop, "p.DTSMTB");
+	crp.p.TBASEM = doubleFromList(crop, "TBASEM");
+	crp.p.TEFFMX = doubleFromList(crop, "TEFFMX");
+	crp.p.TSUMEM = doubleFromList(crop, "TSUMEM");
+	crp.p.IDSL = intFromList(crop, "IDSL");
+	crp.p.DLO = doubleFromList(crop, "DLO");
+	crp.p.DLC = doubleFromList(crop, "DLC");
+	crp.p.TSUM1 = doubleFromList(crop, "TSUM1");
+	crp.p.TSUM2 = doubleFromList(crop, "TSUM2");
+	crp.p.DTSMTB = TBFromList(crop, "DTSMTB");
 
-	crp.p.DVSI = doubleFromList(crop, "p.DVSI");
-	crp.p.DVSEND = doubleFromList(crop, "p.DVSEND");
-	crp.p.TDWI = doubleFromList(crop, "p.TDWI");
-	crp.p.LAIEM = doubleFromList(crop, "p.LAIEM");
-	crp.p.RGRLAI = doubleFromList(crop, "p.RGRLAI");
-	crp.p.SLATB = TBFromList(crop, "p.SLATB");
-	crp.p.SPA = doubleFromList(crop, "p.SPA");
-	crp.p.SSATB = TBFromList(crop, "p.SSATB");
-	crp.p.SPAN = doubleFromList(crop, "p.SPAN");
-	crp.p.TBASE = doubleFromList(crop, "p.TBASE");
-	crp.p.CVL = doubleFromList(crop, "p.CVL");
-	crp.p.CVO = doubleFromList(crop, "p.CVO");
-	crp.p.CVR = doubleFromList(crop, "p.CVR");
-	crp.p.CVS = doubleFromList(crop, "p.CVS");
-	crp.p.Q10 = doubleFromList(crop, "p.Q10");
-	crp.p.RML = doubleFromList(crop, "p.RML");
-	crp.p.RMO = doubleFromList(crop, "p.RMO");
-	crp.p.RMR = doubleFromList(crop, "p.RMR");
-	crp.p.RMS = doubleFromList(crop, "p.RMS");
-	crp.p.RFSETB = TBFromList(crop, "p.RFSETB");
-	crp.p.FRTB = TBFromList(crop, "p.FRTB");
-	crp.p.FLTB = TBFromList(crop, "p.FLTB");
-	crp.p.FSTB = TBFromList(crop, "p.FSTB");
-	crp.p.FOTB = TBFromList(crop, "p.FOTB");
-	crp.p.PERDL = doubleFromList(crop, "p.PERDL");
-	crp.p.RDRRTB = TBFromList(crop, "p.RDRRTB");
-	crp.p.RDRSTB = TBFromList(crop, "p.RDRSTB");
-	crp.p.CFET = doubleFromList(crop, "p.CFET");
-	crp.p.DEPNR = doubleFromList(crop, "p.DEPNR");
-	crp.p.RDI = doubleFromList(crop, "p.RDI");
-	crp.p.RRI = doubleFromList(crop, "p.RRI");
-	crp.p.RDMCR = doubleFromList(crop, "p.RDMCR");
+	crp.p.DVSI = doubleFromList(crop, "DVSI");
+	crp.p.DVSEND = doubleFromList(crop, "DVSEND");
+	crp.p.TDWI = doubleFromList(crop, "TDWI");
+	crp.p.LAIEM = doubleFromList(crop, "LAIEM");
+	crp.p.RGRLAI = doubleFromList(crop, "RGRLAI");
+	crp.p.SLATB = TBFromList(crop, "SLATB");
+	crp.p.SPA = doubleFromList(crop, "SPA");
+	crp.p.SSATB = TBFromList(crop, "SSATB");
+	crp.p.SPAN = doubleFromList(crop, "SPAN");
+	crp.p.TBASE = doubleFromList(crop, "TBASE");
+	crp.p.CVL = doubleFromList(crop, "CVL");
+	crp.p.CVO = doubleFromList(crop, "CVO");
+	crp.p.CVR = doubleFromList(crop, "CVR");
+	crp.p.CVS = doubleFromList(crop, "CVS");
+	crp.p.Q10 = doubleFromList(crop, "Q10");
+	crp.p.RML = doubleFromList(crop, "RML");
+	crp.p.RMO = doubleFromList(crop, "RMO");
+	crp.p.RMR = doubleFromList(crop, "RMR");
+	crp.p.RMS = doubleFromList(crop, "RMS");
+	crp.p.RFSETB = TBFromList(crop, "RFSETB");
+	crp.p.FRTB = TBFromList(crop, "FRTB");
+	crp.p.FLTB = TBFromList(crop, "FLTB");
+	crp.p.FSTB = TBFromList(crop, "FSTB");
+	crp.p.FOTB = TBFromList(crop, "FOTB");
+	crp.p.PERDL = doubleFromList(crop, "PERDL");
+	crp.p.RDRRTB = TBFromList(crop, "RDRRTB");
+	crp.p.RDRSTB = TBFromList(crop, "RDRSTB");
+	crp.p.CFET = doubleFromList(crop, "CFET");
+	crp.p.DEPNR = doubleFromList(crop, "DEPNR");
+	crp.p.RDI = doubleFromList(crop, "RDI");
+	crp.p.RRI = doubleFromList(crop, "RRI");
+	crp.p.RDMCR = doubleFromList(crop, "RDMCR");
 
-	crp.p.IAIRDU = intFromList(crop, "p.IAIRDU");
+	crp.p.IAIRDU = intFromList(crop, "IAIRDU");
 
-	crp.p.KDifTB = TBFromList(crop, "p.KDifTB");
-	crp.p.EFFTB = TBFromList(crop, "p.EFFTB");
-	crp.p.AMAXTB = TBFromList(crop, "p.AMAXTB");
-	crp.p.TMPFTB = TBFromList(crop, "p.TMPFTB");
-	crp.p.TMNFTB = TBFromList(crop, "p.TMNFTB");
+	crp.p.KDifTB = TBFromList(crop, "KDifTB");
+	crp.p.EFFTB = TBFromList(crop, "EFFTB");
+	crp.p.AMAXTB = TBFromList(crop, "AMAXTB");
+	crp.p.TMPFTB = TBFromList(crop, "TMPFTB");
+	crp.p.TMNFTB = TBFromList(crop, "TMNFTB");
 
-	crp.p.CO2AMAXTB = TBFromList(crop, "p.CO2AMAXTB");
-	crp.p.CO2EFFTB = TBFromList(crop, "p.CO2EFFTB");
-	crp.p.CO2TRATB = TBFromList(crop, "p.CO2TRATB");
+	crp.p.CO2AMAXTB = TBFromList(crop, "CO2AMAXTB");
+	crp.p.CO2EFFTB = TBFromList(crop, "CO2EFFTB");
+	crp.p.CO2TRATB = TBFromList(crop, "CO2TRATB");
 
 
 // soil parameters
