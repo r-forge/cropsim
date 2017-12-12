@@ -12,7 +12,8 @@
 
 class DailyWeather {
 	public:
-		double longitude, latitude, elevation, DAYLP, ANGSTA, ANGSTB;
+		double longitude, latitude, elevation;
+		double AngstromA, AngstromB;
 		double CO2 = 400;
 		std::vector<long> date;
 		std::vector<double> srad, tmin, tmax, prec, wind, vapr;
