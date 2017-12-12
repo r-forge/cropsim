@@ -35,9 +35,7 @@ struct WofostControl {
 };
 
 
-struct WofostCrop {
-
-	struct parameters {
+struct WofostCropParameters {
 		double TCNT, TCPT, TCKT;
 		double DVSNPK_STOP, NFIX_FR, NPART;
 		double RMR, RML, RMS, RMO;
@@ -50,8 +48,12 @@ struct WofostCrop {
 		double NRESIDLV, NRESIDST, NRESIDRT, PRESIDLV, PRESIDST, PRESIDRT, KRESIDLV, KRESIDST, KRESIDRT;
 		double NCRIT_FR, PCRIT_FR, KCRIT_FR;
 		double NLUE_NPK, NPK_TRANSLRT_FR;
-	};
-	parameters par;
+};
+
+
+struct WofostCrop {
+
+	WofostCropParameters par;
 
 	struct rates {
        double RNUSO, RPUSO, RKUSO;
@@ -135,18 +137,19 @@ struct WofostCrop {
 };
 
 
+struct WofostSoilParameters {
+	double BG_N_SUPPLY, BG_P_SUPPLY, BG_K_SUPPLY;
+	std::vector<double> N_recovery, P_recovery, K_recovery;
+	double NSOILBASE_FR, PSOILBASE_FR, KSOILBASE_FR;
+	double NSOILBASE, PSOILBASE, KSOILBASE;
+	double NSOILI, PSOILI, KSOILI;
+};
+
 
 struct WofostSoil {
 
-	struct parameters {
-		double BG_N_SUPPLY, BG_P_SUPPLY, BG_K_SUPPLY;
-		std::vector<double> N_recovery, P_recovery, K_recovery;
-		double NSOILBASE_FR, PSOILBASE_FR, KSOILBASE_FR;
-		double NSOILBASE, PSOILBASE, KSOILBASE;
-		double NSOILI, PSOILI, KSOILI;
-	};
-	parameters par;
-
+	WofostSoilParameters par;
+	
 	struct rates {
 		double RNSOIL, RPSOIL, RKSOIL;
 		double RNAVAIL, RPAVAIL, RKAVAIL;
@@ -158,8 +161,6 @@ struct WofostSoil {
 		double NAVAIL, PAVAIL, KAVAIL;
 	};
 	states state;
-
-
 
 
 // parameters
