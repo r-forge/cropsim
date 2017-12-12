@@ -20,7 +20,7 @@ std::vector<double> PENMAN (int DOY, double LAT, double ELEV, double ANGSTA, dou
 
 struct WofostOutput {
 	double LAI;
-}
+};
 
 
 struct WofostControl {

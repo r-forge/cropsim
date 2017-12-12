@@ -2,6 +2,10 @@
 
 .trim2 <- function(x) return(gsub("^ *|(?<= ) | *$", "", x, perl=TRUE))
 
+w <- function() {
+	WofostModel$new()
+}
+
 readWofostOutput <- function(f, wlim=FALSE) {
 
 	r <- .trim2(readLines(f));
