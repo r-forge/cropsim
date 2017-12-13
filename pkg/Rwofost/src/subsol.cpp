@@ -48,8 +48,8 @@ double SUBSOL(double PF, double D, std::vector<double> CONTAB) { // flow is outp
       double D1  = D;
       double MH  = std::exp(ELOG10*PF1);
       if (PF1 <= 0.){
-         double K0   = std::exp( ELOG10 * AFGEN(CONTAB, -1.) );
-         FLOW = K0*(MH/D-1.);
+         double K0 = std::exp( ELOG10 * AFGEN(CONTAB, -1.) );
+         FLOW = K0 * (MH/D - 1.);
 
          return FLOW;
       }
@@ -87,7 +87,7 @@ double SUBSOL(double PF, double D, std::vector<double> CONTAB) { // flow is outp
          IINT = IINT+1;
       }
 
-//15.4 preparation of three-point Gaussian integration
+//15.4 preparation of three-point Gaup.SSIan integration
 
 
 //15.5 setting upper and lower limit

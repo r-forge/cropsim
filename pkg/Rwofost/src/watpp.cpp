@@ -20,9 +20,9 @@ VARIABLE TYPE Description                                      Units   I/O
 
   p.IAIRDU  I*4  indicates presence(1) or absence(0) of airducts            I
                in the roots. 1= can tolerate waterlogging
-  SM0     R*4  soil porosity                                    cm3 cm-3  O
-  SMFCF   R*4  soil moisture content at field capacity          cm3 cm-3  O
-  SMW     R*4  soil moisture content at wilting point           cm3 cm-3  O
+  p.SM0     R*4  soil porosity                                    cm3 cm-3  O
+  p.SMFCF   R*4  soil moisture content at field capacity          cm3 cm-3  O
+  p.SMW     R*4  soil moisture content at wilting point           cm3 cm-3  O
   EVWMX   R*4  maximum evaporation rate from shaded water surface cm d-1  I
   EVSMX   R*4  maximum evaporation rate from shaded soil surface  cm d-1  I
   TRA     R*4  actual transpiration rate                          cm d-1  I
@@ -34,7 +34,7 @@ VARIABLE TYPE Description                                      Units   I/O
 #include <iostream>
 
 void WofostModel::WATPP_initialize() {
-      soil.SM   = soil.SMFCF;
+      soil.SM   = soil.p.SMFCF;
       soil.EVST = 0.;
       soil.EVWT = 0.;
       soil.EVS = 0.;
@@ -47,7 +47,7 @@ void WofostModel::WATPP_rates() {
 
 // evaporation rate from soil EVS (for non-rice crops) or water surface EVW (for rice)
     if (crop.p.IAIRDU == 0) {
-      soil.EVS = soil.EVSMX * (soil.SMFCF - soil.SMW / 3.) / (soil.SM0 - soil.SMW / 3.);
+      soil.EVS = soil.EVSMX * (soil.p.SMFCF - soil.p.SMW / 3.) / (soil.p.SM0 - soil.p.SMW / 3.);
       soil.EVW  = 0;
     } else {
       soil.EVS = 0;
@@ -63,5 +63,5 @@ void WofostModel::WATPP_states() {
          soil.EVWT = soil.EVWT + soil.EVW * DELT;
          soil.EVST = soil.EVST + soil.EVS * DELT;
 // soil permanently at field capacity under potential production :
-         soil.SM  = soil.SMFCF;
+         soil.SM  = soil.p.SMFCF;
 }

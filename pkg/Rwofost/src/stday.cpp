@@ -24,7 +24,7 @@ corresponds with Wind's loam with a drain  depth of 150 cm.
              topsoil is drier than field capacity
  COSUT      counts times that sowing date equals latest sowing date
              (indicator for the suitability of a soil for a specific crop).
- DEFLIM     minimum required soil moisture deficit in plow layer
+ p.DEFLIM     minimum required soil moisture deficit in plow layer
              for occurrence of workable day (workability criterion)
  EVS        daily evaporation from bare soil surface
  DOY       julian date
@@ -37,10 +37,10 @@ corresponds with Wind's loam with a drain  depth of 150 cm.
  RAIN       daily rainfall
  SEEP       daily seepage from plow layer
  SMDEF      estimated soil moisture deficit in plow layer
- SPADS   SPAC  topsoil seepage parameter for deep seedbed (potato)
- SPASS   SPAC  topsoil seepage parameter for shallow seedbed
- SPODS   SPOC  topsoil seepage parameter for deep seedbed (potato)
- SPOSS   SPOC  topsoil seepage parameter for shallow seedbed
+ SPADS      SPAC  topsoil seepage parameter for deep seedbed (potato)
+ SPASS      SPAC  topsoil seepage parameter for shallow seedbed
+ SPODS      SPOC  topsoil seepage parameter for deep seedbed (potato)
+ SPOSS      SPOC  topsoil seepage parameter for shallow seedbed
  WEXC       excess amount of water in plow layer
 
 */
@@ -55,16 +55,16 @@ void WofostModel::STDAY_initialize() {
 // RH:  Terrible hack (BI = "Bintje" ???	)
 /*    if( soil.CRPNAM.substr(1,2) == "BI" ){ 
 // two seepage parameters for deep seedbed (potato)
-        soil.SPAC = soil.SPADS;
-        soil.SPOC = soil.SPODS;
+        soil.SPAC = soil.p.SPADS;
+        soil.SPOC = soil.p.SPODS;
     }
     else{
 */		
 // two seepage parameters for shallow seedbed (all other crops)
     soil.CAPRFU = {-0.50,0.50, 0.00,0.20, 0.10,0.15, 0.40,0.10, 1.00,0.05};
-    soil.SPAC = soil.SPASS;
-    soil.SPOC = soil.SPOSS;
-    soil.DEFLIM = 0.;
+    soil.SPAC = soil.p.SPASS;
+    soil.SPOC = soil.p.SPOSS;
+    soil.p.DEFLIM = 0.;
 
     soil.WEXC = 2.;
     //RAIN=0?
@@ -96,7 +96,7 @@ void WofostModel::STDAY() {
         soil.WEXC = soil.WEXC - soil.SEEP;
     }
     // criterion for workable day
-    if (soil.WEXC <= soil.DEFLIM ){
+    if (soil.WEXC <= soil.p.DEFLIM ){
         soil.ILWPER = soil.ILWPER + 1;
     } else {
         soil.ILWPER = 0;

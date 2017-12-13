@@ -2,7 +2,7 @@
 
 .trim2 <- function(x) return(gsub("^ *|(?<= ) | *$", "", x, perl=TRUE))
 
-w <- function() {
+.w <- function() {
 	WofostModel$new()
 }
 

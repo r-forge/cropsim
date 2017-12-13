@@ -10,6 +10,7 @@
 \alias{WofostCropParametersNPK}
 
 \alias{WofostSoil}
+\alias{WofostSoilParameters}
 \alias{WofostSoilParametersNPK}
 
 \alias{WofostControl}
@@ -19,6 +20,7 @@
 \alias{Rcpp_WofostCropParameters}
 \alias{Rcpp_WofostCropParametersNPK}
 \alias{Rcpp_WofostSoil}
+\alias{Rcpp_WofostSoilParameters}
 \alias{Rcpp_WofostSoilParametersNPK}
 
 \alias{Rcpp_WofostControl}
@@ -34,6 +36,7 @@
 \alias{WofostCropParametersNPK-class}
 
 \alias{WofostSoil-class}
+\alias{WofostSoilParameters-class}
 \alias{WofostSoilParametersNPK-class}
 \alias{WofostControl-class}
 \alias{WofostModel-class}
@@ -44,6 +47,7 @@
 \alias{Rcpp_WofostCropParametersNPK-class}
 
 \alias{Rcpp_WofostSoil-class}
+\alias{Rcpp_WofostSoilParameters-class}
 \alias{Rcpp_WofostSoilParametersNPK-class}
 \alias{Rcpp_WofostControl-class}
 \alias{Rcpp_WofostOutput-class}

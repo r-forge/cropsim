@@ -20,7 +20,7 @@ void WofostModel::soil_initialize() {
 		WATPP_initialize();
 	} else {
 		ROOTD_initialize();
-		if (soil.IZT == 0) {
+		if (soil.p.IZT == 0) {
 			WATFD_initialize();
 		} else {
 			WATGW_initialize();
@@ -34,7 +34,7 @@ void WofostModel::soil_rates() {
 		WATPP_rates();
 	} else {
 		ROOTD_rates();
-		if (soil.IZT == 0) {
+		if (soil.p.IZT == 0) {
 			WATFD_rates();
 		} else {
 			WATGW_rates();
@@ -47,7 +47,7 @@ void WofostModel::soil_states() {
 		WATPP_states();
 	} else {
 		ROOTD_states();
-		if (soil.IZT == 0) {
+		if (soil.p.IZT == 0) {
 			WATFD_states();
 		} else {
 			WATGW_states();

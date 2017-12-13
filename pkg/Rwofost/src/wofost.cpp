@@ -54,7 +54,7 @@ void WofostModel::model_initialize() {
 		ISTATE = 3;
 	} else if (control.ISTCHO == 1) { // model starts at sowing
 		ISTATE = 1;
-	} else if (control.ISTCHO == 2) { // model starts prior to earliest possible sowing date
+	} else if (control.ISTCHO == 2) { // model starts prior to earliest pop.SSIble sowing date
 		ISTATE = 0;
 		STDAY_initialize();
 	}

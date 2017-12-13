@@ -18,6 +18,7 @@ double SUBSOL (double PF, double D, std::vector<double> CONTAB);// flow is outpu
 double SWEAF(double ET0, double CGNR);
 std::vector<double> PENMAN (int DOY, double LAT, double ELEV, double ANGSTA, double ANGSTB, double TMIN, double TMAX, double AVRAD, double VAP, double WIND2, double ATMTR);
 
+
 struct WofostOutput {
 	double LAI;
 };
@@ -103,7 +104,7 @@ struct WofostCrop {
 	double DMI, ADMI;
 
 	//ROOTD
-	double RDMSOL, RR; //RDMO,
+	double RR; //RDMO,
 
 	
 //04/2017 npk
@@ -144,8 +145,6 @@ struct WofostCrop {
 	};
 	variables vn;
 
-
-
 };
 
 
@@ -158,9 +157,48 @@ struct WofostSoilParametersNPK {
 };
 
 
+struct WofostSoilParameters {
+
+	int IZT, ifUNRN;
+	int NOTINF; // fraction not inflitrating rainfall
+	int IDRAIN; // presence of drains
+	double RDM, SM0, SMFCF, SMW, SOPE, KSUB, CRAIRC, K0, SMLIM, SSI;
+	double SSMAX; // max surface storage
+
+	//STDAY
+	double SPADS, SPODS, SPASS, SPOSS, DEFLIM;
+	
+	double WAV, ZTI, DD, RDMSOL;
+	
+	std::vector<double> SMTAB, CONTAB, PFTAB;
+	// currently hard-coded
+	std::vector<double> NINFTB;
+};
+
+
 struct WofostSoil {
 
+	WofostSoilParameters p;
 	WofostSoilParametersNPK pn;
+
+// RATES
+	double EVS, EVW, CR, DMAX, DZ;
+	double RIN, RIRR, DW, PERC, LOSS, DWLOW;
+
+	
+// STATES
+	double SM, SS, W, WI, DSLR, WLOW, WLOWI, WWLOW;
+
+	
+// VARIABLES
+	int ILWPER, IDFWOR;
+
+	double EVWMX, EVSMX, EVST, EVWT, TSR, WDRT, TOTINF, TOTIRR, SUMSM, PERCT, LOSST;
+	double SPAC, SPOC, WEXC, CAPRMX, SEEP, COSUT; 	// STDAY
+	double RTDF, MH0, MH1, ZT, SUBAIR, WZ, WZI, WE, WEDTOT, CRT, DRAINT, PF;
+
+	std::vector<double> SDEFTB, DEFDTB, CAPRFU;
+
 	
 	struct ratesNPK {
 		double RNSOIL, RPSOIL, RKSOIL;
@@ -173,49 +211,7 @@ struct WofostSoil {
 		double NAVAIL, PAVAIL, KAVAIL;
 	};
 	statesNPK sn;
-
-
-// parameters
-	int IZT;
-	int ifUNRN;
-	int NOTINF; // fraction not inflitrating rainfall
-	int IDRAIN; // presence of drains
-	double RDM;
-	double SM0, SMFCF, SMW;
-	double SOPE, KSUB, CRAIRC, K0, SMLIM, SSI;
-	double SSMAX; // max surface storage
-
-	std::vector<double> SMTAB, CONTAB, PFTAB;
-
-	// currently hard-coded
-	std::vector<double> NINFTB;
-
-// variables
-	double EVWMX, EVSMX;
-	double EVST, EVWT, TSR, WDRT, TOTINF, TOTIRR, SUMSM, PERCT, LOSST;
-
-
-// rates
-	double EVS, EVW;
-	double RIN, RIRR, DW, PERC, LOSS, DWLOW;
-
-// states
-
-	double SM;
-	double SS, WAV, W, WI, DSLR, WLOW, WLOWI, WWLOW;
-
-	//???
-
-	double RTDF, MH0, MH1, ZT, ZTI, DD, SUBAIR, WZ, WZI, WE, WEDTOT, CRT, DRAINT, CR, DMAX, DZ, PF;
-	std::vector<double> SDEFTB, DEFDTB;
-
-	//read in STDAY
-	double SPADS, SPODS, SPASS, SPOSS, DEFLIM;
-	// new variable in STDAY
-	double SPAC, SPOC, WEXC, CAPRMX, SEEP, COSUT;
-	int ILWPER, IDFWOR;
-
-	std::vector<double> CAPRFU;
+	
 
 };
 

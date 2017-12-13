@@ -18,7 +18,7 @@ Modifications since WOFOST Version 4.1:
 
 Tamme van der Wal (25-July-1997)
 1) New parameter is read in: p.DVSI                 |
-2) p.KDifTB, p.EFFTB and p.SSATB are now read in from data files and KDif, EFF and SSA are calculated using the AFGEN function.
+2) KDifTB, EFFTB and SSATB are now read in from data files and KDif, EFF and SSA are calculated using the AFGEN function.
 KDif, EFF and SSA which are now functions of DVS or DTEMP
 
 FORMAL PARAMETERS:  (I=input,O=output,C=control,IN=init,T=time)
@@ -40,20 +40,20 @@ IUPL    I4  unit of input file with crop data                    I
 IUOUT   I4  unit of output file with simulation results          I
 IULOG   I4  unit of log file                                     I
 SM      R4  soil moisture content in the rooted zone    cm3 cm-3 I
-SM0     R4  soil porosity, saturated moisture content   cm3 cm-3 I
-SMFCF   R4  soil moisture content at field capacity     cm3 cm-3 I
-SMW     R4  soil moisture content at wilting point      cm3 cm-3 I
-CRAIRC  R4  critical air content in the rootzone        cm3 cm-3 I
+p.SM0     R4  soil porosity, saturated moisture content   cm3 cm-3 I
+p.SMFCF   R4  soil moisture content at field capacity     cm3 cm-3 I
+p.SMW     R4  soil moisture content at wilting point      cm3 cm-3 I
+p.CRAIRC  R4  critical air content in the rootzone        cm3 cm-3 I
 EVWMX   R4  maximum evaporation rate from water surface cm d-1   I
 EVSMX   R4  maximum evaporation rate from soil surface  cm d-1   I or O
 TRA     R4  crop transpiration rate                     cm d-1   I or O
-crop.FR      R4  fraction of dry matter increase
+???FR   R4  fraction of dry matter increase
             partitioned to the roots                      -      O
-p.RRI     R4  root length growth rate                     cm d-1   O
-p.IAIRDU  I4  indicates presence (1) or absence (0) of
+RRI     R4  root length growth rate                     cm d-1   O
+IAIRDU  I4  indicates presence (1) or absence (0) of
             airducts in the roots.                               O
             (1) means tolerating water-saturated soils
-p.RDI     R4  initial rooting depth                         cm     O
+RDI     R4  initial rooting depth                         cm     O
 p.RDMCR   R4  crop-dependent maximum rooting depth          cm     O
 
 

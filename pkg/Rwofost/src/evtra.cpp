@@ -26,7 +26,7 @@ using namespace std;
 void WofostModel::EVTRA() {
 
 //int IWB, int IOX, int p.IAIRDU, double KDif, double p.CFET, double p.DEPNR,
-//        double E0, double ES0, double ET0, double LAI, double SM, double SM0, double SMFCF, double SMW ,double CRAIRC){
+//        double E0, double ES0, double ET0, double LAI, double SM, double p.SM0, double p.SMFCF, double p.SMW ,double p.CRAIRC){
 
     double DSOS = 0.;
     double KGLOB, RFOS=1.;
@@ -56,15 +56,15 @@ void WofostModel::EVTRA() {
         double SWDEP = SWEAF(atm.ET0, crop.p.DEPNR);
         //cout << "ET0: " << atm.ET0 << " p.DEPNR" << crop.p.DEPNR << endl;
         //cout << "SWDEP: " << SWDEP << endl;
-        double SMCR = (1. - SWDEP) * (soil.SMFCF - soil.SMW) + soil.SMW;
+        double SMCR = (1. - SWDEP) * (soil.p.SMFCF - soil.p.SMW) + soil.p.SMW;
         //reduction in transpiration in case of water shortage
-        double RFWS = LIMIT(0.,1.,(soil.SM - soil.SMW)/(SMCR - soil.SMW));
-        //cout << "RFWS: " << RFWS << " SM: " << soil.SM << " SMW: " << soil.SMW << endl;
+        double RFWS = LIMIT(0.,1.,(soil.SM - soil.p.SMW)/(SMCR - soil.p.SMW));
+        //cout << "RFWS: " << RFWS << " SM: " << soil.SM << " p.SMW: " << soil.p.SMW << endl;
         //reduction in transpiration in case of oxygen shortage
-        //for non-rice crops, and possibly deficient land drainage
+        //for non-rice crops, and pop.SSIbly deficient land drainage
         if (crop.p.IAIRDU == 0 && IOX == 1){
             //critical soil moisture content for aeration
-            double SMAIR = soil.SM0 - soil.CRAIRC;
+            double SMAIR = soil.p.SM0 - soil.p.CRAIRC;
             //count days since start oxygen shortage (up to 4 days)
             if (soil.SM >= SMAIR){
                 DSOS = min((DSOS + 1.), 4.);
@@ -73,9 +73,9 @@ void WofostModel::EVTRA() {
             }
             //maximum reduction reached after 4 days
             //call function LIMIT
-            double RFOSMX = LIMIT(0.,1.,(soil.SM0 - soil.SM)/(soil.SM0 - SMAIR));
+            double RFOSMX = LIMIT(0.,1.,(soil.p.SM0 - soil.SM)/(soil.p.SM0 - SMAIR));
             if (crop.p.IAIRDU == 0){
-                RFOS = LIMIT(0.,1.,((soil.SM0-0.05)-soil.SM)/0.05);
+                RFOS = LIMIT(0.,1.,((soil.p.SM0-0.05)-soil.SM)/0.05);
             } else {
 	            RFOS = RFOSMX + (1. - DSOS/4.)*(1. - RFOSMX);
 			}

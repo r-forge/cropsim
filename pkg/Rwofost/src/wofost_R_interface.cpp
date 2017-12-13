@@ -78,11 +78,7 @@ NumericMatrix wofost(List crop, DataFrame weather, List soil, List control) {
 		crp.pn.NMAXLV_TB = TBFromList(crop, "NMAXLV_TB");
 		crp.pn.PMAXLV_TB = TBFromList(crop, "PMAXLV_TB");
 		crp.pn.KMAXLV_TB = TBFromList(crop, "KMAXLV_TB");
-
-  }
-
-
-
+	}
 
 	crp.p.TBASEM = doubleFromList(crop, "TBASEM");
 	crp.p.TEFFMX = doubleFromList(crop, "TEFFMX");
@@ -93,7 +89,6 @@ NumericMatrix wofost(List crop, DataFrame weather, List soil, List control) {
 	crp.p.TSUM1 = doubleFromList(crop, "TSUM1");
 	crp.p.TSUM2 = doubleFromList(crop, "TSUM2");
 	crp.p.DTSMTB = TBFromList(crop, "DTSMTB");
-
 	crp.p.DVSI = doubleFromList(crop, "DVSI");
 	crp.p.DVSEND = doubleFromList(crop, "DVSEND");
 	crp.p.TDWI = doubleFromList(crop, "TDWI");
@@ -144,38 +139,38 @@ NumericMatrix wofost(List crop, DataFrame weather, List soil, List control) {
 	struct WofostSoil sol;
 
 	if (cntr.IOXWL != 0) {
-		sol.SMTAB = TBFromList(soil, "SMTAB");
+		sol.p.SMTAB = TBFromList(soil, "SMTAB");
 	} else { // should be no need to read it; need to check if true
-		sol.SMTAB = TBFromList(soil, "SMTAB");
+		sol.p.SMTAB = TBFromList(soil, "SMTAB");
 	}
-	sol.SMW = doubleFromList(soil, "SMW");
-	sol.SMFCF = doubleFromList(soil, "SMFCF");
-	sol.SM0 = doubleFromList(soil, "SM0");
-	sol.CRAIRC = doubleFromList(soil, "CRAIRC");
-	sol.CONTAB = TBFromList(soil, "CONTAB");
-	sol.K0 = doubleFromList(soil, "K0");
-	sol.SOPE = doubleFromList(soil, "SOPE");
-	sol.KSUB = doubleFromList(soil, "KSUB");
-	sol.SPADS = doubleFromList(soil, "SPADS");
-	sol.SPASS = doubleFromList(soil, "SPASS");
-	sol.SPODS = doubleFromList(soil, "SPODS");
-	sol.SPOSS = doubleFromList(soil, "SPOSS");
-	sol.DEFLIM = doubleFromList(soil, "DEFLIM");
+	sol.p.SMW = doubleFromList(soil, "SMW");
+	sol.p.SMFCF = doubleFromList(soil, "SMFCF");
+	sol.p.SM0 = doubleFromList(soil, "SM0");
+	sol.p.CRAIRC = doubleFromList(soil, "CRAIRC");
+	sol.p.CONTAB = TBFromList(soil, "CONTAB");
+	sol.p.K0 = doubleFromList(soil, "K0");
+	sol.p.SOPE = doubleFromList(soil, "SOPE");
+	sol.p.KSUB = doubleFromList(soil, "KSUB");
+	sol.p.SPADS = doubleFromList(soil, "SPADS");
+	sol.p.SPASS = doubleFromList(soil, "SPASS");
+	sol.p.SPODS = doubleFromList(soil, "SPODS");
+	sol.p.SPOSS = doubleFromList(soil, "SPOSS");
+	sol.p.DEFLIM = doubleFromList(soil, "DEFLIM");
 
 
 	//soil variables that used to be in the control object
-	sol.IZT = intFromList(soil, "IZT");  // groundwater present
-	sol.ifUNRN = intFromList(soil, "IFUNRN");
-	sol.WAV = doubleFromList(soil, "WAV");
-	sol.ZTI = doubleFromList(soil, "ZTI");
-	sol.DD = doubleFromList(soil, "DD");
-	crp.RDMSOL = doubleFromList(soil, "RDMSOL");
+	sol.p.IZT = intFromList(soil, "IZT");  // groundwater present
+	sol.p.ifUNRN = intFromList(soil, "IFUNRN");
+	sol.p.WAV = doubleFromList(soil, "WAV");
+	sol.p.ZTI = doubleFromList(soil, "ZTI");
+	sol.p.DD = doubleFromList(soil, "DD");
+	sol.p.RDMSOL = doubleFromList(soil, "RDMSOL");
 
-	sol.IDRAIN = intFromList(soil, "IDRAIN"); // presence of drains
-	sol.NOTINF = intFromList(soil, "NOTINF"); // fraction not inflitrating rainfall
-	sol.SSMAX = doubleFromList(soil, "SSMAX"); // max surface storage
-	sol.SMLIM = doubleFromList(soil, "SMLIM");
-	sol.SSI = doubleFromList(soil, "SSI");
+	sol.p.IDRAIN = intFromList(soil, "IDRAIN"); // presence of drains
+	sol.p.NOTINF = intFromList(soil, "NOTINF"); // fraction not inflitrating rainfall
+	sol.p.SSMAX = doubleFromList(soil, "SSMAX"); // max surface storage
+	sol.p.SMLIM = doubleFromList(soil, "SMLIM");
+	sol.p.SSI = doubleFromList(soil, "SSI");
 
 	if(cntr.npk_model){
 		sol.pn.N_recovery = vecFromList(control, "Nrecovery");
