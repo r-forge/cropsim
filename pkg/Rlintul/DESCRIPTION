@@ -6,7 +6,7 @@ Date: 2017-12-11
 LinkingTo: Rcpp, meteor
 SystemRequirements: C++11
 Imports: methods, Rcpp (>= 0.12.4)
-Depends: meteor
+Depends: meteor (>= 0.2-2)
 Author: Robert Hijmans
 Maintainer: <r.hijmans@gmail.com>
 Description: This package implements the LINTUL model of crop growth and development.
