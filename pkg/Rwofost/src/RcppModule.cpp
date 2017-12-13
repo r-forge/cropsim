@@ -8,7 +8,7 @@ License: GNU General Public License (GNU GPL) v. 2
 using namespace Rcpp;
 using namespace std;
 #include "R_interface_util.h"
-#include "WOFOST.h"
+#include "wofost.h"
 
 
 void setWeather(WofostModel* m, NumericVector date, NumericVector tmin, NumericVector tmax, NumericVector srad, NumericVector prec, NumericVector wind, NumericVector vapr, double latitude, double AngA, double AngB) {
