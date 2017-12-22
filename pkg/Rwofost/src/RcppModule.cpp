@@ -51,7 +51,7 @@ RCPP_MODULE(wofost){
 
     class_<WofostControl>("WofostControl")
 		.field("modelstart", &WofostControl::modelstart) 
-	//	.fikdifteld("cropstart", &WofostControl::cropstart  
+		.field("cropstart", &WofostControl::cropstart  
 		//.field("long_output", &WofostControl::long_output
 		.field("IWB", &WofostControl::IWB)
 		.field("IOXWL", &WofostControl::IOXWL)
@@ -75,6 +75,7 @@ RCPP_MODULE(wofost){
 		.field("vapr", &DailyWeather::vapr) 
 	;
 	
+	// incomplete
     class_<WofostCropParametersNPK>("WofostCropParametersNPK")
 		.field("TCNT", &WofostCropParametersNPK::TCNT)
 		.field("TCPT", &WofostCropParametersNPK::TCPT)

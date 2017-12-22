@@ -26,7 +26,7 @@ NumericMatrix wofost(List crop, DataFrame weather, List soil, List control) {
 	std::vector<long> startvec = longFromList(control, "modelstart");
 	long start = startvec[0];
 	cntr.cropstart = intFromList(control, "cropstart");
-	cntr.long_output = boolFromList(control, "long_output");
+	//cntr.long_output = boolFromList(control, "long_output");
 
 	cntr.IWB = intFromList(control, "IPRODL"); // translate IPRDL to IWB
 	cntr.IOXWL = intFromList(control, "IOXWL");
