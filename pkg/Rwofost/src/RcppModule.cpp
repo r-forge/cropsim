@@ -51,7 +51,7 @@ RCPP_MODULE(wofost){
 
     class_<WofostControl>("WofostControl")
 		.field("modelstart", &WofostControl::modelstart) 
-		.field("cropstart", &WofostControl::cropstart  
+		.field("cropstart", &WofostControl::cropstart)  
 		//.field("long_output", &WofostControl::long_output
 		.field("IWB", &WofostControl::IWB)
 		.field("IOXWL", &WofostControl::IOXWL)
