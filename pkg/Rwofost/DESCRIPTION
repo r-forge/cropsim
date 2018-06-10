@@ -1,13 +1,14 @@
 Package: Rwofost
 Type: Package
 Title: WOFOST Crop Growth Simulation Model
-Version: 0.2-3
-Date: 2017-12-13
+Version: 0.2-6
+Date: 2018-06-05
 LinkingTo: Rcpp, meteor
 Imports: methods, Rcpp (>= 0.12.4)
 Depends: meteor (>= 0.2-2)
 SystemRequirements: C++11
 Author: Robert Hijmans and Huang Fang
 Maintainer: <r.hijmans@gmail.com>
-Description: This package implements the WOFOST crop growth model.
+Description: An implementation of the WOFOST crop growth simulation model.
 License: GPL (>=3)
+
