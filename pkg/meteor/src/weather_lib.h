@@ -4,7 +4,6 @@ using namespace std;
 #include <numeric>
 
 
-
 /*
 Variable names
 temp: air temperature (degrees C)

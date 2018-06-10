@@ -1,15 +1,6 @@
 /*
 C++ code by Robert Hijmans, 2016
 
-
-Derived from FORTRAN code in WOFOST model
-Author: C. Rappoldt, October 1986, revised April 1991
-Copyright 1988, 2013 Alterra, Wageningen-UR
-Licensed under the EUPL, Version 1.1 or as soon they will be approved by the European Commission - subsequent versions of the EUPL (the "Licence")
-You may not use this work except in compliance with the Licence.  You may obtain a copy of the Licence at: https://joinup.ec.europa.eu/software/page/eupl.
-Unless required by applicable law or agreed to in writing, software distributed under the Licence is distributed on an "AS IS" basis,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the Licence for the specific language governing permissions and limitations under the Licence.
-
 This function generates years of daily rainfall data on the basis of the given long term average monthly rainfall
 (rain) and number of rainy days (raindays) using the method by Geng et al. (1986).
 
@@ -17,7 +8,7 @@ The Markov chain uses the transitional probabilities of a wet day after a dry da
 described by a Markov parameter value of 0.75. In the absence of clustering Markov=1.00.
 The parameters alpha and beta of the gamma distribution function are derived from the mean rainfall per wet day.
 
-
+Derived from FORTRAN code in WOFOST model
 C++ implementation and modifications by Robert Hijmans, June 2016
 modifications
 - simulate n years

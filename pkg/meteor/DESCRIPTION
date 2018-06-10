@@ -5,7 +5,7 @@ Version: 0.3-2
 LinkingTo: Rcpp
 SystemRequirements: C++11
 Imports: methods, Rcpp (>= 0.12.4)
-Date: 2018-06-06
+Date: 2018-06-10
 Authors@R: c(
 	person("Robert J.", "Hijmans", role = c("cre", "aut"),  email = "r.hijmans@gmail.com")
 )
