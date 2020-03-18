@@ -1,45 +1,48 @@
 /*
-Authors: Robert Hijmans and Huang Fang
-Date July 2016
+Author: Robert Hijmans
+2016-2020
 
 License: GNU General Public License (GNU GPL) v. 2
 */
 
 #include <vector>
 #include <string>
-//#include "date.h"
 #include "SimUtil.h"
 
-using namespace std;
-
-double TOTASS(double DAYL, double AMAX, double EFF, double LAI, double KDif, double AVRAD, double SINLD, double COSLD, double DSINBE, double DifPP);
-double ASSIM(double AMAX, double EFF, double LAI, double KDif, double SINB, double PARDIR, double PARDif);
-double SUBSOL (double PF, double D, std::vector<double> CONTAB);// flow is output
-double SWEAF(double ET0, double CGNR);
-std::vector<double> PENMAN (int DOY, double LAT, double ELEV, double ANGSTA, double ANGSTB, double TMIN, double TMAX, double AVRAD, double VAP, double WIND2, double ATMTR);
-
-
-struct WofostOutput {
-	double LAI;
+class WofostWeather {
+public:
+	std::vector<long> date;
+	std::vector<double> srad, tmin, tmax, prec, wind, vapr;
 };
 
 
 struct WofostControl {
-	unsigned modelstart;
+	long modelstart;
 	unsigned cropstart; // sowing, emergence, ...;
-	bool long_output;
-	bool npk_model = false;  //if model is npk, default false
+	//bool long_output;
+	std::string output_option;
+	//bool npk_model = false;  //if model is npk, default false
+
+	double latitude, elevation;
+	double CO2 = 410;
+	
+	bool usePENMAN = true;
+	double ANGSTA = -0.18;
+	double ANGSTB = -0.55;
 
 	unsigned IDESOW;
 	int INYRG, ISTCHO, IDLSOW, IENCHO, IDAYEN, IDURMX;
 	int IOXWL;   //IOX for water limited
-	int	IWB; // water limited (1) or potential (0)
-
+	//int	IPRODL, IWB; // water limited (1) or potential (0)
+	bool water_limited = false; 
+	// nutrient_limited = false;
 	std::vector<double> N_amount, P_amount, K_amount;
 	std::vector<long> NPKdates;
+	bool useForce;
 };
 
 
+/*
 struct WofostCropParametersNPK {
 	double TCNT, TCPT, TCKT;
 	double DVSNPK_STOP, NFIX_FR, NPART;
@@ -51,66 +54,75 @@ struct WofostCropParametersNPK {
 	double NCRIT_FR, PCRIT_FR, KCRIT_FR;
 	double NLUE_NPK, NPK_TRANSLRT_FR;
 };
-
+*/
 
 struct WofostCropParameters {
     int IAIRDU, IDSL;
-	double DLO, DLC, TSUM1, TSUM2, DVSI, DVSEND, TDWI, RGRLAI, SPA, SPAN, TBASE, PGASS;
-	double CVL, CVO, CVR, CVS, Q10, RML, RMO, RMR, RMS, PERDL, CFET, DEPNR, RDMCR, RRI, RDI, LAIEM;
+	double DLO, DLC, TSUM1, TSUM2, DVSI, DVSEND, TDWI, RGRLAI, SPA, SPAN, TBASE;
+	double CVL, CVO, CVR, CVS, Q10, RML, RMO, RMR, RMS, PERDL, CFET, DEPNR, RDMCR, RRI, RDI;
+	double LAIEM;
 	//emergence parameters
 	double TBASEM, TEFFMX, TSUMEM;
 	//tables
-	std::vector<double> DTSMTB, AMAXTB, TMPFTB, KDifTB, EFFTB, TMNFTB, RFSETB, SLATB, FRTB, FLTB, FSTB, FOTB, RDRSTB, RDRRTB, SSATB;
+	std::vector<double> DTSMTB, AMAXTB, TMPFTB, KDIFTB, EFFTB, TMNFTB, RFSETB, SLATB, FRTB, FLTB, FSTB, FOTB, RDRSTB, RDRRTB, SSATB;
 	std::vector<double> CO2AMAXTB, CO2EFFTB, CO2TRATB;
+	
+	//vernalization
+	unsigned VERNSAT; // Saturated vernalisation requirements (days)
+	unsigned VERNBASE; // Base vernalisation requirements (days)
+	std::vector<double> VERNRTB; // vernalisation rate temperature response.
+	double VERNDVS; // DVS at which vernalisation is fulfilled
+	
 } ;
 
+struct WofostCropRates {
+	double VERNR;   // Rate of vernalisation
+    double VERNFAC; // Red. factor for phenol. devel.
+
+};
+
+struct WofostCropStates {
+	unsigned VERN; // Vernalisation state (days)
+	long DOV;      // Day when vernalisation requirements are fulfilled.
+	bool ISVERNALISED; // has the vernalisation been reached?
+};
 
 struct WofostCrop {
 
 	WofostCropParameters p;
+	WofostCropRates r;
+	WofostCropStates s;
 	
 // rates
-	//struct rates {
-		double GASS, GWST, GWSO;
-		double DRST, DRLV, DRRT, DRSO; // dead rates
-		double DVR; // developement rate
-		double DTSUME, DTSUM, GWRT, GLAIEX, MRES;
-	//}
-	//rates r;
+	double GASS, GWST, GWSO;
+	double DRST, DRLV, DRRT, GWRT, DRSO; // dead rates
+	double DVR, DTSUME, DTSUM, GLAIEX;
+	double RR, FYSDEL;
 	
+
 	//struct states {
-		double RD, RDOLD, GRLV;
-		double DWRT, DWLV, DWST, DWSO;
-		double DVS, LAI, LAIEXP;
-		double WRT, WLV, WST, WSO;
-		double TWRT, TWLV, TWST, TWSO, TAGP;
-		double TSUM, TSUME;
+	double RD, RDOLD, GRLV, DWRT, DWLV, DWST, DWSO;
+	double DVS, LAI, LAIEXP, WRT, WLV, WST, WSO;
+	double TWRT, TWLV, TWST, TWSO, TAGP, TSUM, TSUME;
+	double TADW, SAI, PAI; 
 	//}
 	//states s;
 	
 // variables
-	double TRA, TRANRF;
-	double LASUM, KDif, SSA, TRAMX ;
-	std::vector<double> SLA = vector<double>(366), LV = vector<double>(366), LVAGE = vector<double>(366), TMNSAV = vector<double>(7);
-	double FR, FL, FS, FO;
 	bool alive;
-	int emergence;
-	double ASRC;
-
-
-// ???
-	int ILDTSM, ILVOLD, IDANTH, IDWS;
-	double FYSDEL, SLAT, TADW, DSLV, TMINRA;
-	double DMI, ADMI;
-
-	//ROOTD
-	double RR; //RDMO,
+	int emergence, ILVOLD, IDANTH;
+	double EFF, AMAX, PGASS, TRA, RFTRA, TRANRF;
+	double LASUM, KDif, TRAMX;
+	double FR, FL, FS, FO;
+	double TMINRA, DSLV, SLAT;
+	double PMRES;
+	std::vector<double> SLA = std::vector<double>(366), LV = std::vector<double>(366), LVAGE = std::vector<double>(366), TMNSAV = std::vector<double>(7);
 
 	
 //04/2017 npk
-	double GASST, MREST, CTRAT, HI;
+	//double GASST, MREST, CTRAT, HI;
 
-	
+	/*
 	WofostCropParametersNPK pn; // nutrient parameters
 
 	struct ratesNPK {
@@ -134,7 +146,8 @@ struct WofostCrop {
 		double ATKLV, ATKST, ATKRT;
 	};
 	statesNPK sn;
-
+	*/
+	
 	struct variables {
 		double NNI, PNI, KNI, NPKI, NPKREF;
 		double NTRANSLOCATABLE, PTRANSLOCATABLE, KTRANSLOCATABLE;
@@ -147,7 +160,7 @@ struct WofostCrop {
 
 };
 
-
+/*
 struct WofostSoilParametersNPK {
 	double BG_N_SUPPLY, BG_P_SUPPLY, BG_K_SUPPLY;
 	std::vector<double> N_recovery, P_recovery, K_recovery;
@@ -155,14 +168,14 @@ struct WofostSoilParametersNPK {
 	double NSOILBASE, PSOILBASE, KSOILBASE;
 	double NSOILI, PSOILI, KSOILI;
 };
-
+*/
 
 struct WofostSoilParameters {
 
-	int IZT, ifUNRN;
+	int IZT, IFUNRN;
 	int NOTINF; // fraction not inflitrating rainfall
 	int IDRAIN; // presence of drains
-	double RDM, SM0, SMFCF, SMW, SOPE, KSUB, CRAIRC, K0, SMLIM, SSI;
+	double SM0, SMFCF, SMW, SOPE, KSUB, CRAIRC, K0, SMLIM, SSI;
 	double SSMAX; // max surface storage
 
 	//STDAY
@@ -179,27 +192,26 @@ struct WofostSoilParameters {
 struct WofostSoil {
 
 	WofostSoilParameters p;
-	WofostSoilParametersNPK pn;
+	//WofostSoilParametersNPK pn;
 
 // RATES
 	double EVS, EVW, CR, DMAX, DZ;
-	double RIN, RIRR, DW, PERC, LOSS, DWLOW;
-
+	double RIN, RINold, RIRR, DW, PERC, LOSS, DWLOW;
 	
 // STATES
 	double SM, SS, W, WI, DSLR, WLOW, WLOWI, WWLOW;
 
 	
 // VARIABLES
+	double RDM;
 	int ILWPER, IDFWOR;
-
-	double EVWMX, EVSMX, EVST, EVWT, TSR, WDRT, TOTINF, TOTIRR, SUMSM, PERCT, LOSST;
+	double EVWMX, EVSMX, EVST, EVWT, TSR, WDRT, PERCT, LOSST;
 	double SPAC, SPOC, WEXC, CAPRMX, SEEP, COSUT; 	// STDAY
 	double RTDF, MH0, MH1, ZT, SUBAIR, WZ, WZI, WE, WEDTOT, CRT, DRAINT, PF;
 
 	std::vector<double> SDEFTB, DEFDTB, CAPRFU;
 
-	
+	/*
 	struct ratesNPK {
 		double RNSOIL, RPSOIL, RKSOIL;
 		double RNAVAIL, RPAVAIL, RKAVAIL;
@@ -211,16 +223,28 @@ struct WofostSoil {
 		double NAVAIL, PAVAIL, KAVAIL;
 	};
 	statesNPK sn;
-	
+	*/
 
 };
 
 
 struct WofostAtmosphere {
-	double latitude, elevation;
-	double RAIN, RAINT, AVRAD, TEMP, DTEMP, TMIN, TMAX, E0, ES0, ET0, DAYL, DAYLP, WIND, VAP;
+	double RAIN, AVRAD, TEMP, DTEMP, TMIN, TMAX, E0, ES0, ET0, DAYL, DAYLP, WIND, VAP;
 	double SINLD, COSLD, DTGA, DSINB, DSINBE, DifPP;
-	double ANGSTA, ANGSTB, ATMTR;
+	double ATMTR, ANGOT;
+};
+
+
+struct WofostForcer {
+	bool force_DVS=false, force_LAI=false, force_SM=false, force_FR=false, force_DMI=false, force_ADMI=false, force_FL=false, force_PAI=false, force_RFTRA=false, force_SAI=false,
+	force_WRT=false, force_WLV=false, force_WSO=false, force_WST=false;
+	std::vector<double> DVS, LAI, SM, FR, DMI, ADMI, FL, PAI, RFTRA, SAI, WRT, WLV, WSO, WST;
+};
+
+
+struct WofostOutput {
+	std::vector<std::string> names;
+	std::vector<double> values;
 };
 
 
@@ -229,9 +253,8 @@ struct WofostModel {
 
 	unsigned step, time, DOY, npk_step;
 	int IDHALT, ISTATE, IOX;
-	double DELT;
 
-	std::vector<std::string>  messages;
+	std::vector<std::string> messages;
 	bool fatalError;
 
 	WofostSoil soil;
@@ -239,20 +262,26 @@ struct WofostModel {
 	WofostControl control;
 
 	WofostAtmosphere atm;
-	DailyWeather wth;
-
-	std::vector<std::vector<double> > out;
-	std::vector<std::string> out_names;
-
-	void weather_step();
+	WofostWeather wth;
+	
+	WofostForcer forcer;
+	void force_states();
+	
+	WofostOutput output;
+	
+	bool weather_step();
 
 	void crop_initialize();
 	void crop_rates();
 	void crop_states();
 
+	void vernalization_initialize();
+	void vernalization_states();
+	void vernalization_rates();
+
 	//void npk_rates();
 	//void npk_states();
-	void npk_demand_uptake_initialize();
+/*	void npk_demand_uptake_initialize();
 	void npk_demand_uptake_rates();
 	void npk_demand_uptake_states();
 
@@ -270,7 +299,7 @@ struct WofostModel {
 
 	void npk_stress();
 	void npk_apply();
-
+*/
 	//void maintanance_respiration();
 
 	void soil_initialize();
@@ -297,26 +326,15 @@ struct WofostModel {
 	void ROOTD_states();
 
 	void ASTRO();
+	void PENMAN();
+	void PENMAN_MONTEITH();
 	void EVTRA();
-
-	void model_output();
+	double TOTASS();
 
 	void model_initialize();
 	void model_run();
-
-	//04/2017 npk add
-	//void npk_model_run();
-
-	void test();
-
-	//WofostModel(WofostCrop c, WofostSoil s, WofostControl t, Weather w) : crop(c), soil(s), control(t), wth(w) { };
+	void model_output();
 
 };
 
 
-//Undecide variables
-//TSUM
-//crop LAI initialization
-//DAYLP and DAYL
-//ITOLD in states
-//NO RD in crop

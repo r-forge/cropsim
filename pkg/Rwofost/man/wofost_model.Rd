@@ -1,33 +1,50 @@
-\name{wofost}
+\name{wofost_model}
 
-\alias{wofost}
+\alias{wofost_model}
+\alias{run}
+\alias{crop<-}
+\alias{soil<-}
+\alias{control<-}
+\alias{weather<-}
+\alias{crop<-,Rcpp_WofostModel,list-method}
+\alias{soil<-,Rcpp_WofostModel,list-method}
+\alias{control<-,Rcpp_WofostModel,list-method}
+\alias{weather<-,Rcpp_WofostModel,data.frame-method}
+\alias{run,Rcpp_WofostModel-method}
+
 
 \title{
 WOFOST crop growth model
 }
 
 \description{
-Run the WOFOST crop growth model. Through this interface, you provide weather data, and crop, soil and control parameters to run the model once. For multiple runs it might be preferable to use \code{\link{wofost_model}} instead.
+Create a WOFOST crop growth model object. Trhough this interface, you first create a model object and then you run it. The advantage is that you can easily change single parameters of the model and run the model again.
 }
 
 \usage{
-wofost(crop, weather, soil, control)
+wofost_model(crop, weather, soil, control)
+run(x, ...)
+crop(x) <- value
+soil(x) <- value
+control(x) <- value
+weather(x) <- value
 }
+
 
 \arguments{
 \item{crop}{list. Crop parameters}
-\item{weather}{data.frame with weather data}
+\item{weather}{data.frame with weather data. See Details}
 \item{soil}{list. Soil parameters}
 \item{control}{list. Model control options}
+\item{value}{crop, weather, soil, or control data; as above}
+\item{x}{WOFOST model}
+\item{\dots}{additiontal arguments. \code{stopError}(logica). If an error occurs and \code{stopError} is \code{TRUE}, and error message is given. Otherwise, a warning is given and some simulation data (up till when the error occurred) may be returned}
 }
 
 \value{
-matrix
+WofostModel object
 }
 
-\seealso{
-\code{\link{wofost_model}}
-}
 
 \details{
 The weather data must be passed as a data.frame with the following variables and units.
@@ -44,8 +61,9 @@ The weather data must be passed as a data.frame with the following variables and
 }
 
 Note that there should not be any time gaps between the days in the data.frame 
-
 }
+
+
 
 \references{
 Van Diepen, C.A., J. Wolf, and H van Keulen, 1989. WOFOST: a simulation model of crop production. Soil Use and Management, 5: 16-24
@@ -53,59 +71,39 @@ Van Diepen, C.A., J. Wolf, and H van Keulen, 1989. WOFOST: a simulation model of
 Van Keulen, H. and J. Wolf, 1986. Modelling of agricultural production : weather, soils and crops. \url{http://edepot.wur.nl/168025}
 }
 
-
 \examples{
 
 # weather data
 f <- system.file("extdata/Netherlands_Swifterbant.csv", package="meteor")
 w <- read.csv(f)
 w$date <- as.Date(w$date)
-head(w)
 
-# crop and soil parameters
 crop <- wofost_crop("barley")
 soil <- wofost_soil("ec1")
-
-# "control" parameters
 contr <- wofost_control()
+
 contr$modelstart <- as.Date("1980-02-06")
 contr$latitude=52.57
 contr$elevation=50
 
+# create model
+m <- wofost_model(crop, w, soil, contr)
 
 # run model
-d <- wofost(crop, w, soil, contr)
+x <- run(m)
+plot(x[,"date"], x[, "LAI"], cex=.5)
 
-# output
-head(d)
-tail(d)
-plot(d[,"step"], d[, "LAI"])
+# make a change
+m$control$modelstart = as.Date("1980-02-20")
 
+# run model again
+y <- run(m)
+lines(y[,"date"], y[, "LAI"], col="red")
 
-## Another example
-crop <- wofost_crop("rapeseed_1001")
-soil <- wofost_soil("soil_5")
-contr$modelstart <- as.Date("1977-01-01")
-
-rp <- wofost(crop, w, soil, contr)
-plot(rp[,"step"], rp[, "LAI"])
-
-# yield
-plot(rp[, 1], rp[,"WSO"])
-
-
-## water limited
-contr$water_limited <- TRUE
-contr$modelstart <- as.Date("1985-01-01")
-
-crop <- wofost_crop("maize_1")
-f <- system.file("extdata/Philippines_IRRI.csv", package="meteor")
-wth <- read.csv(f)
-wth$date <- as.Date(wth$date)
-contr$elevation <- 21
-contr$latitude <- 14.18
-
-ma <- wofost(crop, wth, soil, contr)
-plot(ma[,"step"], ma[, "LAI"])
-
+# change the crop 
+crop(m) <- wofost_crop("potato_704") 
+p <- run(m)
+lines(p[,"date"], p[, "LAI"], col="blue")
 }
+
+

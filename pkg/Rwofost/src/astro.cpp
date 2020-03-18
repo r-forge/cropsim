@@ -4,7 +4,6 @@ Date: July 2016
 
 License: GNU General Public License (GNU GPL) v. 2 
 
-
 Based on FORTRAN code WOFOST version 7.1.7, release September 2013
 Copyright 1988, 2013 Alterra, Wageningen-UR, Licensed under the EUPL, Version 1.1. 
 
@@ -12,7 +11,7 @@ Author: Daniel van Kraalingen, April 1991
 Modification: Include checks for 0 <= daylength <= 24 hour (Allard de Wit, January 2011)
 
 calculate astronomic daylength, diurnal radiation characteristics such as the atmospheric
-transmip.SSIon, diffuse radiation etc.
+transmission, diffuse radiation etc.
 
  (I=input,O=output,C=control,IN=init,T=time)
  name   type meaning                                    units  class
@@ -26,11 +25,10 @@ transmip.SSIon, diffuse radiation etc.
  COSLD   R4  Amplitude of sine of solar height             -      O
  DifPP   R4  Diffuse irradiation perpendicular to direction of
              light                                      J m-2 s-1 O
- ATMTR   R4  Daily atmospheric transmip.SSIon                -      O
+ ATMTR   R4  Daily atmospheric transmission                -      O
  DSINBE  R4  Daily total of effective solar height         s      O
 */
 
-using namespace std;
 #include <math.h>
 #include <vector>
 #include "wofost.h"
@@ -38,34 +36,26 @@ using namespace std;
 
 void WofostModel::ASTRO() {
 	
-//parameter
-    double ANGLE = -4., RAD = 0.0174533;
 	double PI = 3.141592653589793238462643383279502884197169399375;
+	
+    double ANGLE = -4, RAD = 0.0174533;
     //Error check on latitude
-    if (atm.latitude > 90. || atm.latitude < -90.) {
-        //cout << "astro.cpp invalid LAT " << endl;
-        //terminate();
-        string m ("ASTRO LAT > 90 or LAT < -90");
-        messages.push_back(m);
+    if (control.latitude > 90 || control.latitude < -90) {
+        messages.push_back("latitude: " + std::to_string(control.latitude) + " .it should be between -90 and 90");
+		fatalError = true;
     }
     //Declination and solar constant for this day
-    double DEC, SC;
-    DEC = -asin( sin(23.45 * RAD) * cos(2. * PI * (double(DOY) + 10.)/365.));
-    SC = 1370. * (1. + 0.033 * cos(2. * PI * double(DOY)/365.));
-    //calculation of daylength from intermediate variables
-    //SINLD, COSLD and AOB
+    double DEC = -asin( sin(23.45 * RAD) * cos(2. * PI * (double(DOY) + 10.)/365.));
+    double SC = 1370. * (1. + 0.033 * cos(2. * PI * double(DOY)/365.));
 
-    //double SINLD, COSLD, AOB;
-    double AOB;
-    atm.SINLD = sin(RAD * atm.latitude) * sin(DEC);
-    atm.COSLD = cos(RAD * atm.latitude) * cos(DEC);
-    AOB = atm.SINLD/atm.COSLD;
+    //calculation of daylength from intermediate variables SINLD, COSLD and AOB
+    atm.SINLD = sin(RAD * control.latitude) * sin(DEC);
+    atm.COSLD = cos(RAD * control.latitude) * cos(DEC);
+    double AOB = atm.SINLD / atm.COSLD;
 
 // For very high latitudes and days in summer and winter a limit is inserted
 // to avoid math errors when daylength reaches 24 hours in summer or 0 hours in winter.
-
-    //Calculate solution for base=0 degrees
-    //double DAYL, DSINB, DSINBE;
+// Calculate solution for base=0 degrees
    if (AOB > 1.0) {
         atm.DAYL = 24.0;
         atm.DSINB  = 3600. * (atm.DAYL * atm.SINLD);
@@ -81,12 +71,8 @@ void WofostModel::ASTRO() {
         atm.DSINBE = 3600. * (atm.DAYL * (atm.SINLD + 0.4 * (pow(atm.SINLD, 2) + pow(atm.COSLD, 2) * 0.5)) + 12. * atm.COSLD * (2. + 3. * 0.4 * atm.SINLD) * sqrt(1. - pow(AOB, 2)) / PI);	
 	}
 
-
     //Calculate solution for base=-4 (ANGLE) degrees
-    //double AOB_CORR, DAYLP, ANGOT, ATMTR;
-    double AOB_CORR, ANGOT;
-
-    AOB_CORR = (-sin(ANGLE * RAD) + atm.SINLD) / atm.COSLD;
+    double AOB_CORR = (-sin(ANGLE * RAD) + atm.SINLD) / atm.COSLD;
     if (AOB_CORR > 1.0) {
         atm.DAYLP = 24.0;
     } else if (AOB_CORR < -1.0) {
@@ -95,11 +81,11 @@ void WofostModel::ASTRO() {
         atm.DAYLP = 12.0 * (1. + 2. * asin(AOB_CORR)/PI);
     }
 
-    //extraterrestrial radiation and atmospheric transmip.SSIon
-    ANGOT  = SC * atm.DSINB;
+    //extraterrestrial radiation and atmospheric transmission
+    atm.ANGOT  = SC * atm.DSINB;
     //Check for DAYL=0 as in that case the angot radiation is 0 as well
     if (atm.DAYL > 0.0)  {
-        atm.ATMTR = atm.AVRAD / ANGOT;
+        atm.ATMTR = atm.AVRAD / atm.ANGOT;
     } else {
         atm.ATMTR = 0;
     }
@@ -117,8 +103,4 @@ void WofostModel::ASTRO() {
     }
 
     atm.DifPP = FRDif * atm.ATMTR * 0.5 * SC;
-
-    //vector<double> result = {DAYL, DAYLP, SINLD, COSLD, DifPP, ATMTR, DSINBE};
-
-    //return result;
 }
